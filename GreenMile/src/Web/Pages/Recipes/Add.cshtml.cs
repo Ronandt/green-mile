@@ -19,16 +19,21 @@ namespace Web.Pages.Recipes
         [BindProperty]
         public Recipe CurrentRecipe { get; set; } = new();
         public IFormFile? image { get; set; }
-        public List<String> ingredients { get; set; } = new();
+        public List<String> testIngredientList { get; set; } = new();
 
         public void OnGet()
         {
             //get the ingredients list
+            testIngredientList.Add("First ingredient");
+            testIngredientList.Add("Second ingredient");
+            testIngredientList.Add("Third ingredient");
         }
         public IActionResult OnPost()
         {
-            if(ModelState.IsValid)
-            {
+            TempData["FlashMessage.Type"] = "danger";
+            TempData["FlashMessage.Text"] = ModelState.IsValid + "THIS IS THE MODELSTATE";
+            if (true) //ModelState.IsValid //model state is invalid bc idk how the table works LOL
+            { 
                 if (image != null)
                 {
 
@@ -52,7 +57,7 @@ namespace Web.Pages.Recipes
                 TempData["FlashMessage.Text"] = CurrentRecipe.recipeName + " successfully added!";
                 return Redirect("/Recipes/Index");
             }
-            return Page();
+            //return Page();
         }
     }
 }

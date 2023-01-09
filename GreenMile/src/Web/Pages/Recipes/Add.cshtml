@@ -38,12 +38,52 @@
 											<input placeholder="mins" type="number" class="form-control" min="1" max="1000" step="1" asp-for="CurrentRecipe.duration"/>
 										</div>
 									</div>
-									<div class="col-lg-5">
+									<table>
+								<tr>
+									<th>&nbsp;</th>
+									<th>Ingredients</th>
+									<th>Amount</th>
+								</tr>
+								@*<tr>
+									
+									<td><input type="checkbox" /></td>
+									<td><p>ingredient name</p></td>
+									<td><input type="number" placeholder="g" step="1" min="1" max="10000" /></td>
+								</tr>*@
+								@{
+									@foreach (var ingredient in Model.testIngredientList)
+									{
+										<tr>
+											<td><input asp-for="CurrentRecipe.ingredients" id="check" type="checkbox" /></td>
+											<td><p>@ingredient</p></td> 
+											<td><input type="number" disabled="disabled" id="amount" asp-for="CurrentRecipe.ingredientAmount"placeholder="g" step="1" min="1" max="10000" required/></td>
+										</tr>
+									}
+								}
+							</table>
+									@*<div class="col-lg-5">
+										<div class="mb-4">
 										<label class="form-label">Ingredients</label>
 										<select class="form-select" asp-for="CurrentRecipe.ingredients">
 											<!--add the for loop script thing here to loop through all the ingredients-->
 											<!--change this to checkboxs refer to onenote for reasons-->
-											<option value="0">Ingredient 1</option> @*value is the id of the ingredient*@
+											<option value="0">Ingredient 1</option> value is the id of the ingredient
+											<option value="1">Ingredient 2</option>
+											<option value="2">Ingredient 3</option>
+										</select>
+										
+											//ingredient name, checkbox, ingredient amount input box
+											<p>ingredient name test</p>
+											<input type="checkbox">									
+										
+											}
+										}
+									@*<div class="col-lg-5">
+										<label class="form-label">Ingredients</label>
+										<select class="form-select" asp-for="CurrentRecipe.ingredients">
+											<!--add the for loop script thing here to loop through all the ingredients-->
+											<!--change this to checkboxs refer to onenote for reasons-->
+											<option value="0">Ingredient 1</option> value is the id of the ingredient
 											<option value="1">Ingredient 2</option>
 											<option value="2">Ingredient 3</option>
 										</select>
@@ -53,7 +93,7 @@
 										<label class="form-label" asp-for="CurrentRecipe.ingredientAmount">Ingredient Amount</label>
 									<input placeholder="g" type="number" class="form=control" min="1" max="10000" step="1" asp-for="CurrentRecipe.ingredientAmount"/>
 										</div>
-									</div>
+									</div>*@
 								</div>
 								<div>
 									<button type="submit" class="btn btn-md rounded font-sm hover-up">Publish</button>
@@ -98,5 +138,12 @@
 			uploadimg.readAsDataURL(input.files[0]);
 		}
 	}
+	function EnableDisableTextBox(tick) {
+        var ingredient_amount = document.getElementById("amount");
+        ingredient_amount.disabled = tick.checked ? false : true;
+        if (!ingredient_amount.disabled) {
+            ingredient_amount.focus();
+        }
+    }
 </script>
 
