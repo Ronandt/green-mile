@@ -6,8 +6,10 @@ namespace Web.Models
 {
     public class Recipe
     {
-        [Required, MaxLength(20, ErrorMessage = "Recipe name too long!")]
         [Key]
+        public int Id { get; set; }
+        [Required, MaxLength(20, ErrorMessage = "Recipe name too long!")]
+    
         public string recipeName { get; set; } = string.Empty;
 
         [Required]

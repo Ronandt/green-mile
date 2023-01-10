@@ -20,11 +20,15 @@ namespace Web.Pages.Recipes
         [BindProperty]
         public Recipe CurrentRecipe { get; set; } = new();
         public IFormFile? image { get; set; }
-        public List<String> ingredients { get; set; } = new();
+        public List<String> testIngredientList { get; set; } = new();
 
 
-        public IActionResult OnGet(string id)
+        public IActionResult OnGet(int id)
         {
+            testIngredientList.Add("First ingredient");
+            testIngredientList.Add("Second ingredient");
+            testIngredientList.Add("Third ingredient");
+
             Recipe? recipe = _recipeService.GetRecipeById(id);
             if(recipe == null)
             {
@@ -40,7 +44,7 @@ namespace Web.Pages.Recipes
         }
         public IActionResult OnPost()
         {
-            if (ModelState.IsValid)
+            if (true)   
             { 
                 if (image != null)
                 {
@@ -58,7 +62,7 @@ namespace Web.Pages.Recipes
                 TempData["FlashMessage.Text"] = CurrentRecipe.recipeName + " successfully updated!";
                 return Redirect("/Recipes/Index");
             }
-            return Page();
+            //return Page();
         }
     }
 }

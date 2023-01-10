@@ -45,7 +45,7 @@ namespace Web.Pages.Recipes
                     CurrentRecipe.imageFilePath = String.Format("/" + imagesFolder + "/" + imageFile);
 
                 }
-                Recipe? recipe = _recipeService.GetRecipeById(CurrentRecipe.recipeName);
+                Recipe? recipe = _recipeService.GetRecipeById(CurrentRecipe.Id);
                 if(recipe != null)
                 {
                     TempData["FlashMessage.Type"] = "danger";

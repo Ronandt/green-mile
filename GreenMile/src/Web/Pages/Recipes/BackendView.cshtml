@@ -61,9 +61,9 @@
 											<div class="price mb-2">&nbsp;</div>
 												<!-- price.// -->
 
-												<a asp-page="/Recipes/Update" asp-route-id="@item.recipeName" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> Edit </a>
+												<a asp-page="/Recipes/Update" asp-route-id="@item.Id" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> Edit </a>
 											
-												<a asp-page="/Recipes/BackendView" asp-page-handler="Delete" asp-route-id="@item.recipeName" class="btn btn-sm font-sm btn-light rounded"> <i class="material-icons md-delete_forever"></i> Delete </a>
+												<a asp-page="/Recipes/BackendView" asp-page-handler="Delete" asp-route-id="@item.Id" class="btn btn-sm font-sm btn-light rounded"> <i class="material-icons md-delete_forever"></i> Delete </a>
 											</div>
 										</div>
 										<!-- card-product  end// -->

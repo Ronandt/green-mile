@@ -4,6 +4,7 @@
 }
 <section class="content-main">
 	<form method="post" enctype="multipart/form-data">
+		<input hidden value="@Model.CurrentRecipe.Id"/>
 	<div class="row">
 		<div class="col-9">
 			<div class="content-header">
@@ -23,7 +24,7 @@
 					
 						<div class="mb-4">
 							<label for="product_name" class="form-label" asp-for="CurrentRecipe.recipeName">Recipe Name</label>
-							<input type="text" placeholder="@Model.CurrentRecipe.recipeName" class="form-control" asp-for="CurrentRecipe.recipeName" readonly/>
+							<input type="text" placeholder="@Model.CurrentRecipe.recipeName" class="form-control" asp-for="CurrentRecipe.recipeName"/>
 						</div>
 						<div class="row">
 							<div class="col-lg-4">
@@ -38,25 +39,32 @@
 									<input placeholder="@Model.CurrentRecipe.ingredientAmount" type="number" class="form-control" min="1" max="1000" step="1" asp-for="CurrentRecipe.duration" />
 								</div>
 							</div>
-							<div class="col-lg-5">
-								<label class="form-label">Ingredients</label>
-								<select class="form-select" asp-for="CurrentRecipe.ingredients">
-									<!--add the for loop script thing here to loop through all the ingredients-->
+							<table>
+								<tr>
+									<th>&nbsp;</th>
+									<th>Ingredients</th>
+									<th>Amount</th>
+								</tr>
+								@*<tr>
 
-									<option value="0">Ingredient 1</option> @*value is the id of the ingredient*@
-									<option value="1">Ingredient 2</option>
-									<option value="2">Ingredient 3</option>
-								</select>
-							</div>
-							<div class="col-lg-4">
-								<div class="mb-4">
-									<label class="form-label" asp-for="CurrentRecipe.ingredientAmount">Ingredient Amount</label>
-									<input placeholder="@Model.CurrentRecipe.ingredientAmount" type="number" class="form=control" min="1" max="10000" step="1" asp-for="CurrentRecipe.ingredientAmount" />
-								</div>
-							</div>
+								<td><input type="checkbox" /></td>
+								<td><p>ingredient name</p></td>
+								<td><input type="number" placeholder="g" step="1" min="1" max="10000" /></td>
+								</tr>*@
+								@{
+									@foreach (var ingredient in Model.testIngredientList)
+									{
+										<tr>
+											<td><input id="" type="checkbox" /></td>
+											<td><p>@ingredient</p></td>
+											<td><input type="number" disabled="disabled" id="amount" asp-for="CurrentRecipe.ingredientAmount" placeholder="g" step="1" min="1" max="10000" required /></td>
+										</tr>
+									}
+								}
+							</table>
 						</div>
 						<div>
-							<button type="submit" class="btn btn-md rounded font-sm hover-up">Publish</button>
+							<button type="submit" class="btn btn-md rounded font-sm hover-up">Update</button>
 						</div>
 					
 				</div>
@@ -83,6 +91,7 @@
 				<!-- card end// -->
 			</div>
 	</div>
+	<input hidden asp-for="CurrentRecipe.Id" />
 	</form>
 </section>
 <!-- content-main end// -->
