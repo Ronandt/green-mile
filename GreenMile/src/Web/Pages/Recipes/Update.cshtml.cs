@@ -9,25 +9,33 @@ namespace Web.Pages.Recipes
 {
     public class UpdateModel : PageModel
     {
+
         private readonly RecipeService _recipeService;
+        private readonly FoodItemService _foodItemService;
         private IWebHostEnvironment _webHostEnvironment;
-        public UpdateModel(RecipeService recipeService, IWebHostEnvironment webHostEnvironment)
+
+
+        public UpdateModel(RecipeService recipeService, IWebHostEnvironment webHostEnvironment, FoodItemService foodItemService)
         {
             _recipeService = recipeService;
             _webHostEnvironment = webHostEnvironment;
+            _foodItemService = foodItemService;
         }
 
         [BindProperty]
         public Recipe CurrentRecipe { get; set; } = new();
         public IFormFile? image { get; set; }
         public List<String> testIngredientList { get; set; } = new();
+        public List<FoodItem> IngredientList;
 
 
         public IActionResult OnGet(int id)
         {
-            testIngredientList.Add("First ingredient");
-            testIngredientList.Add("Second ingredient");
-            testIngredientList.Add("Third ingredient");
+
+            IngredientList = _foodItemService.GetAllForRecipe();
+            //testIngredientList.Add("First ingredient");
+            //testIngredientList.Add("Second ingredient");
+            //testIngredientList.Add("Third ingredient");
 
             Recipe? recipe = _recipeService.GetRecipeById(id);
             if(recipe == null)
@@ -49,7 +57,7 @@ namespace Web.Pages.Recipes
                 if (image != null)
                 {
 
-                    var imagesFolder = "uploads";
+                    var image sFolder = "uploads";
                     var imageFile = Guid.NewGuid() + Path.GetExtension(image.FileName);
                     var imagePath = Path.Combine(_webHostEnvironment.ContentRootPath, "wwwroot", imagesFolder, imageFile);
                     using var fileStream = new FileStream(imagePath, FileMode.Create);

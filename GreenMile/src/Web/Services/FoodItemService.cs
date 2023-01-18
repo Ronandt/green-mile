@@ -12,6 +12,10 @@ namespace Web.Services
             _context = context;
         }
 
+        public List<FoodItem> GetAllForRecipe()
+        {
+            return _context.FoodItems.ToList();
+        }
         public IEnumerable<FoodItem> GetAll(Household household)
         {
             return _context.FoodItems

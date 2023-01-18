@@ -251,8 +251,8 @@
 						@{
 							@foreach(var item in Model.RecipeList)
 							{
-								decimal rating;
-								rating = item.difficulty * 20;
+								//decimal rating;
+								//rating = item.difficulty * 20;
 								<!--start recipe card-->
 								<div class="col-lg-1-5 col-md-4 col-12 col-sm-6">
 									<div class="product-cart-wrap mb-30">
@@ -267,12 +267,31 @@
 										<div class="product-content-wrap">
 
 											<h2><a href="shop-product-right.html">@item.recipeName</a></h2>
-											<div class="product-rate-cover">
+											@*<div class="product-rate-cover">
 												<div class="product-rate d-inline-block">
 													<div class="product-rating" style="width: @rating%"></div>
 												</div>
 												<span class="font-small ml-5 text-muted"> (@item.difficulty)</span>
+											</div>*@
+											<div>
+											@{
+												@if (item.difficulty=="Easy")
+												{
+													<p>Difficulty: <font color="green">@item.difficulty</font></p>
+												}
+												else if(item.difficulty=="Intermediate")
+												{
+													<p>Difficulty: <font color="orange	">@item.difficulty</font></p>
+												}
+												else if(item.difficulty=="Hard")
+												{
+													<p>Difficulty: <font color="red">@item.difficulty</font></p>
+												}
+											}
+												
+
 											</div>
+
 
 											<div class="product-card-bottom">
 												<div class="product-price">

@@ -23,8 +23,7 @@ namespace Web.Models
         public int duration { get; set; } = 0;
 
         [Required]
-        [Column(TypeName = "decimal(2,1)")]
-        public decimal difficulty { get; set; } = 0;
+        public string difficulty { get; set; } = string.Empty ;
 
         public string reviews { get; set; } = string.Empty;
 

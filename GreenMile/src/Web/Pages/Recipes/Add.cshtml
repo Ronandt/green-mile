@@ -29,7 +29,13 @@
 									<div class="col-lg-4">
 										<div class="mb-4">
 											<label class="form-label" asp-for="CurrentRecipe.difficulty">Difficulty</label>
-											<input placeholder="difficulty" type="number" class="form-control" min="0" max="5" step="0.5" asp-for="CurrentRecipe.difficulty"/>
+@*											<input placeholder="difficulty" type="number" class="form-control" min="0" max="5" step="0.5" asp-for="CurrentRecipe.difficulty"/>
+*@											<select asp-for="CurrentRecipe.difficulty" required>
+												<option selected disabled>Select a Difficulty:</option>
+												<option value="Easy">Easy</option>
+												<option value="Intermediate">Intermediate</option>
+												<option value="Hard">Hard</option>
+											</select>
 										</div>
 									</div>
 									<div class="col-lg-4">
@@ -51,11 +57,12 @@
 									<td><input type="number" placeholder="g" step="1" min="1" max="10000" /></td>
 								</tr>*@
 								@{
-									@foreach (var ingredient in Model.testIngredientList)
+									@foreach (var ingredient in Model.IngredientList)
 									{
 										<tr>
-											<td><input id="" type="checkbox" /></td>
-											<td><p>@ingredient</p></td> 
+											<td><input id="test" type="checkbox" /></td>
+											<td></td>
+											<td><p>@ingredient.Name</p></td> 
 											<td><input type="number" disabled="disabled" id="amount" asp-for="CurrentRecipe.ingredientAmount"placeholder="g" step="1" min="1" max="10000" required/></td>
 										</tr>
 									}

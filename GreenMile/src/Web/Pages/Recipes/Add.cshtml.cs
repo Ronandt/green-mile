@@ -8,12 +8,15 @@ namespace Web.Pages.Recipes
     public class AddModel : PageModel
     {
         private readonly RecipeService _recipeService;
+        private readonly FoodItemService _foodItemService;
         private IWebHostEnvironment _webHostEnvironment;
 
-        public AddModel(RecipeService recipeService, IWebHostEnvironment webHostEnvironment)
+
+        public AddModel(RecipeService recipeService, IWebHostEnvironment webHostEnvironment, FoodItemService foodItemService)
         {
             _recipeService = recipeService;
             _webHostEnvironment = webHostEnvironment;
+            _foodItemService = foodItemService;
         }
 
         [BindProperty]
@@ -21,12 +24,17 @@ namespace Web.Pages.Recipes
         public IFormFile? image { get; set; }
         public List<String> testIngredientList { get; set; } = new();
 
+        public List<FoodItem> IngredientList;
+
         public void OnGet()
         {
             //get the ingredients list
-            testIngredientList.Add("First ingredient");
-            testIngredientList.Add("Second ingredient");
-            testIngredientList.Add("Third ingredient");
+             IngredientList =  _foodItemService.GetAllForRecipe();
+
+            //test data
+            //testIngredientList.Add("First ingredient");
+            //testIngredientList.Add("Second ingredient");
+            //testIngredientList.Add("Third ingredient");
         }
         public IActionResult OnPost()
         {
