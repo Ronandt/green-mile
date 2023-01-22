@@ -6,7 +6,7 @@ using Web.Utils;
 
 namespace Web.Services
 {
-    public class GroceryFoodService
+    public class GroceryFoodService: IGroceryFoodService
     {
         private readonly DataContext _dataContext;
         public GroceryFoodService(DataContext dataContext)
