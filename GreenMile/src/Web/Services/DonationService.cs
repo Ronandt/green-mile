@@ -19,7 +19,7 @@ namespace Web.Services
         public List<Donation> GetAll()
         {
             return _context.Donations
-                .Include(d => d.FoodItem)
+                .Include(d => d.CustomFood)
                 .Include(u => u.User)
                 .OrderBy(m => m.Id)
                 .ToList();
@@ -41,14 +41,14 @@ namespace Web.Services
         {
 
             return _context.Donations
-                .Include(d => d.FoodItem)
+                .Include(d => d.CustomFood)
                 .FirstOrDefault(x => x.Id.Equals(id)); ;
         }
 
         public List<Donation> GetDonationsByUser(string id)
         {
             return _context.Donations
-                .Include(d => d.FoodItem)
+                .Include(d => d.CustomFood)
                 .Where(x => x.User.Id.Equals(id))
                 .OrderByDescending(m => m.Date)
                 .ToList();

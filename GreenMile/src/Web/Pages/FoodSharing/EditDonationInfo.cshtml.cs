@@ -12,23 +12,23 @@ namespace Web.Pages.FoodSharing
     [Authorize]
     public class EditDonationInfoModel : PageModel
     {
-        private readonly FoodItemService _foodService;
+        private readonly CustomFoodService _customFoodService;
         private readonly DonationService _donationService;
         private readonly IWebHostEnvironment _environment;
 
         public EditDonationInfoModel(
-            FoodItemService foodItemService,
+            CustomFoodService customFoodService,
             DonationService donationService,
             IWebHostEnvironment environment
         )
         {
             _donationService = donationService;
-            _foodService = foodItemService;
+            _customFoodService = customFoodService;
             _environment = environment;
         }
 
         [BindProperty]
-        public int FoodItemId { get; set; }
+        public int CustomFoodId { get; set; }
 
         [BindProperty]
         public string? Name { get; set; }
@@ -37,15 +37,12 @@ namespace Web.Pages.FoodSharing
         public string? Description { get; set; }
 
         [BindProperty]
-        public int? Quantity { get; set; }
-
-        [BindProperty]
         public DateTime? ExpiryDate { get; set; }
 
         [BindProperty]
-        public IFormFile? Image { get; set; }
+        public IFormFile? Upload { get; set; }
 
-        public bool IsCustom { get; set; }
+        public string Image { get; set; }
 
         public IActionResult OnGet(int id)
         {
@@ -54,10 +51,12 @@ namespace Web.Pages.FoodSharing
             if (donation is null)
                 return NotFound();
 
-            IsCustom = donation.FoodItem!.IsCustom;
-            FoodItemId = donation.FoodItem.Id;
+            CustomFoodId = donation.CustomFood.Id;
+
+            Image = donation.CustomFood.Image;
 
             return Page();
+
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -65,24 +64,23 @@ namespace Web.Pages.FoodSharing
             if (!ModelState.IsValid)
                 return Page();
 
-            var foodItem = await _foodService.GetFoodItemById(FoodItemId);
+            var customFood = await _customFoodService.GetCustomFoodById(CustomFoodId);
 
-            foodItem!.Name = Name ?? foodItem.Name;
-            foodItem.Description = Description ?? foodItem.Description;
-            foodItem.ExpiryDate = ExpiryDate ?? foodItem.ExpiryDate;
-            foodItem.Quantity = Quantity ?? foodItem.Quantity;
-
-            if (Image is not null)
+            customFood!.Name = Name ?? customFood.Name;
+            customFood.Description = Description ?? customFood.Description;
+            customFood.ExpiryDate = ExpiryDate ?? customFood.ExpiryDate;
+            
+            if (Upload is not null)
             {
                 var uploadFolder = "Uploads";
-                var imageFile = Guid.NewGuid() + Path.GetExtension(Image.FileName);
+                var imageFile = Guid.NewGuid() + Path.GetExtension(Upload.FileName);
                 var imagePath = Path.Combine(_environment.ContentRootPath, "wwwroot", uploadFolder, imageFile);
                 using var fileStream = new FileStream(imagePath, FileMode.Create);
-                await Image.CopyToAsync(fileStream);
-                foodItem.ImageFilePath = string.Format("/{0}/{1}", uploadFolder, imageFile);
+                await Upload.CopyToAsync(fileStream);
+                customFood.Image = string.Format("/{0}/{1}", uploadFolder, imageFile);
             }
 
-            await _foodService.Update(foodItem);
+            await _customFoodService.Update(customFood);
 
             return Redirect("/FoodSharing");
         }

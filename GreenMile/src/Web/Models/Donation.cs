@@ -33,12 +33,13 @@ public class Donation
     /// Refer to the food item class
     /// </summary>
     public CustomFood? CustomFood { get; set; }
+
+
 }
 
 public enum DonationStatus
 {
-    PENDING,
     ACTIVE,
-    COMPLETE,
-    EXPIRED
+    RESERVED,
+    COMPLETED,
 }

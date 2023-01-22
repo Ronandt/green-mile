@@ -8,19 +8,14 @@ public class CustomFood
     [Key]
     public int Id { get; set; }
 
-    [Required]
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
-    [Required]
-    public string Description { get; set; }
+    public string Description { get; set; } = string.Empty;
 
-    [MaxLength(50)]
     public string? Image { get; set; }
 
+    public DateTime ExpiryDate { get; set; } 
 
-    [Required]
-    [DataType(DataType.Date)]
-    public DateTime ExpiredDate { get; set; } = DateTime.Today;
-
+    // public ICollection<Category> Categories { get; set; } = new List<Category>();
 
 }
