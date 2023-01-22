@@ -89,8 +89,8 @@
                                     <div class="product-img-action-wrap">
                                         <div class="product-img product-img-zoom">
                                             <a href="shop-product-right.html">
-                                                <img class="default-img" src="@item.FoodItem.ImageFilePath" alt="" />
-                                                <img class="hover-img" src="@item.FoodItem.ImageFilePath" alt="" />
+                                                <img class="default-img" src="@item.CustomFood.Image" alt="" />
+                                                <img class="hover-img" src="@item.CustomFood.Image" alt="" />
                                             </a>
                                         </div>
                                         <div class="product-action-1">
@@ -108,7 +108,7 @@
                                         <div class="product-category">
                                             <a href="">Food Category</a>
                                         </div>
-                                        <h2><a href="shop-product-right.html">@item.FoodItem.ImageFilePath</a></h2>
+                                        <h2><a href="shop-product-right.html">@item.CustomFood.Name</a></h2>
                                         <!--
                                                                                             <div class="product-rate-cover">
                                                                                                 <div class="product-rate d-inline-block">
@@ -138,7 +138,7 @@
                                                         <!-- MAIN SLIDES -->
                                                     <div class="product-image-slider">
                                                             <figure class="border-radius-10">
-                                                                <img src="@item.FoodItem.ImageFilePath" alt="product image" />
+                                                                <img src="@item.CustomFood.Image" alt="product image" />
                                                             </figure>
                                                             <figure class="border-radius-10">
                                                                 <img src="assets/imgs/shop/product-16-1.jpg"
@@ -157,7 +157,7 @@
                                                     <div class="detail-info pr-30 pl-30">
                                                         <span class="stock-status in-stock"> @item.Status </span>
                                                         <h3 class="title-detail"><a href="shop-product-right.html"
-                                                            class="text-heading">@item.FoodItem.ImageFilePath</a></h3>
+                                                            class="text-heading">@item.CustomFood.Image</a></h3>
                                                         <!--
                                                                 <div class="product-detail-rating">
 
@@ -182,7 +182,7 @@
                                                                 -->
                                                     <div class="food-description">
                                                             <p>
-                                                                @item.FoodItem.Description
+                                                                @item.CustomFood.Description
                                                             </p>
                                                         </div>
                                                         <div class="detail-extralink mb-30">

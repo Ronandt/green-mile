@@ -11,7 +11,7 @@ using Web.Data;
 namespace Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230122081425_first")]
+    [Migration("20230122132735_first")]
     partial class first
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -171,17 +171,42 @@ namespace Web.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("Web.Models.CustomFood", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("ExpiryDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CustomFoods");
+                });
+
             modelBuilder.Entity("Web.Models.Donation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("CustomFoodId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
-
-                    b.Property<int?>("FoodItemId")
-                        .HasColumnType("INTEGER");
 
                     b.Property<int>("Status")
                         .HasColumnType("INTEGER");
@@ -191,7 +216,7 @@ namespace Web.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FoodItemId");
+                    b.HasIndex("CustomFoodId");
 
                     b.HasIndex("UserId");
 
@@ -488,15 +513,15 @@ namespace Web.Migrations
 
             modelBuilder.Entity("Web.Models.Donation", b =>
                 {
-                    b.HasOne("Web.Models.FoodItem", "FoodItem")
+                    b.HasOne("Web.Models.CustomFood", "CustomFood")
                         .WithMany()
-                        .HasForeignKey("FoodItemId");
+                        .HasForeignKey("CustomFoodId");
 
                     b.HasOne("Web.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
-                    b.Navigation("FoodItem");
+                    b.Navigation("CustomFood");
 
                     b.Navigation("User");
                 });

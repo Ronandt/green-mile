@@ -35,8 +35,7 @@ namespace Web.Pages.FoodSharing
         public string Name { get; set; }
         [BindProperty, Required, MinLength(0), MaxLength(100)]
         public string Description { get; set; }
-        [BindProperty, Required, Range(1, 100, ErrorMessage = " Choose between 1 - 100")]
-        public int Quantity { get; set; }
+        
         [BindProperty, Required]
         public DateTime ExpiryDate { get; set; }
 
