@@ -1,8 +1,6 @@
-﻿
-using System.ComponentModel.DataAnnotations;
-
-using Web.Data;
+﻿using Web.Data;
 using Web.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Web.Services
 {
@@ -24,7 +22,24 @@ namespace Web.Services
         {
             return _context.CustomFoods.OrderBy(m => m.Id).ToList();
         }
+        public async Task<CustomFood?> GetCustomFoodById(int id)
+        {
+            return await _context.CustomFoods.FindAsync(id);
+        }
 
+        public async Task Update(CustomFood customfood)
+        {
+            _context.CustomFoods.Update(customfood);
+            await _context.SaveChangesAsync();
+        }
 
+        public List<Donation> GetDonationsByUser(string id)
+        {
+            return _context.Donations
+                .Include(d => d.CustomFood)
+                .Where(x => x.User.Id.Equals(id))
+                .OrderByDescending(m => m.Date)
+                .ToList();
+        }
     }
 }
