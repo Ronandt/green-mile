@@ -32,7 +32,7 @@ public class Donation
     /// <summary>
     /// Refer to the food item class
     /// </summary>
-    public FoodItem? FoodItem { get; set; }
+    public CustomFood? CustomFood { get; set; }
 }
 
 public enum DonationStatus
