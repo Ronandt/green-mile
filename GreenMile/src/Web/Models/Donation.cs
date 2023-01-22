@@ -21,7 +21,7 @@ public class Donation
     /// <summary>
     /// The date and time that the donation offer was created.
     /// </summary>
-    public DateTime Date { get; set; } = DateTime.Now;
+    public DateTime Date { get; set; }
 
     /// <summary>
     /// The user that created the donation offer.

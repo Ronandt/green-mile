@@ -9,17 +9,17 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Web.Models;
 using Web.Services;
 
-namespace Web.Pages.FoodSharing.AddDonation;
+namespace Web.Pages.FoodSharing;
 
 [Authorize]
-public class FoodTracker : PageModel
+public class AddDonationModel : PageModel
 {
     private readonly DonationService _donationService;
     private readonly FoodItemService _foodItemService;
     private readonly IHouseholdService _householdService;
     private readonly UserManager<User> _userManager;
 
-    public FoodTracker(DonationService donationService, FoodItemService foodItemService, UserManager<User> userManager, IHouseholdService householdService)
+    public AddDonationModel(DonationService donationService, FoodItemService foodItemService, UserManager<User> userManager, IHouseholdService householdService)
     {
         _donationService = donationService;
         _foodItemService = foodItemService;

@@ -15,15 +15,18 @@ namespace Web.Pages.FoodSharing
         private readonly FoodItemService _foodService;
         private readonly DonationService _donationService;
         private readonly IWebHostEnvironment _environment;
+        private readonly UserManager<User> _userManager;
 
         public EditDonationInfoModel(
             FoodItemService foodItemService,
             DonationService donationService,
-            IWebHostEnvironment environment
+            IWebHostEnvironment environment,
+            UserManager<User> userManager
         )
         {
             _donationService = donationService;
             _foodService = foodItemService;
+            _userManager = userManager;
             _environment = environment;
         }
 
