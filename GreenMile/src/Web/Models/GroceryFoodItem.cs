@@ -2,10 +2,19 @@
 {
     public class GroceryFoodItem
     {
-        public int Id { get; set; }
+        public string Id { get; set; } = Guid.NewGuid().ToString();
         public int Quantity { get; set; }
-        public string ExtraNote { get; set; }
-        public Boolean InBasket { get; set; }
-        public double CarbonFootprintSum { get; set; }
+        public string? ExtraNote { get; set; }
+        public bool InBasket { get; set; }
+   
+
+        public Household? Household { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string? Description { get; set; } = string.Empty;
+    
+        public double? CarbonFootprint { get; set; }
+   
+        public string? ImageFilePath { get; set; } = string.Empty;
+        public Category? Category { get; set; }
     }
 }

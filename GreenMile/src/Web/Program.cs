@@ -55,6 +55,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(30);
     options.Lockout.MaxFailedAccessAttempts = 5;
     options.Lockout.AllowedForNewUsers = true;
+    
 });
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
