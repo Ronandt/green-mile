@@ -7,6 +7,8 @@ using Web.Services;
 using Microsoft.AspNetCore.Identity;
 
 
+
+
 namespace Web.Pages.Account
 {
 
@@ -21,19 +23,22 @@ namespace Web.Pages.Account
         private readonly IHouseholdService _householdService;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly IImageService _imageService;
+        private readonly OpenAIApiService _openAIApiService;
+        private readonly Services.IImageService _imageService;
+     
 
-        public DetailsModel(IHouseholdService householdService, UserManager<User> userManager, IImageService imageService, SignInManager<User> signInManager)
+        public DetailsModel(IHouseholdService householdService, UserManager<User> userManager, Services.IImageService imageService, SignInManager<User> signInManager, OpenAIApiService openAiService)
         {
             _householdService = householdService;
             _userManager = userManager;
             _imageService = imageService;
             _signInManager = signInManager;
+            _openAIApiService = openAiService;
         }
 
         public async Task<IActionResult> OnGetAsync()
         {
-
+         
             User user = (await _userManager.GetUserAsync(HttpContext.User));
             if (!await _userManager.IsInRoleAsync(user, "Member"))
             {
@@ -59,7 +64,7 @@ namespace Web.Pages.Account
                 AccountUiState.FirstName != user.FirstName, AccountUiState.Username != user.UserName, AccountUiState.LastName != user.LastName, AccountUiState.EmailAddress != user.Email, AccountUiState.NewPassword != null,
                 AccountUiState.ConfirmPassword != null, AccountUiState.HasImageChanged
             };
-            if (ModelState.IsValid && formCheck.Any(x => x == true))
+            if (formCheck.Any(x => x == true))
 
             {
                 if (formCheck.Any(x => x == true))
@@ -86,7 +91,11 @@ namespace Web.Pages.Account
                     }
                     if(AccountUiState.HasImageChanged && Upload != null)
                     {
-                        _imageService.StoreImage(Upload, user);
+                        await _imageService.StoreImage(Upload, user);
+                    }
+                    if(AccountUiState.HasImageChanged && AccountUiState.GeneratedImage == true && AccountUiState.GeneratedImageUrl != null)
+                    {
+                        await _imageService.StoreImageFromUrl(AccountUiState.GeneratedImageUrl, user);
                     }
                  
 
@@ -102,8 +111,9 @@ namespace Web.Pages.Account
             }
             else
             {
-                TempData["error"] = "Form not filled properly!";
+                TempData["info"] = "Your changes are already saved";
             }
+         
             return Redirect("/account/details");
         }
 
@@ -127,5 +137,10 @@ namespace Web.Pages.Account
             }
 
         }
+
+       /* public async Task<IActionResult> OnPostGenerateImageAsync() {
+            _openAIApiService.GenerateImage()
+
+        }*/
     }
 }

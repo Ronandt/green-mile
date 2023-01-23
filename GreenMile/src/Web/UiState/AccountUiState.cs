@@ -24,10 +24,10 @@ namespace Web.UiState
 
         [Microsoft.AspNetCore.Mvc.BindProperty]
         public IFormFile? Upload { get; set; }
-
+        public bool? GeneratedImage { get; set; }
       
         public bool HasImageChanged { get; set; } = false;
-
+        public string? GeneratedImageUrl { get; set; } = null;
 
 
     }

@@ -1,7 +1,11 @@
+using System.Net;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
+
+using OpenAI.GPT3.Extensions;
 
 using Web.Data;
 using Web.Models;
@@ -17,10 +21,11 @@ builder.Services.AddScoped<FoodItemService>();
 builder.Services.AddScoped<FoodCategoryService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IHouseholdService, HouseholdService>();
-
+builder.Services.AddScoped<IGroceryFoodService, GroceryFoodService>();
 builder.Services.AddScoped<IImageService, ImageService>();
+builder.Services.AddScoped<OpenAIApiService>();
 builder.Services.AddScoped<RecipeService>();
-
+builder.Services.AddOpenAIService();
 builder.Services.AddScoped<DonationService>();
 builder.Services.AddScoped<CustomFoodService>();
 
@@ -55,12 +60,14 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(30);
     options.Lockout.MaxFailedAccessAttempts = 5;
     options.Lockout.AllowedForNewUsers = true;
+    
 });
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 // NOTE: Stores to server memory
 // TODO: Change to externals stores to allow horizontal scalling
 builder.Services.AddDistributedMemoryCache();
+builder.Services.AddControllers();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
@@ -85,6 +92,7 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+WebRequest.DefaultWebProxy = null;
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -96,6 +104,7 @@ app.UseRouting();
 app.UseAuthentication();
 
 app.UseAuthorization();
+app.MapControllers();
 
 app.MapRazorPages();
 

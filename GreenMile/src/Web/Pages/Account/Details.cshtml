@@ -710,30 +710,31 @@ a, a:hover {
 
                                                 <form method="POST" enctype="multipart/form-data" >
                                                     <div class="row">
+                                                         <input type="file" accept="image/*" class="form-control" onchange="showImgPreview(this)" asp-for="Upload"/>
+                    <br />
+                                                        <img id="imgPreview" class="rounded-circle" style="clip-path:circle();height:250px;width:300px;object-fit:cover;border-radius:50%; overflow: hidden; margin-top: 30px" src="@((await imageService.RetrieveImage(user)).Value)" />
+                             <div class="load" id="load" style="display:none">
+                              <hr/><hr/><hr/><hr/>
+                            </div>
+                                                                           <div class="form-group col-md-6" style="margin-top: 20px; height: 20px;">
+                                                            Or you can generate an image...
+                                          <input class="form-control" id="prompt"/>
+                                                            <button class="btn btn-primary" type="button"  onclick="generateImage();return false" style="margin-top:0px;position:relative;left: 440px;bottom: 50px;" id="genimg">Generate Image</button>
+
+                    </div>
+     
+                                                    </div>
+                                                    <input type="hidden" asp-for="AccountUiState.HasImageChanged"/>
+
+                                                     <input type="hidden" asp-for="AccountUiState.GeneratedImage" value="false"/>
+
+                                                     <input type="hidden" asp-for="AccountUiState.GeneratedImageUrl"/>
+
+
+                                                    <div class="row">
 
 
 
-<input type="hidden" asp-for="AccountUiState.HasImageChanged"/>
-
-                                                     
-<div class="profile-pic-wrapper">
-  <div class="pic-holder">
-    <!-- uploaded pic shown here -->
-                                                                <img id="profilePic"  class="pic"  src="@((await imageService.RetrieveImage(user)).Value)">
-
-    <input class="uploadProfileInput" type="file"  asp-for="Upload" accept="image/*" style="opacity: 0;" />
-    <label for="AccountUiState_Upload" class="upload-file-block">
-      <div class="text-center">
-        <div class="mb-2">
-          <i class="fa fa-camera fa-2x"></i>
-        </div>
-        <div class="text-uppercase">
-          Update <br /> Profile Photo
-        </div>
-      </div>
-    </label>
-  </div>
-</div>
 
 
 
@@ -801,26 +802,25 @@ a, a:hover {
 
                                                 <form method="POST" enctype="multipart/form-data">
                                                     <div class="row">
-                                                        <input type="hidden" asp-for="AccountUiState.HasImageChanged" />
-                                                        <div class="profile-pic-wrapper">
-                                                            <div class="pic-holder">
-                                                                <!-- uploaded pic shown here -->
-                                                                <img id="profilePic"   class="pic" src="@((await imageService.RetrieveImage(user)).Value)">
-                                                                
-                                                                <input class="uploadProfileInput" asp-for="Upload" type="file" accept="image/*" style="opacity: 0;" />
-                                                                <label for="Upload" class="upload-file-block">
-                                                                    <div class="text-center">
-                                                                        <div class="mb-2">
-                                                                            <i class="fa fa-camera fa-2x"></i>
-                                                                        </div>
-                                                                        <div class="text-uppercase">
-                                                                            Update <br /> Profile Photo
-                                                                        </div>
-                                                                    </div>
-                                                                </label>
-                                                            </div>
+                                                           <input type="file" accept="image/*" class="form-control" onchange="showImgPreview(this)" asp-for="Upload"/>
+                    <br />
+                                                        <img id="imgPreview" class="rounded-circle" style="clip-path:circle();height:250px;width:300px;object-fit:cover;border-radius:50%; overflow: hidden;margin-top: 30px" src="@((await imageService.RetrieveImage(user)).Value)" />
+                                                       
+                                                        <div class="form-group col-md-6" style="margin-top: 20px; height: 20px;">
+                                                            Or you can generate an image...
+                                                            <input class="form-control" id="prompt"/>
+                                                            <button class="btn btn-primary" onclick="generateImage();return false" type="button" style="margin-top:0px;position:relative;left: 440px;bottom: 50px;" id="genimg">Generate Image</button>
                                                         </div>
+                                                    </div>
+                                                    <input type="hidden" asp-for="AccountUiState.GeneratedImage" value="false" />
 
+                                                    <input type="hidden" asp-for="AccountUiState.GeneratedImageUrl" />
+                                                       
+                                                     <input type="hidden" asp-for="AccountUiState.HasImageChanged" />
+                                                     
+
+                                                    <div class="row">
+                                                       
                                                         <div class="form-group col-md-6">
                                                             <label>First Name <span class="required">*</span></label>
                                                             <input class="form-control" asp-for="AccountUiState.FirstName" />
@@ -1305,71 +1305,48 @@ a, a:hover {
 
 
 </script>
+
 <script>
-    $(document).on("change", ".uploadProfileInput", function () {
-        var triggerInput = this;
-        var currentImg = $(this).closest(".pic-holder").find(".pic").attr("src");
-        var holder = $(this).closest(".pic-holder");
-        var wrapper = $(this).closest(".profile-pic-wrapper");
-        $(wrapper).find('[role="alert"]').remove();
-        triggerInput.blur();
-        var files = !!this.files ? this.files : [];
-        if (!files.length || !window.FileReader) {
-            return;
+    function showImgPreview(input) {
+        document.getElementById("AccountUiState_HasImageChanged").value = true
+        if (input.files[0]) {
+            var uploadimg = new FileReader(); uploadimg.onload = function (displayimg) {
+                $("#imgPreview").attr('src', displayimg.target.result);
+
+            }
+            uploadimg.readAsDataURL(input.files[0]);
         }
-        if (/^image/.test(files[0].type)) {
-            // only image file
-            var reader = new FileReader(); // instance of the FileReader
-            reader.readAsDataURL(files[0]); // read the local file
+          document.getElementById("AccountUiState_GeneratedImage").value = false
+    }
+</script>
+<script>
+    async function generateImage() {
+        const object = { prompt: document.getElementById("prompt").value };
+    document.getElementById("imgPreview").src = "https://cdn.dribbble.com/users/1186261/screenshots/3718681/_______.gif"
+    document.getElementById("prompt").disabled = true
+    document.getElementById("genimg").disabled = true
+    document.getElementById("AccountUiState_GeneratedImage").value = true
 
-            reader.onloadend = function () {
-                $(holder).addClass("uploadInProgress");
-                $(holder).find(".pic").attr("src", this.result);
-                $(holder).append(
-                    '<div class="upload-loader"><div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div></div>'
-                );
+    const response = await fetch('/api/generateimage', {
+      method: 'POST',
+      body: JSON.stringify(object),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      
+       document.getElementById("AccountUiState_HasImageChanged").value = true
+       url =  await response.text()
+       document.getElementById("imgPreview").src = url
+       document.getElementById("AccountUiState_GeneratedImageUrl").value = url
+      setTimeout(function(){
 
-                // Dummy timeout; call API or AJAX below
-                setTimeout(() => {
-                    $(holder).removeClass("uploadInProgress");
-                    $(holder).find(".upload-loader").remove();
-                    // If upload successful
-                    if (Math.random() < 0.9) {
-                        $(wrapper).append(
-                            '<div class="snackbar show" role="alert"><i class="fa fa-check-circle text-success"></i> Profile image updated successfully</div>'
-                        );
-
-                        $("#AccountUiState_HasImageChanged").val(true)
-
-                        // Clear input after upload
-                        $(triggerInput).val("");
-
-                        setTimeout(() => {
-                            $(wrapper).find('[role="alert"]').remove();
-                        }, 3000);
-                    } else {
-                        $(holder).find(".pic").attr("src", currentImg);
-                        $(wrapper).append(
-                            '<div class="snackbar show" role="alert"><i class="fa fa-times-circle text-danger"></i> There is an error while uploading! Please try again later.</div>'
-                        );
-
-                        // Clear input after upload
-                        $(triggerInput).val("");
-                        setTimeout(() => {
-                            $(wrapper).find('[role="alert"]').remove();
-                        }, 3000);
-                    }
-                }, 1500);
-            };
-        } else {
-            $(wrapper).append(
-                '<div class="alert alert-danger d-inline-block p-2 small" role="alert">Please choose the valid image.</div>'
-            );
-            setTimeout(() => {
-                $(wrapper).find('role="alert"').remove();
-            }, 3000);
-        }
-    });
-
+            document.getElementById("prompt").disabled = false
+          document.getElementById("genimg").disabled = false
+}, 5000); 
+        
+    
+       
+    }
 </script>
 @await Html.PartialAsync("_ValidationScriptsPartial")

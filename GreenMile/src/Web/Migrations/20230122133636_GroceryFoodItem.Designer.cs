@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Web.Data;
 
@@ -10,9 +11,10 @@ using Web.Data;
 namespace Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230122133636_GroceryFoodItem")]
+    partial class GroceryFoodItem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.12");
@@ -179,14 +181,11 @@ namespace Web.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-
-                    
-
-                    b.Property<DateTime>("ExpiryDate")
+                    b.Property<DateTime>("ExpiredDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Image")
-
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -210,7 +209,6 @@ namespace Web.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
-
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -218,7 +216,6 @@ namespace Web.Migrations
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
 
                     b.Property<string>("UserId")
                         .HasColumnType("TEXT");
@@ -238,10 +235,8 @@ namespace Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-
                     b.Property<double>("CarbonFootprint")
                         .HasColumnType("REAL");
-
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -256,11 +251,6 @@ namespace Web.Migrations
                     b.Property<string>("ImageFilePath")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-
-                    b.Property<bool>("IsCustom")
-                        .HasColumnType("INTEGER");
-
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -463,7 +453,6 @@ namespace Web.Migrations
                     b.Property<string>("ImageURL")
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
-
 
                     b.Property<string>("LastName")
                         .IsRequired()

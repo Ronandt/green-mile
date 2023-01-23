@@ -37,6 +37,7 @@ public class LoginModel : PageModel
     {
         if (ModelState.IsValid)
         {
+
             var identityResult = await _signInManager.PasswordSignInAsync(UserName, Password, RememberMe, true);
             if (identityResult.Succeeded)
             {
