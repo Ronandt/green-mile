@@ -14,6 +14,8 @@ namespace Web.Models
 
         public RequestStatus Status { get; set; }
 
+        public DateTime Date { get; set; } = DateTime.Now;
+
     }
 }
 
