@@ -17,12 +17,12 @@ namespace Web.API
             _openAIApiService = openAIApiService;
         }
         // GET: api/generateimage/50000
-        [HttpGet("{prompt}")]
-        public async Task<ActionResult<string>> GenerateImage(string prompt)
+        [HttpPost]
+        public async Task<ActionResult<string>> GenerateImage([FromBody]object prompt)
         {
             try
             {
-                string image = await _openAIApiService.GenerateImage(prompt);
+                string image = await _openAIApiService.GenerateImage(prompt.ToString());
                 return Ok(image);
             }
             catch (Exception)
