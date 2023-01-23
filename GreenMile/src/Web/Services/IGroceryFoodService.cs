@@ -1,6 +1,6 @@
 ﻿using Web.Data;
 using Web.Utils;
-using Web.Models
+using Web.Models;
 namespace Web.Services
 {
     public interface IGroceryFoodService

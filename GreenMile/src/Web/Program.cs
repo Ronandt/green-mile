@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 
+using OpenAI.GPT3.Extensions;
+
 using Web.Data;
 using Web.Models;
 using Web.Services;
@@ -19,8 +21,9 @@ builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IHouseholdService, HouseholdService>();
 builder.Services.AddScoped<IGroceryFoodService, GroceryFoodService>();
 builder.Services.AddScoped<IImageService, ImageService>();
+builder.Services.AddScoped<OpenAIApiService>();
 builder.Services.AddScoped<RecipeService>();
-
+builder.Services.AddOpenAIService();
 builder.Services.AddScoped<DonationService>();
 builder.Services.AddScoped<CustomFoodService>();
 
