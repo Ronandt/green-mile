@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Identity;
+using System.Xml.Linq;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -21,6 +24,12 @@ namespace Web.Pages.FoodSharing
         {
             DonationList = _donationService.GetAll();
             
+        }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            
+            return Page();
         }
     }
 }
