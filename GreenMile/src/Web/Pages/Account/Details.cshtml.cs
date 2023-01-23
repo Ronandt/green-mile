@@ -93,6 +93,10 @@ namespace Web.Pages.Account
                     {
                         await _imageService.StoreImage(Upload, user);
                     }
+                    if(AccountUiState.HasImageChanged && AccountUiState.GeneratedImage == true && AccountUiState.GeneratedImageUrl != null)
+                    {
+                        await _imageService.StoreImageFromUrl(AccountUiState.GeneratedImageUrl, user);
+                    }
                  
 
                     await _userManager.UpdateAsync(user);
@@ -109,6 +113,7 @@ namespace Web.Pages.Account
             {
                 TempData["info"] = "Your changes are already saved";
             }
+         
             return Redirect("/account/details");
         }
 

@@ -716,7 +716,8 @@ a, a:hover {
                              <div class="load" id="load" style="display:none">
                               <hr/><hr/><hr/><hr/>
                             </div>
-                    <div class="form-group col-md-6">
+                                                                           <div class="form-group col-md-6" style="margin-top: 20px; height: 20px;">
+                                                            Or you can generate an image...
                                           <input class="form-control" id="prompt"/>
                                                             <button class="btn btn-primary" type="button"  onclick="generateImage();return false" style="margin-top:0px;position:relative;left: 440px;bottom: 50px;" id="genimg">Generate Image</button>
 
@@ -725,8 +726,9 @@ a, a:hover {
                                                     </div>
                                                     <input type="hidden" asp-for="AccountUiState.HasImageChanged"/>
 
-                                                     
+                                                     <input type="hidden" asp-for="AccountUiState.GeneratedImage" value="false"/>
 
+                                                     <input type="hidden" asp-for="AccountUiState.GeneratedImageUrl"/>
 
 
                                                     <div class="row">
@@ -810,6 +812,9 @@ a, a:hover {
                                                             <button class="btn btn-primary" onclick="generateImage();return false" type="button" style="margin-top:0px;position:relative;left: 440px;bottom: 50px;" id="genimg">Generate Image</button>
                                                         </div>
                                                     </div>
+                                                    <input type="hidden" asp-for="AccountUiState.GeneratedImage" value="false" />
+
+                                                    <input type="hidden" asp-for="AccountUiState.GeneratedImageUrl" />
                                                        
                                                      <input type="hidden" asp-for="AccountUiState.HasImageChanged" />
                                                      
@@ -1311,6 +1316,7 @@ a, a:hover {
             }
             uploadimg.readAsDataURL(input.files[0]);
         }
+          document.getElementById("AccountUiState_GeneratedImage").value = false
     }
 </script>
 <script>
@@ -1319,7 +1325,8 @@ a, a:hover {
     document.getElementById("imgPreview").src = "https://cdn.dribbble.com/users/1186261/screenshots/3718681/_______.gif"
     document.getElementById("prompt").disabled = true
     document.getElementById("genimg").disabled = true
-    
+    document.getElementById("AccountUiState_GeneratedImage").value = true
+
     const response = await fetch('/api/generateimage', {
       method: 'POST',
       body: JSON.stringify(object),
@@ -1329,7 +1336,9 @@ a, a:hover {
     })
       
        document.getElementById("AccountUiState_HasImageChanged").value = true
-       document.getElementById("imgPreview").src = await response.text()
+       url =  await response.text()
+       document.getElementById("imgPreview").src = url
+       document.getElementById("AccountUiState_GeneratedImageUrl").value = url
       setTimeout(function(){
 
             document.getElementById("prompt").disabled = false

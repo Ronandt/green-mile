@@ -50,14 +50,14 @@ namespace Web.Services
             
         }
 
-        async Task StoreImageFromUrl(string url, User user)
+        async Task IImageService.StoreImageFromUrl(string url, User user)
         {
 
             using (WebClient webClient = new WebClient())
             {
                 string imageFile = Guid.NewGuid() + ".png";
                 string imagePath = Path.Combine(_env.ContentRootPath, "wwwroot", destinationFolder, imageFile);
-                webClient.DownloadFileAsync(new Uri(url), imagePath);
+                webClient.DownloadFile(new Uri(url), imagePath);
                 user.ImageURL = $"/{destinationFolder}/{imageFile}";
                 await _userManager.UpdateAsync(user);
 
