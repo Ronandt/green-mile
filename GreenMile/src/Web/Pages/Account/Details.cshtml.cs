@@ -38,8 +38,7 @@ namespace Web.Pages.Account
 
         public async Task<IActionResult> OnGetAsync()
         {
-            await _openAIApiService.GenerateImage("Cat");
-
+         
             User user = (await _userManager.GetUserAsync(HttpContext.User));
             if (!await _userManager.IsInRoleAsync(user, "Member"))
             {
@@ -133,5 +132,10 @@ namespace Web.Pages.Account
             }
 
         }
+
+       /* public async Task<IActionResult> OnPostGenerateImageAsync() {
+            _openAIApiService.GenerateImage()
+
+        }*/
     }
 }

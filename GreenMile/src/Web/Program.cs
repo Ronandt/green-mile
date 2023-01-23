@@ -65,6 +65,7 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 // NOTE: Stores to server memory
 // TODO: Change to externals stores to allow horizontal scalling
 builder.Services.AddDistributedMemoryCache();
+builder.Services.AddControllers();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
@@ -100,6 +101,7 @@ app.UseRouting();
 app.UseAuthentication();
 
 app.UseAuthorization();
+app.MapControllers();
 
 app.MapRazorPages();
 
