@@ -22,7 +22,7 @@ namespace Web.Services
             {
                 Prompt = prompt,
                 N = 1,
-                Size = OpenAI.GPT3.ObjectModels.StaticValues.ImageStatics.Size.Size256,
+                Size = OpenAI.GPT3.ObjectModels.StaticValues.ImageStatics.Size.Size512,
                 ResponseFormat = OpenAI.GPT3.ObjectModels.StaticValues.ImageStatics.ResponseFormat.Url,
                 User = "TestUser"
             });
