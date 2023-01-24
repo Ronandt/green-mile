@@ -21,6 +21,7 @@ builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<RecipeService>();
 builder.Services.AddScoped<DonationService>();
 builder.Services.AddScoped<CustomFoodService>();
+builder.Services.AddScoped<DonationRequestService>();
 
 builder.Services.AddDbContext<DataContext>(options =>
 {

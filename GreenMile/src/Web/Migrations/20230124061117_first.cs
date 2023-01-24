@@ -244,6 +244,38 @@ namespace Web.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "DonationRequests",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    DonationId = table.Column<int>(type: "INTEGER", nullable: true),
+                    DonorId = table.Column<string>(type: "TEXT", nullable: true),
+                    RecipientId = table.Column<string>(type: "TEXT", nullable: true),
+                    Status = table.Column<int>(type: "INTEGER", nullable: false),
+                    Date = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DonationRequests", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DonationRequests_AspNetUsers_DonorId",
+                        column: x => x.DonorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_DonationRequests_AspNetUsers_RecipientId",
+                        column: x => x.RecipientId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_DonationRequests_Donations_DonationId",
+                        column: x => x.DonationId,
+                        principalTable: "Donations",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "FoodItems",
                 columns: table => new
                 {
@@ -359,6 +391,21 @@ namespace Web.Migrations
                 column: "FoodItemId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DonationRequests_DonationId",
+                table: "DonationRequests",
+                column: "DonationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DonationRequests_DonorId",
+                table: "DonationRequests",
+                column: "DonorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DonationRequests_RecipientId",
+                table: "DonationRequests",
+                column: "RecipientId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Donations_CustomFoodId",
                 table: "Donations",
                 column: "CustomFoodId");
@@ -448,7 +495,7 @@ namespace Web.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Donations");
+                name: "DonationRequests");
 
             migrationBuilder.DropTable(
                 name: "FoodItemCategories");
@@ -463,10 +510,13 @@ namespace Web.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "CustomFoods");
+                name: "Donations");
 
             migrationBuilder.DropTable(
                 name: "Categories");
+
+            migrationBuilder.DropTable(
+                name: "CustomFoods");
 
             migrationBuilder.DropTable(
                 name: "FoodItems");

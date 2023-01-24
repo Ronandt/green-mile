@@ -45,6 +45,7 @@ namespace Web.Services
                 .FirstOrDefault(x => x.Id.Equals(id)); ;
         }
 
+
         public List<Donation> GetDonationsByUser(string id)
         {
             return _context.Donations
