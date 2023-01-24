@@ -43,8 +43,16 @@ namespace Web.Pages.FoodSharing
             var user = await _userManager.Users.FirstAsync(u => u.Id == userId);
 
             var exists = await _donationRequestService.DonationRequestExists(DonationId, userId);
-            Console.WriteLine("Hello",exists.ToString());
 
+            // Donor cannot request for his/her own donation
+            var donor = donation.User;
+            if (donor == user)
+            {
+                TempData["FlashMessage.Type"] = "danger";
+                TempData["FlashMessage.Text"] = string.Format("You are not allowed to request your own donation");
+                return Redirect("/FoodSharing/Index");
+            }
+                
             if (exists == false)
             {
                 var request = new DonationRequest()
@@ -68,6 +76,8 @@ namespace Web.Pages.FoodSharing
                 return Redirect("/FoodSharing/Index");
 
             }
+
+
             
         }
     }
