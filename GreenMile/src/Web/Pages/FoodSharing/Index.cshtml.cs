@@ -61,9 +61,9 @@ namespace Web.Pages.FoodSharing
                 MailMessage message = new MailMessage();
                 message.To.Add("liujiajun2003@gmail.com");
                 message.Subject = "Test Email";
-                message.Body = "This is a test email sent from a Razor Page.";
+                message.Body = "Your received a donation request from user GUOLIHENG";
                 message.IsBodyHtml = false;
-                message.From = new MailAddress("GreenMileByCrazyAPI@gmail.com");
+                message.From = new MailAddress("greenmile2024bycrazyapi@gmail.com");
 
                 SmtpClient client = new SmtpClient();
                 client.Host = "smtp.gmail.com";
@@ -71,7 +71,7 @@ namespace Web.Pages.FoodSharing
                 client.UseDefaultCredentials = false;
                 client.EnableSsl = true;
                 // Green Mile Email Account Password: greenmile2023!
-                client.Credentials = new NetworkCredential("GreenMileByCrazyAPI@gmail.com", "arcpfpypntqmhnxf");
+                client.Credentials = new NetworkCredential("greenmile2024bycrazyapi@gmail.com", "arcpfpypntqmhnxf");
                 await client.SendMailAsync(message);
 
                 var request = new DonationRequest()
