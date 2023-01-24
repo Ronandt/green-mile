@@ -22,15 +22,21 @@ namespace Web.Services
         {
             return _context.DonationRequests.OrderBy(m => m.Id).ToList();
         }
+        public List<DonationRequest> GetRequestByUser(string userId)
+        {
+            return _context.DonationRequests
+                .Include(d => d.Donation.CustomFood)
+                .Where(x => x.Recipient.Id == userId)
+                .ToList();
+        }
 
         public async Task<bool> DonationRequestExists(int donationId, string userId)
         {
             var request = await _context.DonationRequests
-                .Include(d => d.Donation)
-                .Include(d => d.Recipient)
                 .Where(x => x.Donation.Id == donationId && x.Recipient.Id == userId)
                 .FirstOrDefaultAsync();
-            if(request == null) { return false; } else { return true; }
+
+            if (request == null) { return false; } else { return true; }
 
         }
 

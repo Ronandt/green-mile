@@ -21,7 +21,7 @@ namespace Web.Models
 
 public enum RequestStatus
 {
-    Pending,
-    Accpeted,
-    Done,
+    PENDING,
+    ACCEPTED,
+    DONE,
 }

@@ -42,16 +42,17 @@ namespace Web.Pages.FoodSharing
             var userId = (await _userManager.GetUserAsync(HttpContext.User)).Id;
             var user = await _userManager.Users.FirstAsync(u => u.Id == userId);
 
-            var exists = _donationRequestService.DonationRequestExists(DonationId, userId);
+            var exists = await _donationRequestService.DonationRequestExists(DonationId, userId);
+            Console.WriteLine("Hello",exists.ToString());
 
-            if (exists.Equals(false))
+            if (exists == false)
             {
                 var request = new DonationRequest()
                 {
                     Donation = donation,
                     Donor = donation?.User,
                     Recipient = user,
-                    Status = RequestStatus.Pending
+                    Status = RequestStatus.PENDING
                 };
 
                 _donationRequestService.AddRequest(request);
