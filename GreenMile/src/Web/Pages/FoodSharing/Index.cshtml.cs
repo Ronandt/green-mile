@@ -37,24 +37,37 @@ namespace Web.Pages.FoodSharing
 
         public async Task<IActionResult> OnPostAsync()
         {
+            // Checking for has the recipient requested the item before
+            var donation = _donationService.GetDonationById(DonationId);
             var userId = (await _userManager.GetUserAsync(HttpContext.User)).Id;
             var user = await _userManager.Users.FirstAsync(u => u.Id == userId);
 
-            var donation = _donationService.GetDonationById(DonationId);
+            var exists = _donationRequestService.DonationRequestExists(DonationId, userId);
 
-            var request = new DonationRequest()
+            if (exists.Equals(false))
             {
-                Donation = donation,
-                Donor = donation?.User,
-                Recipient = user,
-                Status = RequestStatus.Pending
-            };
+                var request = new DonationRequest()
+                {
+                    Donation = donation,
+                    Donor = donation?.User,
+                    Recipient = user,
+                    Status = RequestStatus.Pending
+                };
 
-            _donationRequestService.AddRequest(request);
+                _donationRequestService.AddRequest(request);
 
-            TempData["FlashMessage.Type"] = "success";
-            TempData["FlashMessage.Text"] = string.Format("You have request for the items, Please wait for the donor to response");
-            return Redirect("/FoodSharing/Index");
+                TempData["FlashMessage.Type"] = "success";
+                TempData["FlashMessage.Text"] = string.Format("You have request for the items, Please wait for the donor to response");
+                return Redirect("/FoodSharing/Index");
+            }
+            else
+            {
+                TempData["FlashMessage.Type"] = "danger";
+                TempData["FlashMessage.Text"] = string.Format("You have requested for the items before");
+                return Redirect("/FoodSharing/Index");
+
+            }
+            
         }
     }
 }

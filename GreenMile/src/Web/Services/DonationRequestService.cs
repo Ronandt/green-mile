@@ -23,9 +23,15 @@ namespace Web.Services
             return _context.DonationRequests.OrderBy(m => m.Id).ToList();
         }
 
-        public async Task<DonationRequest?> GetCustomFoodById(int id)
+        public async Task<bool> DonationRequestExists(int donationId, string userId)
         {
-            return await _context.DonationRequests.FindAsync(id);
+            var request = await _context.DonationRequests
+                .Include(d => d.Donation)
+                .Include(d => d.Recipient)
+                .Where(x => x.Donation.Id == donationId && x.Recipient.Id == userId)
+                .FirstOrDefaultAsync();
+            if(request == null) { return false; } else { return true; }
+
         }
 
         public List<DonationRequest> GetRequestsByUser(string id)
