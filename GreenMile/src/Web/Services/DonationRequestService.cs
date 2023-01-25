@@ -30,6 +30,14 @@ namespace Web.Services
                 .ToList();
         }
 
+        public List<DonationRequest> GetRequestByDonor(string userId)
+        {
+            return _context.DonationRequests
+                .Include(d => d.Donation.CustomFood)
+                .Where(x => x.Donor.Id == userId)
+                .ToList();
+        }
+
         public async Task<bool> DonationRequestExists(int donationId, string userId)
         {
             var request = await _context.DonationRequests
