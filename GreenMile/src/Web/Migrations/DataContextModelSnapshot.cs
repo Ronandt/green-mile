@@ -232,6 +232,38 @@ namespace Web.Migrations
                     b.ToTable("Donations");
                 });
 
+            modelBuilder.Entity("Web.Models.DonationRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("DonationId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("DonorId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RecipientId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DonationId");
+
+                    b.HasIndex("DonorId");
+
+                    b.HasIndex("RecipientId");
+
+                    b.ToTable("DonationRequests");
+                });
+
             modelBuilder.Entity("Web.Models.FoodItem", b =>
                 {
                     b.Property<int>("Id")
@@ -587,6 +619,27 @@ namespace Web.Migrations
                     b.Navigation("CustomFood");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Web.Models.DonationRequest", b =>
+                {
+                    b.HasOne("Web.Models.Donation", "Donation")
+                        .WithMany()
+                        .HasForeignKey("DonationId");
+
+                    b.HasOne("Web.Models.User", "Donor")
+                        .WithMany()
+                        .HasForeignKey("DonorId");
+
+                    b.HasOne("Web.Models.User", "Recipient")
+                        .WithMany()
+                        .HasForeignKey("RecipientId");
+
+                    b.Navigation("Donation");
+
+                    b.Navigation("Donor");
+
+                    b.Navigation("Recipient");
                 });
 
             modelBuilder.Entity("Web.Models.FoodItem", b =>
