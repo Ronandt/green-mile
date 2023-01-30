@@ -7,6 +7,8 @@ using Web.Services;
 using Microsoft.AspNetCore.Identity;
 
 
+
+
 namespace Web.Pages.Account
 {
 
@@ -16,19 +18,27 @@ namespace Web.Pages.Account
 
         [BindProperty]
         public AccountUiState? AccountUiState { get; set; } = new AccountUiState();
+        [BindProperty]
+        public IFormFile? Upload { get; set; }
         private readonly IHouseholdService _householdService;
         private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly OpenAIApiService _openAIApiService;
+        private readonly Services.IImageService _imageService;
+     
 
-        public DetailsModel(IHouseholdService householdService, UserManager<User> userManager)
+        public DetailsModel(IHouseholdService householdService, UserManager<User> userManager, Services.IImageService imageService, SignInManager<User> signInManager, OpenAIApiService openAiService)
         {
             _householdService = householdService;
             _userManager = userManager;
-
+            _imageService = imageService;
+            _signInManager = signInManager;
+            _openAIApiService = openAiService;
         }
 
         public async Task<IActionResult> OnGetAsync()
         {
-
+         
             User user = (await _userManager.GetUserAsync(HttpContext.User));
             if (!await _userManager.IsInRoleAsync(user, "Member"))
             {
@@ -41,6 +51,7 @@ namespace Web.Pages.Account
             AccountUiState.LastName = user.LastName;
             AccountUiState.Username = user.UserName;
             AccountUiState.EmailAddress = user.Email;
+
             return Page();
         }
 
@@ -51,9 +62,9 @@ namespace Web.Pages.Account
             List<Boolean> formCheck = new List<Boolean>()
             {
                 AccountUiState.FirstName != user.FirstName, AccountUiState.Username != user.UserName, AccountUiState.LastName != user.LastName, AccountUiState.EmailAddress != user.Email, AccountUiState.NewPassword != null,
-                AccountUiState.ConfirmPassword != null
+                AccountUiState.ConfirmPassword != null, AccountUiState.HasImageChanged
             };
-            if (ModelState.IsValid && formCheck.Any(x => x == true))
+            if (formCheck.Any(x => x == true))
 
             {
                 if (formCheck.Any(x => x == true))
@@ -74,6 +85,19 @@ namespace Web.Pages.Account
                     user.LastName = AccountUiState.LastName;
                     user.UserName = AccountUiState.Username;
                     user.Email = AccountUiState.EmailAddress;
+                    if(AccountUiState.Upload!=null)
+                    {
+                        Console.WriteLine("WHAT THE FUC");
+                    }
+                    if(AccountUiState.HasImageChanged && Upload != null)
+                    {
+                        await _imageService.StoreImage(Upload, user);
+                    }
+                    if(AccountUiState.HasImageChanged && AccountUiState.GeneratedImage == true && AccountUiState.GeneratedImageUrl != null)
+                    {
+                        await _imageService.StoreImageFromUrl(AccountUiState.GeneratedImageUrl, user);
+                    }
+                 
 
                     await _userManager.UpdateAsync(user);
                     TempData["success"] = "Changes have been saved"!;
@@ -87,9 +111,10 @@ namespace Web.Pages.Account
             }
             else
             {
-                TempData["error"] = "Form not filled properly!";
+                TempData["info"] = "Your changes are already saved";
             }
-            return Page();
+         
+            return Redirect("/account/details");
         }
 
         public async Task<IActionResult> OnPostDeleteAsync()
@@ -98,11 +123,11 @@ namespace Web.Pages.Account
             User user = await _userManager.GetUserAsync(HttpContext.User);
             if (!ModelState.IsValid && (user.UserName != AccountUiState.Username || !await _userManager.CheckPasswordAsync(user, AccountUiState.Password)))
             {
-                TempData["tab"] = "danger-zone";
-                TempData["error"] = "Username and/or password incorrect!";
+                //TempData["tab"] = "danger-zone";
+                TempData["error"] = "Account deleted";
 
-
-                return Redirect("/Account/Details");
+                await _signInManager.SignOutAsync();
+                return Redirect("/");
             }
             else
             {
@@ -112,5 +137,10 @@ namespace Web.Pages.Account
             }
 
         }
+
+       /* public async Task<IActionResult> OnPostGenerateImageAsync() {
+            _openAIApiService.GenerateImage()
+
+        }*/
     }
 }

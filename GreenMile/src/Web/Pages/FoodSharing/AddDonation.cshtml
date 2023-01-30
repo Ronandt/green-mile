@@ -1,13 +1,6 @@
 ﻿@page
-@using Microsoft.AspNetCore.Identity;
-@using Web.Services;
-@using Web.Models;
-@model Web.Pages.FoodSharing.AddCustomFoodModel
-@inject UserManager<User> userManager;
+@model Web.Pages.FoodSharing.AddDonationModel
 
-@{
-    User user = await userManager.GetUserAsync(HttpContext.User);
-}
 <main class="main pages">
     <div class="page-content">
         <div class="container">
@@ -19,7 +12,7 @@
                                 <div class="padding_eight_all bg-white">
                                     <div class="heading_s1" style="margin-top:100px">
                                         <h1 class="mb-5">Create Your Food Item</h1>
-                                        
+
                                     </div>
                                     <div asp-validation-summary="All" class="text-danger"></div>
                                     <form method="post" enctype="multipart/form-data">
@@ -28,31 +21,31 @@
                                         <div class="form-group">
                                             <label class="col-sm-2 col-form-label">Image</label>
                                             <div class="col-sm-10">
-                                                <input type="file" accept="image/*" asp-for="Upload" class="form-control"/>
+                                                <input type="file" accept="image/*" asp-for="Upload" class="form-control" />
                                                 <span asp-validation-for="Upload" class="text-danger"></span>
                                             </div>
                                         </div>
 
                                         <div class="form-group">
-                                            <label class="col-sm-2 col-form-label" asp-for="MyCustomFood.Name"></label>
+                                            <label class="col-sm-2 col-form-label" asp-for="Name"></label>
                                             <div class="col-sm-10">
-                                                <input class="form-control" asp-for="MyCustomFood.Name" />
-                                                <span asp-validation-for="MyCustomFood.Name" class="text-danger"></span>
+                                                <input class="form-control" asp-for="Name" />
+                                                <span asp-validation-for="Name" class="text-danger"></span>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-2 col-form-label" asp-for="MyCustomFood.Description"></label>
+                                            <label class="col-sm-2 col-form-label" asp-for="Description"></label>
                                             <div class="col-sm-10">
-                                                <input class="form-control" asp-for="MyCustomFood.Description" />
-                                                <span asp-validation-for="MyCustomFood.Description" class="text-danger"></span>
+                                                <textarea class="form-control" asp-for="Description"></textarea>
+                                                <span asp-validation-for="Description" class="text-danger"></span>
                                             </div>
                                         </div>
-                                      
+
                                         <div class="form-group">
-                                            <label class="col-sm-2 col-form-label" asp-for="MyCustomFood.ExpiredDate"></label>
+                                            <label class="col-sm-2 col-form-label" asp-for="ExpiryDate"></label>
                                             <div class="col-sm-10">
-                                                <input class="form-control" asp-for="MyCustomFood.ExpiredDate" />
-                                                <span asp-validation-for="MyCustomFood.ExpiredDate" class="text-danger"></span>
+                                                <input class="form-control" asp-for="ExpiryDate" />
+                                                <span asp-validation-for="ExpiryDate" class="text-danger"></span>
                                             </div>
                                         </div>
 
@@ -64,6 +57,7 @@
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="form-group mb-30">
                                             <button type="submit" value="Add" class="btn btn-fill-out btn-block hover-up font-weight-bold">Submit</button>
                                         </div>
@@ -78,5 +72,6 @@
         </div>
     </div>
 </main>
+
 
 
