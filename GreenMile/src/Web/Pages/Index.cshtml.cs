@@ -20,7 +20,7 @@ public class IndexModel : PageModel
     public async Task<IActionResult> OnGetAsync()
     {
         
-        if (User.Identity.IsAuthenticated && !await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(User), "Member"))
+        if (User != null && User.Identity.IsAuthenticated && !await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(User), "Member"))
         {
             return Redirect("/account/transferhousehold");
         }

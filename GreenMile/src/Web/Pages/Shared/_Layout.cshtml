@@ -447,6 +447,9 @@
     <!-- Template  JS -->
     <script src="~/js/main.js?v=5.6"></script>
     <script src="~/js/shop.js?v=5.6"></script>
+    @await RenderSectionAsync("RecaptchaScript", required: false)
 </body>
+
+
 
 </html>

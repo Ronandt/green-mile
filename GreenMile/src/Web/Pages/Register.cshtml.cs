@@ -18,6 +18,7 @@ public class RegisterModel : PageModel
     private readonly SignInManager<User> _signInManager;
     private readonly IHttpContextAccessor _contextAccessor;
     private readonly IHouseholdService _householdService;
+    private readonly ICaptchaService _captchaService;
     private readonly INotificationService _notificationService;
 
     [BindProperty, Required]
@@ -40,13 +41,14 @@ public class RegisterModel : PageModel
     [BindProperty, Required]
     public HouseholdUiState HouseholdUiState { get; set; }
 
-    public RegisterModel(UserManager<User> userManager, SignInManager<User> signInManager, IHttpContextAccessor contextAccessor, IHouseholdService householdService, INotificationService notificationService)
+    public RegisterModel(UserManager<User> userManager, SignInManager<User> signInManager, IHttpContextAccessor contextAccessor, IHouseholdService householdService, INotificationService notificationService, ICaptchaService captchaService)
     {
         _householdService = householdService;
         _userManager = userManager;
         _signInManager = signInManager;
         _contextAccessor = contextAccessor;
         _notificationService = notificationService;
+        _captchaService = captchaService;
     }
 
     public void OnGet()
@@ -71,6 +73,12 @@ public class RegisterModel : PageModel
 
         if (ModelState.IsValid)
         {
+            if (!(await _captchaService.CaptchaPassed(Request.Form["token"])).Value)
+            {
+                ModelState.AddModelError("", "You have failed the CAPTCHA. Try again.");
+                return Page();
+
+            }
             if ((bool)HouseholdUiState.JoinHousehold)
             {
 

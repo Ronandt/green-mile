@@ -62,7 +62,7 @@
                                             <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                                         </div>
 
-
+                                        <input type="hidden" id="token" name="token" />
 
                                         <input type="hidden" asp-for="HouseholdUiState.JoinHousehold" value="true"/>
                                         <link rel="stylesheet" href="~/css/Register.css" asp-append-version="true" />
@@ -160,3 +160,15 @@
 
                                                 }
                                             </script>
+
+@section RecaptchaScript
+    {
+    <script src="https://www.google.com/recaptcha/api.js?render=6LeHUwckAAAAAA0wOUeJAjtDczI5kGeF-C_usJxy"></script>
+    <script>
+        grecaptcha.ready(function () {
+            grecaptcha.execute('6LeHUwckAAAAAA0wOUeJAjtDczI5kGeF-C_usJxy', { action: 'submit' }).then(function (token) {
+                document.getElementById("token").value = token;
+            });
+        });
+    </script>
+}

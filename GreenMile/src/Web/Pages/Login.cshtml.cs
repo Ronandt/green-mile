@@ -57,4 +57,11 @@ public class LoginModel : PageModel
         }
         return Page();
     }
+
+    public async Task<IActionResult> OnPostGoogleAsync()
+    {
+
+        return new ChallengeResult("Google", _signInManager.ConfigureExternalAuthenticationProperties("Google", "/ExternalLogin"));
+
+    }
 }
