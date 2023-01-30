@@ -30,13 +30,18 @@
                                 <div class="padding_eight_all bg-white">
                                     <div class="heading_s1" style="margin-top:100px">
                                         <h1 class="mb-5">Create an Account</h1>
+
+
                                         <p class="mb-30">Already have an account? <a href="Login">Login</a>
                                         </p>
                                     </div>
                                     <div asp-validation-summary="All" class="text-danger"></div>
                                     <form method="post">
+                                        <img id="imgPreview" class="rounded-circle" style="clip-path:circle();height:250px;width:300px;object-fit:cover;border-radius:50%; overflow: hidden; margin-top: 30px" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/2048px-Default_pfp.svg.png" />
+                                        
                                         <div class="form-group">
-                                            <input placeholder="UserName" asp-for="UserName" />
+                                            <input placeholder="UserName" asp-for="UserName" onkeydown="generateImg()" />
+                                            <input type="hidden" asp-for="UploadString"/>
                                             <span asp-validation-for="UserName" class="text-danger"></span>
                                         </div>
                                         <div class="row">
@@ -172,3 +177,12 @@
         });
     </script>
 }
+<script>
+       function generateImg() {
+
+            document.getElementById("imgPreview").src = "https://api.dicebear.com/5.x/pixel-art/svg?seed=" + document.getElementById("UserName").value
+            document.getElementById("UploadString").value = document.getElementById("UserName").value
+       }
+
+
+</script>

@@ -46,6 +46,7 @@ namespace Web.Pages
                             FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
                             LastName = "",
                             Email = info.Principal.FindFirstValue(ClaimTypes.Email),
+                          
                             
                         };
                         var identityResult = await _userManager.CreateAsync(user);

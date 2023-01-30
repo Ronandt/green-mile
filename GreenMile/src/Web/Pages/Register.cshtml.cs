@@ -20,11 +20,15 @@ public class RegisterModel : PageModel
     private readonly IHouseholdService _householdService;
     private readonly ICaptchaService _captchaService;
     private readonly INotificationService _notificationService;
+    private readonly IImageService _imageService;
 
     [BindProperty, Required]
     public string UserName { get; set; }
+
     [BindProperty, Required]
     public string FirstName { get; set; }
+    [BindProperty]
+    public string UploadString { get; set; }
     [BindProperty, Required]
     public string LastName { get; set; }
     [BindProperty, Required]
@@ -41,7 +45,7 @@ public class RegisterModel : PageModel
     [BindProperty, Required]
     public HouseholdUiState HouseholdUiState { get; set; }
 
-    public RegisterModel(UserManager<User> userManager, SignInManager<User> signInManager, IHttpContextAccessor contextAccessor, IHouseholdService householdService, INotificationService notificationService, ICaptchaService captchaService)
+    public RegisterModel(UserManager<User> userManager, SignInManager<User> signInManager, IHttpContextAccessor contextAccessor, IHouseholdService householdService, INotificationService notificationService, ICaptchaService captchaService, IImageService imageService)
     {
         _householdService = householdService;
         _userManager = userManager;
@@ -49,6 +53,8 @@ public class RegisterModel : PageModel
         _contextAccessor = contextAccessor;
         _notificationService = notificationService;
         _captchaService = captchaService;
+        _imageService = imageService;
+       
     }
 
     public void OnGet()
@@ -107,16 +113,22 @@ public class RegisterModel : PageModel
                 FirstName = FirstName,
                 LastName = LastName,
                 Email = Email,
+
+
             };
 
             var result = await _userManager.CreateAsync(newUser, Password);
 
             if (result.Succeeded)
             {
+               
                 await _signInManager.SignInAsync(newUser, false);
+
                 var user = await _userManager.FindByNameAsync(UserName);
                 var userId = user.Id;
-               
+                await _imageService.StoreImageFromUrl($"https://api.dicebear.com/5.x/pixel-art/png?seed={UploadString}", await _userManager.FindByIdAsync(userId));
+
+
 
                 if ((bool)!HouseholdUiState.JoinHousehold)
                 {
