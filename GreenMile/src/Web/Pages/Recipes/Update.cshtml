@@ -4,44 +4,44 @@
 }
 <section class="content-main">
 	<form method="post" enctype="multipart/form-data">
-		<input hidden value="@Model.CurrentRecipe.Id"/>
-	<div class="row">
-		<div class="col-9">
-			<div class="content-header">
-				<br />
-				<h2 class="content-title">Update Recipe</h2>
-				<br />
+		<div class="row">
+			<div class="col-9">
+				<div class="content-header">
+					<br />
+					<h2 class="content-title">Update Recipe</h2>
+					<br />
 
-				<br />
-			</div>
-		</div>
-		<div class="col-lg-6">
-			<div class="card mb-4">
-				<div class="card-header">
-					<h4>Update Recipe</h4>
+					<br />
 				</div>
-				<div class="card-body">
-					
+			</div>
+			<div class="col-lg-6">
+				<div class="card mb-4">
+					<div class="card-header">
+						<h4>Update Recipe</h4>
+					</div>
+					<div class="card-body">
+
 						<div class="mb-4">
 							<label for="product_name" class="form-label" asp-for="CurrentRecipe.recipeName">Recipe Name</label>
-							<input type="text" placeholder="@Model.CurrentRecipe.recipeName" class="form-control" asp-for="CurrentRecipe.recipeName"/>
+							<input type="text" placeholder="@Model.CurrentRecipe.recipeName" class="form-control" asp-for="CurrentRecipe.recipeName" />
 						</div>
 						<div class="row">
 							<div class="col-lg-4">
 								<div class="mb-4">
 									<label class="form-label" asp-for="CurrentRecipe.difficulty">Difficulty</label>
-									<select asp-for="CurrentRecipe.difficulty" required>
-												<option selected disabled>Select a Difficulty:</option>
-												<option value="Easy">Easy</option>
-												<option value="Intermediate">Intermediate</option>
-												<option value="Hard">Hard</option>
-											</select>
+									@*											<input placeholder="difficulty" type="number" class="form-control" min="0" max="5" step="0.5" asp-for="CurrentRecipe.difficulty"/>
+									*@											<select asp-for="CurrentRecipe.difficulty" required>
+										<option selected disabled>Select a Difficulty:</option>
+										<option value="Easy">Easy</option>
+										<option value="Intermediate">Intermediate</option>
+										<option value="Hard">Hard</option>
+									</select>
 								</div>
 							</div>
 							<div class="col-lg-4">
 								<div class="mb-4">
 									<label class="form-label" asp-for="CurrentRecipe.duration">Duration</label>
-									<input placeholder="@Model.CurrentRecipe.ingredientAmount" type="number" class="form-control" min="1" max="1000" step="1" asp-for="CurrentRecipe.duration" />
+									<input placeholder="@Model.CurrentRecipe.duration" type="number" class="form-control" min="1" max="1000" step="1" asp-for="CurrentRecipe.duration" />
 								</div>
 							</div>
 							<table>
@@ -60,23 +60,58 @@
 									@foreach (var ingredient in Model.IngredientList)
 									{
 										<tr>
-											<td><input id="" type="checkbox" /></td>
+											<td><input id="@ingredient.Id" type="checkbox" onclick="EnableDisableTextBox(@ingredient.Id)" /></td>
 											<td><p>@ingredient.Name</p></td>
-											<td><input type="number" disabled="disabled" id="amount" asp-for="CurrentRecipe.ingredientAmount" placeholder="g" step="1" min="1" max="10000" required /></td>
+											<td><input type="number" disabled="disabled" id="@("amount" + ingredient.Id)" placeholder="g" step="1" min="1" max="10000" onchange="" required /></td>
 										</tr>
 									}
 								}
 							</table>
+							<input type="hidden" id="PostIngredientList" asp-for="CurrentRecipe.ingredients" />
+							<input type="hidden" id="PostIngredientAmount" asp-for="CurrentRecipe.ingredientAmount" />
+							@*<div class="col-lg-5">
+							<div class="mb-4">
+							<label class="form-label">Ingredients</label>
+							<select class="form-select" asp-for="CurrentRecipe.ingredients">
+							<!--add the for loop script thing here to loop through all the ingredients-->
+							<!--change this to checkboxs refer to onenote for reasons-->
+							<option value="0">Ingredient 1</option> value is the id of the ingredient
+							<option value="1">Ingredient 2</option>
+							<option value="2">Ingredient 3</option>
+							</select>
+
+							//ingredient name, checkbox, ingredient amount input box
+							<p>ingredient name test</p>
+							<input type="checkbox">
+
+							}
+							}
+							@*<div class="col-lg-5">
+							<label class="form-label">Ingredients</label>
+							<select class="form-select" asp-for="CurrentRecipe.ingredients">
+							<!--add the for loop script thing here to loop through all the ingredients-->
+							<!--change this to checkboxs refer to onenote for reasons-->
+							<option value="0">Ingredient 1</option> value is the id of the ingredient
+							<option value="1">Ingredient 2</option>
+							<option value="2">Ingredient 3</option>
+							</select>
+							</div>
+							<div class="col-lg-4">
+							<div class="mb-4">
+							<label class="form-label" asp-for="CurrentRecipe.ingredientAmount">Ingredient Amount</label>
+							<input placeholder="g" type="number" class="form=control" min="1" max="10000" step="1" asp-for="CurrentRecipe.ingredientAmount"/>
+							</div>
+							</div>*@
 						</div>
 						<div>
-							<button type="submit" class="btn btn-md rounded font-sm hover-up">Update</button>
+							<button type="submit" class="btn btn-md rounded font-sm hover-up">Publish</button>
 						</div>
-					
+
+					</div>
 				</div>
+				<!-- card end// -->
+				<!-- card end// -->
 			</div>
-			<!-- card end// -->
-			<!-- card end// -->
-		</div>
 			<div class="col-lg-3">
 				<div class="card mb-4">
 					<div class="card-header">
@@ -85,7 +120,7 @@
 					<div class="card-body">
 						<div class="input-upload">
 							<br />
-							<input class="form-control" type="file" accept="image/*" asp-for="image" onchange="showImgPreview(this)"/>
+							<input class="form-control" type="file" accept="image/*" asp-for="image" onchange="showImgPreview(this)" />
 						</div>
 						<img id="imgPreview" class="rounded-circle"
 							 style="height:300px;width:300px;object-fit:cover"
@@ -95,13 +130,19 @@
 				<!-- card end// -->
 				<!-- card end// -->
 			</div>
-	</div>
-	<input hidden asp-for="CurrentRecipe.Id" />
+		</div>
+		<input hidden asp-for="CurrentRecipe.Id" />
 	</form>
 </section>
 <!-- content-main end// -->
+<script type="text/javascript">
 
-<script>
+
+
+	//ingredient_ids.push(0);
+	//alert(ingredient_ids);
+	//const ingredient_amounts =[];
+	const ingredientList = []
 	function showImgPreview(input) {
 		if (input.files[0]) {
 			var uploadimg = new FileReader();
@@ -111,4 +152,39 @@
 			uploadimg.readAsDataURL(input.files[0]);
 		}
 	}
+
+	function EnableDisableTextBox(id) {
+
+		var amount_id = "amount" + id
+		//alert(amount_id)
+		var ingredient_amount = document.getElementById(amount_id);
+		if (ingredient_amount.disabled) {
+			//add ingredient from list
+
+
+			ingredientList.push(id)
+			//alert("added: " + ingredientList.toString())
+			console.log(ingredientList);
+			document.getElementById("PostIngredientList").value = ingredientList.toString();
+			document.getElementById("PostIngredientAmount").value = ingredientList.toString();
+			ingredient_amount.disabled = false;
+		}
+		else {
+			//remove ingredient to list
+			for (let i = 0; i < ingredientList.length; i++) {
+				if (ingredientList[i] == id) {
+					ingredientList.splice(i, 1);
+					break;
+				}
+			}
+			//alert("Removed: " + ingredientList.toString());
+			console.log(ingredientList);
+			document.getElementById("PostIngredientList").value = ingredientList.toString();
+			document.getElementById("PostIngredientAmount").value = ingredientList.toString();
+			ingredient_amount.disabled = true;
+		}
+	}
+
+
 </script>
+
