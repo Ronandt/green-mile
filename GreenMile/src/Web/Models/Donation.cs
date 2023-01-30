@@ -23,6 +23,8 @@ public class Donation
     /// </summary>
     public DateTime Date { get; set; } = DateTime.Now;
 
+    public string Location { get; set; } = string.Empty;
+
     /// <summary>
     /// The user that created the donation offer.
     /// </summary>

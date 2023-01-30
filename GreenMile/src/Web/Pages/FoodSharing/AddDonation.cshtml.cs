@@ -48,9 +48,12 @@ namespace Web.Pages.FoodSharing
 
         public Donation MyDonation { get; set; } = new();
 
+        [BindProperty, Required]
+        [RegularExpression(@"^[0-9]{6}$", ErrorMessage = "6 digits only"), Display(Name = "Pick-Up Location")]
+        public string Location { get; set; } = string.Empty;
         public void OnGet()
         {
-
+            
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -102,6 +105,7 @@ namespace Web.Pages.FoodSharing
                         User = user,
                         CustomFood = newFood,
                         Status = DonationStatus.ACTIVE,
+                        Location = Location
                     };
 
                     _donationService.AddDonation(donation);
