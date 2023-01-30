@@ -57,7 +57,7 @@ namespace Web.Pages.Recipes
                 if (image != null)
                 {
 
-                    var image sFolder = "uploads";
+                    var imagesFolder = "uploads";
                     var imageFile = Guid.NewGuid() + Path.GetExtension(image.FileName);
                     var imagePath = Path.Combine(_webHostEnvironment.ContentRootPath, "wwwroot", imagesFolder, imageFile);
                     using var fileStream = new FileStream(imagePath, FileMode.Create);

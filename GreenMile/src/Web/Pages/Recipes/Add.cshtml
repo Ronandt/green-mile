@@ -57,17 +57,18 @@
 									<td><input type="number" placeholder="g" step="1" min="1" max="10000" /></td>
 								</tr>*@
 								@{
-									@foreach (var ingredient in Model.IngredientList)
+														@foreach (var ingredient in Model.IngredientList)
 									{
-										<tr>
-											<td><input id="test" type="checkbox" /></td>
-											<td></td>
-											<td><p>@ingredient.Name</p></td> 
-											<td><input type="number" disabled="disabled" id="amount" asp-for="CurrentRecipe.ingredientAmount"placeholder="g" step="1" min="1" max="10000" required/></td>
-										</tr>
+															<tr>
+																<td><input id="@ingredient.Id" type="checkbox" onclick="EnableDisableTextBox(@ingredient.Id)"/></td>
+																<td><p>@ingredient.Name</p></td> 
+																<td><input type="number" disabled="disabled" id="@("amount" + ingredient.Id)" placeholder="g" step="1" min="1" max="10000" onchange="" required/></td>
+															</tr>
 									}
 								}
 							</table>
+							<input type="hidden" asp-for="CurrentRecipe.ingredients" />
+							<input type="hidden" asp-for="CurrentRecipe.ingredientAmount" />
 									@*<div class="col-lg-5">
 										<div class="mb-4">
 										<label class="form-label">Ingredients</label>
@@ -135,7 +136,14 @@
 			</form>
 		</section>
 		<!-- content-main end// -->
-<script>
+<script type="text/javascript">
+
+	
+	
+	//ingredient_ids.push(0);
+	//alert(ingredient_ids);
+	//const ingredient_amounts =[];
+
 	function showImgPreview(input) {
 		if (input.files[0]) {
 			var uploadimg = new FileReader();
@@ -145,12 +153,23 @@
 			uploadimg.readAsDataURL(input.files[0]);
 		}
 	}
-	//function EnableDisableTextBox(tick) {
- //       var ingredient_amount = document.getElementById("amount");
- //       ingredient_amount.disabled = tick.checked ? false : true;
- //       if (!ingredient_amount.disabled) {
- //           ingredient_amount.focus();
- //       }
- //   }
+
+	function EnableDisableTextBox(id) 
+	{
+		
+		var amount_id = "amount" + id
+		//alert(amount_id)
+		var ingredient_amount = document.getElementById(amount_id);
+		if(ingredient_amount.disabled)
+		{
+			ingredient_amount.disabled = false;
+		}
+		else
+		{
+			ingredient_amount.disabled = true;
+		}
+	}
+        
+	
 </script>
 

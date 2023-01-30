@@ -22,9 +22,12 @@ namespace Web.Pages.Recipes
         [BindProperty]
         public Recipe CurrentRecipe { get; set; } = new();
         public IFormFile? image { get; set; }
-        public List<String> testIngredientList { get; set; } = new();
+        //public List<String> testIngredientList { get; set; } = new();
 
         public List<FoodItem> IngredientList;
+
+        public List<string> ingredientIds;
+        public List<string> ingredientAmounts;
 
         public void OnGet()
         {
