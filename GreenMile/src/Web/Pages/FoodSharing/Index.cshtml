@@ -27,7 +27,7 @@
                                 <a href="blog-category-grid.html"><i class="fi-rs-cross mr-10"></i>Hello</a>
                             </li>
                             <li class="hover-up">
-                                <a href="blog-category-grid.html"><i class="fi-rs-cross mr-10"></i></a>
+                                <a href="blog-category-grid.html"><i class="fi-rs-cross mr-10">IDK</i></a>
                             </li>
                             <li class="hover-up mr-0">
                                 <a href="blog-category-grid.html"><i class="fi-rs-cross mr-10"></i>Food</a>
@@ -106,13 +106,13 @@
                                         </div>
                                         <div class="entry-content-2">
                                             <h6 class="mb-10 font-sm"><a class="entry-meta text-muted"
-                                                href="blog-category-grid.html">Food Category</a></h6>
+                                                href=" ">@item.CustomFood.Category</a></h6>
                                             <h4 class="post-title mb-15">
                                                 <a data-bs-toggle="modal" data-bs-target="#quickViewModal@(item.Id)">@item.CustomFood.Name </a>
                                             </h4>
                                             <div class="entry-meta font-xs color-grey mt-10 pb-10">
                                                 <div>
-                                                    <span class="post-on mr-10">@item.Date</span>
+                                                    <span class="post-on mr-10">@String.Format("{0:MM/dd/yyyy}", item.Date)</span>
                                                     <span class="hit-count has-dot mr-10">@item.User.UserName</span>
                                                     <span class="hit-count has-dot">5 star</span>
                                                 </div>
@@ -286,3 +286,8 @@
         </div>
     </div>
 </main>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

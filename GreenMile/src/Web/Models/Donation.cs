@@ -27,12 +27,12 @@ public class Donation
     /// The user that created the donation offer.
     /// </summary>
 
-    public User? User { get; set; }
+    public User User { get; set; } = new User();
 
     /// <summary>
     /// Refer to the food item class
     /// </summary>
-    public CustomFood? CustomFood { get; set; }
+    public CustomFood CustomFood { get; set; }  = new CustomFood();
 
 
 }

@@ -34,6 +34,9 @@ namespace Web.Pages.FoodSharing
         public string? Name { get; set; }
 
         [BindProperty]
+        public string? Category { get; set; }
+
+        [BindProperty]
         public string? Description { get; set; }
 
         [BindProperty]
@@ -52,7 +55,10 @@ namespace Web.Pages.FoodSharing
                 return NotFound();
 
             CustomFoodId = donation.CustomFood.Id;
-
+            Name = donation.CustomFood.Name;
+            Category = donation.CustomFood.Category;
+            Description= donation.CustomFood.Description;
+            ExpiryDate = donation.CustomFood.ExpiryDate;
             Image = donation.CustomFood.Image;
 
             return Page();
@@ -67,8 +73,9 @@ namespace Web.Pages.FoodSharing
             var customFood = await _customFoodService.GetCustomFoodById(CustomFoodId);
 
             customFood!.Name = Name ?? customFood.Name;
-            customFood.Description = Description ?? customFood.Description;
-            customFood.ExpiryDate = ExpiryDate ?? customFood.ExpiryDate;
+            customFood!.Category = Category ?? customFood.Category;
+            customFood!.Description = Description ?? customFood.Description;
+            customFood!.ExpiryDate = ExpiryDate ?? customFood.ExpiryDate;
             
             if (Upload is not null)
             {
@@ -82,6 +89,8 @@ namespace Web.Pages.FoodSharing
 
             await _customFoodService.Update(customFood);
 
+            TempData["FlashMessage.Type"] = "success";
+            TempData["FlashMessage.Text"] = "You have successfully updated the food item";
             return Redirect("/FoodSharing");
         }
     }

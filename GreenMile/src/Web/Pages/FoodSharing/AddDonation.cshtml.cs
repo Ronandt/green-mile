@@ -18,7 +18,7 @@ namespace Web.Pages.FoodSharing
         private readonly DonationService _donationService;
         private readonly CustomFoodService _customFoodService;
         private readonly UserManager<User> _userManager;
-        private IWebHostEnvironment _environment;
+        private readonly IWebHostEnvironment _environment;
         public AddDonationModel(DonationService donationService,
             CustomFoodService customFoodService,
             UserManager<User> userManager,
@@ -32,12 +32,16 @@ namespace Web.Pages.FoodSharing
         }
 
         [BindProperty, Required, MinLength(1), MaxLength(20)]
-        public string Name { get; set; }
-        [BindProperty, Required, MinLength(0), MaxLength(100)]
-        public string Description { get; set; }
-        
+        public string Name { get; set; } = string.Empty;
+
+        [BindProperty, Required, MinLength(0), MaxLength(100)] 
+        public string Description { get; set; } = string.Empty;
+
         [BindProperty, Required]
         public DateTime ExpiryDate { get; set; }
+
+        [BindProperty, Required]
+        public string Category { get; set; } = string.Empty;
 
         [BindProperty, Required]
         public IFormFile? Upload { get; set; }
@@ -53,7 +57,12 @@ namespace Web.Pages.FoodSharing
         {
             if (ModelState.IsValid)
             {
-                if (Upload != null)
+                if (Upload == null)
+                {
+                    ModelState.AddModelError("Upload", "Please Upload Image");
+                    return Page();
+                }
+                else
                 {
                     if (Upload.Length > 2 * 1024 * 1024)
                     {
@@ -68,11 +77,11 @@ namespace Web.Pages.FoodSharing
                     // Food Item Input
                     var newFood = new CustomFood()
                     {
-                      
+
                         Name = Name,
                         Description = Description,
                         ExpiryDate = ExpiryDate,
-                        
+                        Category = Category,
                     };
 
                     // Uploads Destination

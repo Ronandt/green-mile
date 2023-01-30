@@ -104,7 +104,7 @@
                                     </div>
                                     <div class="product-content-wrap">
                                         <div class="product-category">
-                                            <a href="">Food Category</a>
+                                            <a href="">@item.CustomFood.Category</a>
                                         </div>
                                         <h2><a href="shop-product-right.html">@item.CustomFood.Name</a></h2>
                                         <!--
@@ -116,7 +116,7 @@
                                                                                             </div>
                                                                                         -->
                                     <div>
-                                            <span class="font-small text-muted">By <a href="">@item.User.UserName</a></span>
+                                           <!-- <span class="font-small text-muted">By <a href=""></a></span>  -->
                                         </div>
                                     </div>
                                 </div>
@@ -155,7 +155,7 @@
                                                     <div class="detail-info pr-30 pl-30">
                                                         <span class="stock-status in-stock"> @item.Status </span>
                                                         <h3 class="title-detail"><a href="shop-product-right.html"
-                                                            class="text-heading">@item.CustomFood.Image</a></h3>
+                                                            class="text-heading">@item.CustomFood.Name</a></h3>
                                                         <!--
                                                                 <div class="product-detail-rating">
 
@@ -178,11 +178,13 @@
                                                                     </div>
                                                                 </div>
                                                                 -->
-                                                    <div class="food-description">
+                                                        <div class="food-description">
                                                             <p>
+                                                                @item.CustomFood.Category <br>
                                                                 @item.CustomFood.Description
                                                             </p>
                                                         </div>
+                                                        <br>
                                                         <div class="detail-extralink mb-30">
                                                             <div class="detail-qty border radius">
 

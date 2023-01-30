@@ -31,7 +31,21 @@
                             <span asp-validation-for="Name" class="text-danger"></span>
                         </div>
                     </div>
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label" asp-for="Category"></label>
+                        <div class="col-sm-10">
+                            @Html.DropDownListFor(model => model.Category, new List<SelectListItem>
+                            {
+                                new SelectListItem {Text = "Fresh produce", Value = "Fresh produce", Selected = true },
+                                new SelectListItem {Text = "Canned food", Value = "Canned food" },
+                                new SelectListItem {Text = "Snacks", Value = "Snacks" },
+                                new SelectListItem {Text = "Beverages", Value = "Beverages" },
+                                new SelectListItem {Text = "Meats", Value = "Meats" },
+                            }, new { @class = "form-control" })
 
+                            <span asp-validation-for="Category" class="text-danger"></span>
+                        </div>
+                    </div>
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label" asp-for="Description"></label>
                         <div class="col-sm-10">
@@ -83,6 +97,6 @@
 
 @section Scripts {
 @{
-await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
 }
 }
