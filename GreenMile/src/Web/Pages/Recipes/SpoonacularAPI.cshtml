@@ -31,7 +31,7 @@
 				document.getElementById("output").innerHTML = "<h1>" + 
 				res.results[0].title + 
 				"</h1><br><img src='" + 
-				res.baseUri+res.results[0].image + "'width='400' / ><br> ready in " + res.results[0].readyInMinutes + " minutes" 
+				res.baseUri+res.results[0].image + "'width='400' / ><br> ready in " + res.results[0].readyInMinutes + " minutes" //results[0].(what you need) follow documentation to see how to get data
 				getSource(res.results[0].id)
 			}
 		});
