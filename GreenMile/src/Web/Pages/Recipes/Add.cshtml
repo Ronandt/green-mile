@@ -57,18 +57,18 @@
 									<td><input type="number" placeholder="g" step="1" min="1" max="10000" /></td>
 								</tr>*@
 								@{
-														@foreach (var ingredient in Model.IngredientList)
+																			@foreach (var ingredient in Model.IngredientList)
 									{
-															<tr>
-																<td><input id="@ingredient.Id" type="checkbox" onclick="EnableDisableTextBox(@ingredient.Id)"/></td>
-																<td><p>@ingredient.Name</p></td> 
-																<td><input type="number" disabled="disabled" id="@("amount" + ingredient.Id)" placeholder="g" step="1" min="1" max="10000" onchange="" required/></td>
-															</tr>
+																				<tr>
+																					<td><input id="@ingredient.Id" type="checkbox" onclick="EnableDisableTextBox(@ingredient.Id)"/></td>
+																					<td><p>@ingredient.Name</p></td> 
+																					<td><input type="number" disabled="disabled" id="@("amount" + ingredient.Id)" placeholder="g" step="1" min="1" max="10000" onchange="" required/></td>
+																				</tr>
 									}
 								}
 							</table>
-							<input type="hidden" asp-for="CurrentRecipe.ingredients" />
-							<input type="hidden" asp-for="CurrentRecipe.ingredientAmount" />
+							<input type="hidden" id="PostIngredientList" asp-for="CurrentRecipe.ingredients" />
+							<input type="hidden" id="PostIngredientAmount" asp-for="CurrentRecipe.ingredientAmount" />
 									@*<div class="col-lg-5">
 										<div class="mb-4">
 										<label class="form-label">Ingredients</label>
@@ -143,7 +143,7 @@
 	//ingredient_ids.push(0);
 	//alert(ingredient_ids);
 	//const ingredient_amounts =[];
-
+	const ingredientList = []
 	function showImgPreview(input) {
 		if (input.files[0]) {
 			var uploadimg = new FileReader();
@@ -162,10 +162,29 @@
 		var ingredient_amount = document.getElementById(amount_id);
 		if(ingredient_amount.disabled)
 		{
+			//add ingredient from list
+			
+			
+			ingredientList.push(id)
+			//alert("added: " + ingredientList.toString())
+			console.log(ingredientList);
+			document.getElementById("PostIngredientList").value = ingredientList.toString();
+			document.getElementById("PostIngredientAmount").value = ingredientList.toString();
 			ingredient_amount.disabled = false;
 		}
 		else
 		{
+			//remove ingredient to list
+			for (let i = 0; i < ingredientList.length; i++) {
+				if (ingredientList[i] == id) {
+					ingredientList.splice(i, 1);
+					break;
+				}
+			}
+			//alert("Removed: " + ingredientList.toString());
+			console.log(ingredientList);
+			document.getElementById("PostIngredientList").value = ingredientList.toString();
+			document.getElementById("PostIngredientAmount").value = ingredientList.toString();
 			ingredient_amount.disabled = true;
 		}
 	}

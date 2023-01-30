@@ -1,0 +1,69 @@
+﻿@page
+@model Web.Pages.Recipes.DetailsModel
+@{
+}
+
+<!--End header-->
+	<div class="container mb-30">
+		<div class="row">
+			<div class="col-xl-11 col-lg-12 m-auto">
+				<div class="row">
+					<div class="col-xl-9">
+						<div class="product-detail accordion-detail">
+							<div class="row mb-50 mt-30">
+								<div class="col-md-6 col-sm-12 col-xs-12 mb-md-0 mb-sm-5">
+									<div class="detail-gallery">
+										<span class="zoom-icon"><i class="fi-rs-search"></i></span>
+										<!-- MAIN SLIDES -->
+										<div class="product-image-slider">
+											<figure class="border-radius-10">
+												<img src="@Model.currentRecipe.imageFilePath" alt="product image" />
+											</figure>
+										</div>
+										<!-- THUMBNAILS -->
+										
+									</div>
+									<!-- End Gallery -->
+								</div>
+								<div class="col-md-6 col-sm-12 col-xs-12">
+									<div class="detail-info pr-30 pl-30">
+										
+										<h2 class="title-detail">@Model.currentRecipe.recipeName</h2>
+										<div class="product-detail-rating">
+											<div class="product-rate-cover text-end">
+												<div class="product-rate d-inline-block">
+													<div class="product-rating" style="width: 90%"></div>
+												</div>
+												<span class="font-small ml-5 text-muted"> (32 reviews)</span>
+											</div>
+										</div>
+										<div class="clearfix product-price-cover">
+											<div class="product-price primary-color float-left">
+												<span class="current-price text-brand">
+													@Model.currentRecipe.duration mins</span>
+												@*<span>
+													<span class="save-price font-md color3 ml-15">26% Off</span>
+													<span class="old-price font-md ml-15">$52</span>
+												</span>*@
+											</div>
+										</div>
+										
+
+										<div class="detail-extralink mb-50">
+											
+											<div class="product-extra-link2">
+												<button type="submit" class="button button-add-to-cart"><i class="fi-rs-shopping-cart"></i>Add to cart</button>
+												<a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
+												
+											</div>
+										</div>
+										<h2>Ingredients:</h2>
+										<div class="font-xs">
+											@{
+												 @foreach (var ingredient in Model.ingredients)
+												 {
+													 <p>@ingredient</p>
+												 } 
+											}
+										</div>
+									</div>
