@@ -17,7 +17,7 @@ namespace Web.UiState
         public string? Password { get; set; } = null;
         [DataType(DataType.Password)]
         public string? ConfirmPassword { get; set; } = null;
-        [DataType(DataType.Password)]
+        [DataType(DataType.Password), Compare(nameof(ConfirmPassword), ErrorMessage ="New password is not equal to confirm password!")]
         public string? NewPassword { get; set; } = null;
         [Required]
         [DataType(DataType.EmailAddress)]
