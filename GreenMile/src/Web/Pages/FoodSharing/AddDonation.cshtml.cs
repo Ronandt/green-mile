@@ -37,8 +37,9 @@ namespace Web.Pages.FoodSharing
         [BindProperty, Required, MinLength(0), MaxLength(100)] 
         public string Description { get; set; } = string.Empty;
 
-        [BindProperty, Required]
-        public DateTime ExpiryDate { get; set; }
+        [BindProperty, Required, DataType(DataType.Date),Display(Name = "Expiry Date")]
+        [FutureDate(7, ErrorMessage = "Expiry date must be at least 7 days from now")]
+        public DateTime ExpiryDate { get; set; } = DateTime.Now;
 
         [BindProperty, Required]
         public string Category { get; set; } = string.Empty;
@@ -72,6 +73,9 @@ namespace Web.Pages.FoodSharing
                         ModelState.AddModelError("Upload", "File size cannot exceed 2MB.");
                         return Page();
                     }
+
+                    // Check for ExpiryDate
+
 
                     // Get User
                     var userId = (await _userManager.GetUserAsync(HttpContext.User)).Id;
