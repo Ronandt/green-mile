@@ -68,7 +68,7 @@
                         <input type="file" accept="image/*" asp-for="Upload" class="form-control" onchange="showImgPreview(this)" />
                         <span asp-validation-for="Upload" class="text-danger"></span>
                     </div>
-                    <img id="imgPreview" class="rounded-circle" style="height:300px;width:300px;object-fit:cover"
+                    <img id="imgPreview" style="height:300px;width:300px;object-fit:cover"
                          src="@(string.IsNullOrEmpty(Model.Image) ? "/uploads/user.png" : Model.Image)"
                          onerror="this.src='/uploads/user.png'" />
                     <input class="form-control d-none" asp-for="Image" />

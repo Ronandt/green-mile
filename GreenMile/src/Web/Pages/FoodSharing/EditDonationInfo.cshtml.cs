@@ -1,3 +1,6 @@
+using System.ComponentModel.DataAnnotations;
+using System.Xml.Linq;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -39,7 +42,8 @@ namespace Web.Pages.FoodSharing
         [BindProperty]
         public string? Description { get; set; }
 
-        [BindProperty]
+        [BindProperty, Required, DataType(DataType.Date), Display(Name = "Expiry Date")]
+
         public DateTime? ExpiryDate { get; set; }
 
         [BindProperty]

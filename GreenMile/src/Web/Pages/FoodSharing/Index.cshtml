@@ -110,8 +110,6 @@
                                                     <div class="row">
                                                         <div class="col-md-6 col-sm-12 col-xs-12 mb-md-0 mb-sm-5">
                                                             <div class="detail-gallery">
-
-                                                                <!-- MAIN SLIDES -->
                                                                 <div class="product-image-slider">
                                                                     <figure class="border-radius-10">
                                                                         <img src="@item.CustomFood.Image" alt="product image" />
@@ -121,20 +119,13 @@
                                                                          alt="product image" />
                                                                     </figure>
                                                                 </div>
-                                                                <!-- THUMBNAILS
-                                                                                            <div class="slider-nav-thumbnails">
-                                                                                            <div><img src="" alt="product image" /></div>
-                                                                                            <div><img src="assets/imgs/shop/thumbnail-4.jpg" alt="food image" /></div>
-                                                                                            </div> -->
                                                             </div>
-                                                            <!-- End Gallery -->
                                                         </div>
                                                         <div class="col-md-6 col-sm-12 col-xs-12">
                                                             <div class="detail-info pr-30 pl-30">
                                                                 <span class="stock-status in-stock"> @item.Status </span>
                                                                 <h3 class="title-detail">
-                                                                    <a href=""
-                                                                   class="text-heading">@item.CustomFood.Name</a>
+                                                                    <span class="text-heading">@item.CustomFood.Name</span>
                                                                 </h3>
                                                                 <div class="food-description">
                                                                     <p>
@@ -142,18 +133,12 @@
                                                                     </p>
                                                                 </div>
                                                                 <div class="detail-extralink mb-30">
-                                                                    <div class="detail-qty border radius">
-
-                                                                        <span class="qty-val">1</span>
-
-                                                                    </div>
                                                                     <form method="post">
                                                                     <input asp-for = "DonationId" value= "@item.Id" hidden>
                                                                     <div class="product-extra-link2">
                                                                         <button type="submit" class="button button-add-to-cart">
                                                                             <i class=" "></i>Request
                                                                         </button>
-
                                                                     </div>
                                                                     </form>
                                                                 </div>
