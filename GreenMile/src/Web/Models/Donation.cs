@@ -25,4 +25,5 @@ public enum DonationStatus
     ACTIVE,
     RESERVED,
     COMPLETED,
+    CANCELLED
 }

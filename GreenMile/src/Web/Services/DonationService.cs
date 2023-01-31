@@ -33,10 +33,10 @@ namespace Web.Services
             _context.SaveChanges();
         }
 
-        public void UpdateDonation(Donation donation)
+        public async Task UpdateDonation(Donation donation)
         {
             _context.Donations.Update(donation);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         public Donation? GetDonationById(int id)

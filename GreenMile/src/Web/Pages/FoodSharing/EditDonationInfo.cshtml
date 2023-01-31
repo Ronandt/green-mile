@@ -1,6 +1,6 @@
 ﻿@page
 @model EditDonationInfoModel
-
+@using Web.Models
 
 <main class="main">
     <div class="page-header mt-30 mb-50">
@@ -22,6 +22,7 @@
         <form class="mt-3" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="All" class="text-danger"></div>
             <input type="hidden" asp-for="CustomFoodId" value="@Model.CustomFoodId">
+            <input type="hidden" asp-for="DonationId" value="@Model.DonationId">
             <div class="row">
                 <div class="col-md-8">
                     <div class="row mb-3">
@@ -59,6 +60,21 @@
                         <div class="col-sm-10">
                             <input class="form-control" asp-for="ExpiryDate" />
                             <span asp-validation-for="ExpiryDate" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label" asp-for="Status"></label>
+                        <div class="col-sm-10">
+                            @Html.DropDownListFor(model => model.Status, new List<SelectListItem>
+                            {
+                                new SelectListItem {Text = "ACTIVE", Value = DonationStatus.ACTIVE.ToString() },
+                                new SelectListItem {Text = "RESERVED", Value = DonationStatus.RESERVED.ToString() },
+                                new SelectListItem {Text = "COMPLETED", Value = DonationStatus.COMPLETED.ToString() },
+                                new SelectListItem {Text = "CANCELLED", Value =  DonationStatus.CANCELLED.ToString()},
+                            }, "-- Select --", new { @class = "form-select" })
+
+                            <span asp-validation-for="Category" class="text-danger"></span>
                         </div>
                     </div>
                 </div>

@@ -33,6 +33,9 @@ namespace Web.Pages.FoodSharing
         [BindProperty]
         public int CustomFoodId { get; set; }
 
+        [BindProperty] 
+        public int DonationId { get; set; }
+
         [BindProperty]
         public string? Name { get; set; }
 
@@ -51,6 +54,9 @@ namespace Web.Pages.FoodSharing
 
         public string Image { get; set; }
 
+        [BindProperty]
+        public string Status { get; set; }
+
         public IActionResult OnGet(int id)
         {
             var donation = _donationService.GetDonationById(id);
@@ -59,11 +65,13 @@ namespace Web.Pages.FoodSharing
                 return NotFound();
 
             CustomFoodId = donation.CustomFood.Id;
+            DonationId = donation.Id;
             Name = donation.CustomFood.Name;
             Category = donation.CustomFood.Category;
             Description= donation.CustomFood.Description;
             ExpiryDate = donation.CustomFood.ExpiryDate;
             Image = donation.CustomFood.Image;
+            Status = donation.Status.ToString();
 
             return Page();
 
@@ -75,6 +83,24 @@ namespace Web.Pages.FoodSharing
                 return Page();
 
             var customFood = await _customFoodService.GetCustomFoodById(CustomFoodId);
+            var donation  = _donationService.GetDonationById(DonationId);
+
+            if (Status == DonationStatus.ACTIVE.ToString())
+            {
+                donation!.Status = DonationStatus.ACTIVE;
+            }
+            else if (Status == DonationStatus.RESERVED.ToString())
+            {
+                donation!.Status = DonationStatus.RESERVED;
+            }
+            else if (Status == DonationStatus.COMPLETED.ToString())
+            {
+                donation!.Status = DonationStatus.COMPLETED;
+            }
+            else if (Status == DonationStatus.CANCELLED.ToString())
+            {
+                donation!.Status = DonationStatus.CANCELLED;
+            }
 
             customFood!.Name = Name ?? customFood.Name;
             customFood!.Category = Category ?? customFood.Category;
@@ -91,7 +117,11 @@ namespace Web.Pages.FoodSharing
                 customFood.Image = string.Format("/{0}/{1}", uploadFolder, imageFile);
             }
 
+            await _donationService.UpdateDonation(donation);
             await _customFoodService.Update(customFood);
+
+            
+
 
             TempData["FlashMessage.Type"] = "success";
             TempData["FlashMessage.Text"] = "You have successfully updated the food item";
