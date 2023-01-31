@@ -25,7 +25,6 @@
 
   <ItemGroup>
     <Folder Include="Pages\GroceryList\" />
-    <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 
 </Project>
