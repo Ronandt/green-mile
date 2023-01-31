@@ -58,7 +58,7 @@
                             <tr>
                                 <td>@item.Id</td>
                                 <td>@item.Donation.CustomFood.Name</td>
-                                <td>@item.Date</td>
+                                <td>@String.Format("{0:MM/dd/yyyy}", item.Date)</td>
                                 <td>@item.Status</td>
                                 <td width="20%">
                                     <button type="button" title="View" class="btn btn-info">
