@@ -9,9 +9,11 @@ using Web.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Net.Mail;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Web.Pages.FoodSharing
 {
+    [Authorize]
     public class IndexModel : PageModel
     {
         private readonly DonationService _donationService;
@@ -30,10 +32,11 @@ namespace Web.Pages.FoodSharing
         [BindProperty]
         public int DonationId { get; set; }
 
-        public void OnGet()
+        public async Task OnGetAsync()
         {
-         
-            DonationList = _donationService.GetAll();
+            var userId = (await _userManager.GetUserAsync(HttpContext.User)).Id;
+
+            DonationList = _donationService.GetAll(userId);
             
         }
 
@@ -51,7 +54,7 @@ namespace Web.Pages.FoodSharing
             if (donor == user)
             {
                 TempData["FlashMessage.Type"] = "danger";
-                TempData["FlashMessage.Text"] = string.Format("You are not allowed to request your own donation");
+                TempData["FlashMessage.Text"] = "You are not allowed to request your own donation";
                 return Redirect("/FoodSharing/Index");
             }
                 

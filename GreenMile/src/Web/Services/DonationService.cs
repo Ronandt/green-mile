@@ -16,11 +16,13 @@ namespace Web.Services
             _context = context;
         }
 
-        public List<Donation> GetAll()
+        // Only retrieve the donations that is not belong to the current user
+        public List<Donation> GetAll(string id)
         {
             return _context.Donations
                 .Include(d => d.CustomFood)
                 .Include(u => u.User)
+                .Where(x => !x.User.Id.Equals(id))
                 .OrderBy(m => m.Id)
                 .ToList();
         }
@@ -42,7 +44,7 @@ namespace Web.Services
 
             return _context.Donations
                 .Include(d => d.CustomFood)
-                .FirstOrDefault(x => x.Id.Equals(id)); ;
+                .FirstOrDefault(x => x.Id.Equals(id)); 
         }
 
 

@@ -134,14 +134,10 @@
                                                     <div class="detail-gallery">
 
                                                         <!-- MAIN SLIDES -->
-                                                    <div class="product-image-slider">
-                                                            <figure class="border-radius-10">
-                                                                <img src="@item.CustomFood.Image" alt="product image" />
-                                                            </figure>
-                                                            <figure class="border-radius-10">
-                                                                <img src="assets/imgs/shop/product-16-1.jpg"
-                                                                alt="product image" />
-                                                            </figure>
+                                                        <div class="product-image-slider">
+                                                                <figure class="border-radius-10">
+                                                                    <img src="@item.CustomFood.Image" alt="product image" />
+                                                                </figure>
                                                         </div>
                                                         <!-- THUMBNAILS
                                                                                     <div class="slider-nav-thumbnails">
@@ -199,10 +195,10 @@
                                                         </div>
                                                         <div class="font-xs">
                                                             <ul>
-                                                                <li class="mb-5">Donor: <span
-                                                                    class="text-brand">@item.User.UserName</span></li>
+                                                                
                                                                 <li class="mb-5">Date:<span class="text-brand">
-                                                                        @item.Date</span></li>
+                                                                        @String.Format("{0:MM/dd/yyyy}", item.Date)
+                                                                        </span></li>
                                                             </ul>
                                                         </div>
                                                     </div>
