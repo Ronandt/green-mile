@@ -36,7 +36,7 @@ namespace Web.Pages
             User user = await _userManager.GetUserAsync(HttpContext.User);
             if (!await _userManager.IsInRoleAsync(user, "Member") && user.HouseholdId is null)
             {
-                TempData["info"] = "You may have gotten kicked out of the household! Please join another one";
+                TempData["info"] = "You do not have a household! Please join another one";
 
 
             }

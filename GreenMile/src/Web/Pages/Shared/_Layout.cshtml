@@ -119,12 +119,13 @@
                                     <li>
                                         <a href="page-about.html">Home</a>
                                     </li>
-
                                     <li>
                                         <a href="#">Food Sharing <i class="fa-solid fa-chevron-down"></i></a>
                                         <ul class="sub-menu">
-                                            <li><a href="/FoodSharing/MyDonations">View My Donations</a></li>
                                             <li><a href="/FoodSharing/Index">Available Donations</a></li>
+                                            <li><a href="/FoodSharing/MyDonations">My Donations</a></li>
+                                            <li><a href="/FoodSharing/MyDonationRequest">My Requests</a></li>
+                                            <li><a href="/FoodSharing/ReceivedRequests">Received Requests</a></li>
                                         </ul>
                                     </li>
                                     <li>
@@ -446,6 +447,9 @@
     <!-- Template  JS -->
     <script src="~/js/main.js?v=5.6"></script>
     <script src="~/js/shop.js?v=5.6"></script>
+    @await RenderSectionAsync("RecaptchaScript", required: false)
 </body>
+
+
 
 </html>

@@ -11,8 +11,8 @@ using Web.Data;
 namespace Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230122132735_first")]
-    partial class first
+    [Migration("20230130120243_ResetMigrtions")]
+    partial class ResetMigrtions
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -223,11 +223,46 @@ namespace Web.Migrations
                     b.ToTable("Donations");
                 });
 
+            modelBuilder.Entity("Web.Models.DonationRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("DonationId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("DonorId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RecipientId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DonationId");
+
+                    b.HasIndex("DonorId");
+
+                    b.HasIndex("RecipientId");
+
+                    b.ToTable("DonationRequests");
+                });
+
             modelBuilder.Entity("Web.Models.FoodItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<double>("CarbonFootprint")
+                        .HasColumnType("REAL");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -279,6 +314,48 @@ namespace Web.Migrations
                     b.HasIndex("FoodItemId");
 
                     b.ToTable("FoodItemCategories");
+                });
+
+            modelBuilder.Entity("Web.Models.GroceryFoodItem", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double?>("CarbonFootprint")
+                        .HasColumnType("REAL");
+
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ExtraNote")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("HouseholdId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ImageFilePath")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("InBasket")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("HouseholdId");
+
+                    b.ToTable("GroceryFood");
                 });
 
             modelBuilder.Entity("Web.Models.Household", b =>
@@ -401,6 +478,10 @@ namespace Web.Migrations
 
                     b.Property<int?>("HouseholdId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("ImageURL")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -526,6 +607,27 @@ namespace Web.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Web.Models.DonationRequest", b =>
+                {
+                    b.HasOne("Web.Models.Donation", "Donation")
+                        .WithMany()
+                        .HasForeignKey("DonationId");
+
+                    b.HasOne("Web.Models.User", "Donor")
+                        .WithMany()
+                        .HasForeignKey("DonorId");
+
+                    b.HasOne("Web.Models.User", "Recipient")
+                        .WithMany()
+                        .HasForeignKey("RecipientId");
+
+                    b.Navigation("Donation");
+
+                    b.Navigation("Donor");
+
+                    b.Navigation("Recipient");
+                });
+
             modelBuilder.Entity("Web.Models.FoodItem", b =>
                 {
                     b.HasOne("Web.Models.Household", "Household")
@@ -548,6 +650,21 @@ namespace Web.Migrations
                     b.Navigation("Category");
 
                     b.Navigation("FoodItem");
+                });
+
+            modelBuilder.Entity("Web.Models.GroceryFoodItem", b =>
+                {
+                    b.HasOne("Web.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId");
+
+                    b.HasOne("Web.Models.Household", "Household")
+                        .WithMany("GroceryItems")
+                        .HasForeignKey("HouseholdId");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Household");
                 });
 
             modelBuilder.Entity("Web.Models.Household", b =>
@@ -584,6 +701,8 @@ namespace Web.Migrations
 
             modelBuilder.Entity("Web.Models.Household", b =>
                 {
+                    b.Navigation("GroceryItems");
+
                     b.Navigation("Users");
                 });
 
