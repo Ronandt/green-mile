@@ -34,8 +34,8 @@ namespace Web.Pages.FoodSharing
 
         public async Task OnGetAsync()
         {
-            var userId = (await _userManager.GetUserAsync(HttpContext.User)).Id;
 
+            var userId = (await _userManager.GetUserAsync(HttpContext.User)).Id;
             DonationList = _donationService.GetAll(userId);
             
         }
@@ -45,12 +45,13 @@ namespace Web.Pages.FoodSharing
             // Checking for has the recipient requested the item before
             var donation = _donationService.GetDonationById(DonationId);
             var userId = (await _userManager.GetUserAsync(HttpContext.User)).Id;
-            var user = await _userManager.Users.FirstAsync(u => u.Id == userId);
+            User user = await _userManager.Users.FirstAsync(u => u.Id == userId);
 
             var exists = await _donationRequestService.DonationRequestExists(DonationId, userId);
 
             // Donor cannot request for his/her own donation
-            var donor = donation.User;
+            User donor = donation.User;
+
             if (donor == user)
             {
                 TempData["FlashMessage.Type"] = "danger";
@@ -60,6 +61,15 @@ namespace Web.Pages.FoodSharing
                 
             if (exists == false)
             {
+                var request = new DonationRequest()
+                {
+                    Donation = donation,
+                    Donor = donor,
+                    Recipient = user,
+                    Status = RequestStatus.PENDING
+                };
+
+                _donationRequestService.AddRequest(request);
 
                 MailMessage message = new MailMessage();
                 message.To.Add("liujiajun2003@gmail.com");
@@ -76,17 +86,6 @@ namespace Web.Pages.FoodSharing
                 // Green Mile Email Account Password: greenmile2023!
                 client.Credentials = new NetworkCredential("greenmile2024bycrazyapi@gmail.com", "arcpfpypntqmhnxf");
                 await client.SendMailAsync(message);
-
-                var request = new DonationRequest()
-                {
-                    Donation = donation,
-                    Donor = donation?.User,
-                    Recipient = user,
-                    Status = RequestStatus.PENDING
-                };
-
-                _donationRequestService.AddRequest(request);
-
                 TempData["FlashMessage.Type"] = "success";
                 TempData["FlashMessage.Text"] = string.Format("You have request for the items, Please wait for the donor to response");
                 return Redirect("/FoodSharing/Index");
