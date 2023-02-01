@@ -81,7 +81,7 @@
                                 {
                                     <article class="col-xl-4 col-lg-6 col-md-6 text-center hover-up mb-30 animated">
                                         <div class="post-thumb">
-                                            <a data-bs-toggle="modal" data-bs-target="#quickViewModal@(item.Id)">
+                                            <a data-bs-toggle="modal" data-bs-target="#quickViewModal@(item.Id)" onclick="initMap('@item.Location')">
                                                 <img class="border-radius-15" src="@item.CustomFood.Image" alt="" />
                                             </a>
                                         </div>
@@ -132,7 +132,9 @@
                                                                         @item.CustomFood.Description
                                                                     </p>
                                                                 </div>
+                                                                <div id="map"></div>
                                                                 <div class="detail-extralink mb-30">
+
                                                                     <form method="post">
                                                                     <input asp-for = "DonationId" value= "@item.Id" hidden>
                                                                     <div class="product-extra-link2">
@@ -227,10 +229,35 @@
         </div>
     </div>
 </main>
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+
+<style>
+    #map {
+        margin-top: 10px;
+        width: 80%;
+        height: 100px;
+        margin-bottom: 10px;
     }
-}
+</style>
+
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB8-8MPI9bBRCr3ny5hatCyihjlm1eT-kQ"></script>
+
+<script>
+    function initMap(location) {
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 14,
+        });
+
+        var geocoder = new google.maps.Geocoder();
+        geocoder.geocode({ 'address': location }, function (results, status) {
+            if (status === 'OK') {
+                map.setCenter(results[0].geometry.location);
+                var marker = new google.maps.Marker({
+                    map: map,
+                    position: results[0].geometry.location
+                });
+            } 
+        });
+    }
+</script>
+
