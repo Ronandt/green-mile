@@ -72,6 +72,7 @@ public class UpdateModel : PageModel
         Description = CurrentFoodItem.Description;
         Quantity = CurrentFoodItem.Quantity;
         ExpiryDate = CurrentFoodItem.ExpiryDate;
+        Category = CurrentFoodItem.Category;
 
 
         return Page();
