@@ -30,6 +30,11 @@ namespace Web.Services
                 .ToList();
         }
 
+        public async Task Update(DonationRequest request)
+        {
+            _context.DonationRequests.Update(request);
+            await _context.SaveChangesAsync();
+        }
         public List<DonationRequest> GetRequestByDonor(string userId)
         {
             return _context.DonationRequests
@@ -56,6 +61,14 @@ namespace Web.Services
                 .Where(x => x.Recipient.Id.Equals(id))
                 .OrderByDescending(m => m.Date)
                 .ToList();
+        }
+
+        public async Task<DonationRequest> GetRequestsByRequestID(int id)
+        {
+            return await _context.DonationRequests
+                .Include(d => d.Donation.CustomFood)
+                .Where(x => x.Id.Equals(id))
+                .FirstAsync();
         }
     }
 }

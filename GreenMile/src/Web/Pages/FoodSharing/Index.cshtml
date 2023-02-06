@@ -129,6 +129,7 @@
                                                                 </h3>
                                                                 <div class="food-description">
                                                                     <p>
+                                                                        @item.CustomFood.Category <br>
                                                                         @item.CustomFood.Description
                                                                     </p>
                                                                 </div>
@@ -139,7 +140,7 @@
                                                                     <input asp-for = "DonationId" value= "@item.Id" hidden>
                                                                     <div class="product-extra-link2">
                                                                         <button type="submit" class="button button-add-to-cart">
-                                                                            <i class=" "></i>Request
+                                                                           Request
                                                                         </button>
                                                                     </div>
                                                                     </form>

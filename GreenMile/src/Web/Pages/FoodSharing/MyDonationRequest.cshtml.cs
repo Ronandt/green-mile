@@ -1,3 +1,5 @@
+using System.Xml.Linq;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -29,6 +31,18 @@ namespace Web.Pages.FoodSharing
             DonationRequestList = _donationRequestService.GetRequestByUser(userId);
             MyRequestCount = DonationRequestList.Count;
             return Page();
+        }
+
+        public async Task<IActionResult> OnPostCancelAsync(int id)
+        {
+            var donationRequest = await _donationRequestService.GetRequestsByRequestID(id);
+            donationRequest.Status = RequestStatus.CANCELLED;
+            await _donationRequestService.Update(donationRequest);
+
+            TempData["FlashMessage.Type"] = "success";
+            TempData["FlashMessage.Text"] = string.Format("You have successfully cancelled the request with food item {0}", donationRequest.Donation.CustomFood.Name);
+
+            return RedirectToPage("/FoodSharing/MyDonationRequest");
         }
     }
 }
