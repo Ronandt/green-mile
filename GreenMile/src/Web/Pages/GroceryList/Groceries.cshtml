@@ -107,7 +107,7 @@
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    value: document.getElementById("GroceryListUiState_Quantity" + id).value
+                    value: 1
                 })
             })
                 .then(res => {
@@ -125,7 +125,7 @@
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    value: document.getElementById("GroceryListUiState_Quantity" + id).value
+                    value: -1
                 })
             })
                 .then(res => {
