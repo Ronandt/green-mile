@@ -101,6 +101,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
+
 app.MapHub<ChatHub>("/chatHub");
 
 

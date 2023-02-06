@@ -1,5 +1,5 @@
 ﻿
-var connection = new signalR.HubConnectionBuilder().withUrl("/Chathub").build();
+var connection = new signalR.HubConnectionBuilder().withUrl("/chathub").build();
 
 //Disable send button until connection is established
 $("#sendMessage").prop('disabled', true);
