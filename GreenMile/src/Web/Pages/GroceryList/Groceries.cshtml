@@ -49,8 +49,8 @@
                             {
                                 <tr class="pt-30">
                                     <td class="custome-checkbox pl-30">
-                                        <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox1" value="" />
-                                        <label class="form-check-label" for="exampleCheckbox1"></label>
+                                        <input class="form-check-input" type="checkbox" name="@("checkbox" + food.Id)" id="@("checkbox" + food.Id)" value="" />
+                                        <label class="form-check-label" for="@("checkbox" + food.Id)" ></label>
                                     </td>
                                     <td class="image product-thumbnail pt-40"><img src="@food.ImageFilePath" alt="#" /></td>
                                     <td class="product-des product-name">
@@ -97,9 +97,12 @@
 
 
         <script>
+
     function up(id) {
-        document.getElementById("GroceryListUiState_Quantity" + id).value =  parseInt(document.getElementById("GroceryListUiState_Quantity" + id).value) + 1
-        document.getElementById("value" + id).textContent = document.getElementById("GroceryListUiState_Quantity" + id).value
+            let vals = Math.max(1, parseInt(document.getElementById("value" + id).textContent) + 1)
+       
+            document.getElementById("value" + id).textContent =vals
+        document.getElementById("value" + id).textContent = vals
 
             fetch('/api/grocerylist/' + id, {
                 method: 'PUT',
@@ -117,8 +120,9 @@
     }
 
     function down(id) {
-        document.getElementById("GroceryListUiState_Quantity" + id).value = Math.max(1, document.getElementById("GroceryListUiState_Quantity" + id   ).value - 1)
-        document.getElementById("value" + id).textContent = document.getElementById("GroceryListUiState_Quantity" + id).value
+            let vals = Math.max(1, document.getElementById("value" + id).textContent - 1)
+        document.getElementById("value" + id).textContent = vals
+        document.getElementById("value" + id).textContent = vals
           fetch('/api/grocerylist/' + id, {
                 method: 'PUT',
                 headers: {
