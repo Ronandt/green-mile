@@ -14,14 +14,16 @@ namespace Web.Services
             _dataContext = dataContext;
         }
 
-        public async Task Add(GroceryFoodItem groceryItem)
+        public async Task<Boolean> Add(GroceryFoodItem groceryItem)
         {
             if(groceryItem is null)
             {
                 throw new ArgumentNullException(nameof(groceryItem));
             }
 
-           await _dataContext.AddAsync(groceryItem);
+           await _dataContext.GroceryFood.AddAsync(groceryItem);
+            await _dataContext.SaveChangesAsync();
+            return true;
         }
 
         public async Task ChangeQuantity(GroceryFoodItem groceryItem, int quantity)

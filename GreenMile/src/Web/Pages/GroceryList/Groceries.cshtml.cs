@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -7,6 +8,7 @@ using Web.Services;
 
 namespace Web.Pages.GroceryList
 {
+    [Authorize]
     public class GroceriesModel : PageModel
     {
         private readonly IGroceryFoodService _groceryFoodService;

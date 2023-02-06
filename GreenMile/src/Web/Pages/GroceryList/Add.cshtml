@@ -1,0 +1,86 @@
+﻿@page
+@model Web.Pages.GroceryList.AddModel
+@{
+}
+<main class="main pages">
+    <div class="page-content">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 m-auto">
+                    <div class="row">
+                        <div class="col-xl-12" style="max-width: 600px; margin: 0 auto;">
+                            <div class="login_wrap widget-taber-content background-white">
+                                <div class="padding_eight_all bg-white">
+                                    <div class="heading_s1" style="margin-top:100px; margin-bottom: 30px;">
+                                        <h1 class="mb-5">Create Your Food Item</h1>
+
+                                    </div>
+                                    <div asp-validation-summary="All" class="text-danger"></div>
+                                    <form method="post" enctype="multipart/form-data">
+                                        <div asp-validation-summary="All" class="text-danger"></div>
+
+     <input type="file" accept="image/*" class="form-control" onchange="showImgPreview(this)" asp-for="GroceryUiState.Image"/>
+                    <br />
+                                        <img id="imgPreview" class="rounded-circle" style="clip-path:circle();height:250px;width:300px;object-fit:cover;border-radius:50%; overflow: hidden;margin-top: 30px" src="https://www.pinclipart.com/picdir/big/86-862588_mobi-food-logo-gif-clipart.png" />
+
+                                        <div class="form-group">
+                                            <label class="col-sm-2 col-form-label" asp-for="GroceryUiState.Name"></label>
+                                            <div class="col-sm-10">
+                                                <input class="form-control" asp-for="GroceryUiState.Name" />
+                                                <span asp-validation-for="GroceryUiState.Name" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                     
+
+                                        Quantity
+                        <br />
+                                        <div class="detail-extralink mr-15" style="margin-bottom: 20px;">
+                                            <div class="detail-qty border radius">
+                                                <a onclick="down()" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
+                                                <span id="value" class="qty-val">1</span>
+                                                <a  onclick="up()" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
+                                            </div>
+                                        </div>
+
+                                        <input type="hidden" value = "1" asp-for="GroceryUiState.Quantity"/>
+                                  
+
+
+                                        <div class="form-group mb-30">
+                                            <button type="submit" value="Add" class="btn btn-fill-out btn-block hover-up font-weight-bold">Submit</button>
+                                        </div>
+                                        <p class="font-xs text-muted"><strong>Note:</strong>Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our privacy policy</p>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script>
+	function showImgPreview(input) {
+		if (input.files[0]) {
+			var uploadimg = new FileReader();
+			uploadimg.onload = function (displayimg) {
+				$("#imgPreview").attr('src', displayimg.target.result);
+			}
+			uploadimg.readAsDataURL(input.files[0]);
+		}
+	}
+</script>
+
+<script>
+    function up() {
+        document.getElementById("GroceryUiState_Quantity").value =  parseInt(document.getElementById("GroceryUiState_Quantity").value) + 1
+        document.getElementById("value").textContent = document.getElementById("GroceryUiState_Quantity").value
+    }
+
+    function down() {
+        document.getElementById("GroceryUiState_Quantity").value = Math.max(1, document.getElementById("GroceryUiState_Quantity").value - 1)
+        document.getElementById("value").textContent = document.getElementById("GroceryUiState_Quantity").value
+    }
+</script>
+

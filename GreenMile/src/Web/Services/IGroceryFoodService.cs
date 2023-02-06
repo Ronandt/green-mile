@@ -7,7 +7,7 @@ namespace Web.Services
     {
 
 
-        public Task Add(GroceryFoodItem groceryItem);
+        public Task<Boolean> Add(GroceryFoodItem groceryItem);
 
         public Task ChangeQuantity(GroceryFoodItem groceryItem, int quantity);
 
