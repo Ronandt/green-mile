@@ -1,76 +1,146 @@
+
+using System.ComponentModel.DataAnnotations;
+
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 using Web.Models;
 using Web.Services;
 
+
 namespace Web.Pages.FoodTracker;
 
 public class UpdateModel : PageModel
+
 {
-    private readonly IHostEnvironment _environment;
     private readonly FoodItemService _foodItemService;
+    private readonly UserManager<User> _userManager;
+    private readonly IHttpContextAccessor _http;
+    private readonly IHouseholdService _householdService;
+    private readonly FoodCategoryService _foodcategoryService;
+    private IWebHostEnvironment _environment;
 
-    public UpdateModel(FoodItemService foodItemService, IHostEnvironment environment)
+    public UpdateModel(IHttpContextAccessor http, IHouseholdService householdService, FoodItemService fooditemService, IWebHostEnvironment environment, FoodCategoryService foodCategoryService)
     {
-        _foodItemService = foodItemService;
+        _foodItemService = fooditemService;
         _environment = environment;
+        _foodcategoryService = foodCategoryService;
+        _http = http;
+        _householdService = householdService;
     }
-
+   
     [BindProperty]
-    public FoodItem FoodItem { get; set; }
+    public FoodItem CurrentFoodItem { get; set; }
 
-    [BindProperty]
-    public string? Name { get; set; }
+    public static List<Category> Categories { get; set; } = new();
 
-    [BindProperty]
-    public string? Description { get; set; }
+    [BindProperty, Required]
+    public string Category { get; set; }
 
-    [BindProperty]
+    [BindProperty, Required]
+    public string Name { get; set; }
+
+    [BindProperty, Required, MinLength(0), MaxLength(100)]
+    public string Description { get; set; }
+
+    [BindProperty, Required, Range(1, 100, ErrorMessage = " Choose between 1 - 100")]
     public int Quantity { get; set; }
 
-    [BindProperty]
-    public IFormFile? Image { get; set; }
+    [BindProperty, Required]
+    public DateTime ExpiryDate { get; set; }
+
+    [BindProperty, Required]
+    public IFormFile? ImageFilePath { get; set; }
+
+    [BindProperty, Required]
+    public double Weight { get; set; }
+
+    [BindProperty, Required]
+    public double CarbonFoodprint { get; set; }
 
     public async Task<IActionResult> OnGetAsync(int id)
     {
-        FoodItem = await _foodItemService.GetFoodItemById(id);
+        CurrentFoodItem = await _foodItemService.GetFoodItemById(id);
 
-        if (FoodItem is null)
+        if (CurrentFoodItem is null)
         {
             return NotFound();
         }
 
-        Name = FoodItem.Name;
-        Description = FoodItem.Description;
-        Quantity = FoodItem.Quantity;
+        Name = CurrentFoodItem.Name;
+        Description = CurrentFoodItem.Description;
+        Quantity = CurrentFoodItem.Quantity;
+        ExpiryDate = CurrentFoodItem.ExpiryDate;
+
 
         return Page();
     }
 
     public async Task<IActionResult> OnPostAsync()
     {
-        if (FoodItem is null)
+        if (!ModelState.IsValid)
         {
-            return NotFound();
+            return Page();
         }
 
-        if (Image is not null)
+        if (ImageFilePath != null)
         {
-            var uploadFolder = "Uploads";
-            var imageFile = Guid.NewGuid() + Path.GetExtension(Image.FileName);
-            var imagePath = Path.Combine(_environment.ContentRootPath, "wwwroot", uploadFolder, imageFile);
+            if (ImageFilePath.Length > 2 * 1024 * 1024)
+            {
+                ModelState.AddModelError("Upload", "File size cannot exceed 2MB.");
+                return Page();
+            }
+
+            var uploadsFolder = "uploads";
+            if (CurrentFoodItem.ImageFilePath != null)
+            {
+                var oldImageFile = Path.GetFileName(CurrentFoodItem.ImageFilePath);
+                var oldImagePath = Path.Combine(_environment.ContentRootPath, "wwwroot", uploadsFolder, oldImageFile);
+                if (System.IO.File.Exists(oldImagePath))
+                {
+                    System.IO.File.Delete(oldImagePath);
+                }
+                // Console.WriteLine("Success 1");
+            }
+            // Console.WriteLine("Success 2");
+
+            var imageFile = Guid.NewGuid() + Path.GetExtension(ImageFilePath.FileName);
+            var imagePath = Path.Combine(_environment.ContentRootPath, "wwwroot", uploadsFolder, imageFile);
             using var fileStream = new FileStream(imagePath, FileMode.Create);
-            await Image.CopyToAsync(fileStream);
-            FoodItem.ImageFilePath = string.Format("/{0}/{1}", uploadFolder, imageFile);
+            await ImageFilePath.CopyToAsync(fileStream);
+            CurrentFoodItem.ImageFilePath = string.Format("/{0}/{1}", uploadsFolder, imageFile);
+            // Console.WriteLine("Success 3");
         }
 
-        FoodItem.Name = Name ?? FoodItem.Name;
-        FoodItem.Description = Description ?? FoodItem.Description;
-        FoodItem.Quantity = Quantity;
+        var category = _foodcategoryService.GetCategoryByName(Category);
 
-        await _foodItemService.Update(FoodItem);
+        CurrentFoodItem.Name = Name;
+        CurrentFoodItem.Description = Description;
+        CurrentFoodItem.Quantity = Quantity;
+        CurrentFoodItem.ExpiryDate = ExpiryDate;
+        CurrentFoodItem.Category = Category;
+        CurrentFoodItem.CarbonFootprint = CarbonFoodprint;
+        CurrentFoodItem.Weight = Weight;
+        CurrentFoodItem.Status = true;
+        CurrentFoodItem.IsCustom = true;
+        
+        // Console.WriteLine("Success 4"); // Console.WriteLine($"{CurrentFoodItem.Id}");
+        // Console.WriteLine($"{CurrentFoodItem.Name}");
+        // Console.WriteLine($"{CurrentFoodItem.ImageFilePath}");
 
-        return Redirect("/Index");
+        _foodItemService.UpdateFoodItem(CurrentFoodItem);
+        // Console.WriteLine("Success 5");
+        // Console.WriteLine($"{Name}");
+        // Console.WriteLine($"{ImageFilePath.ToString()}");
+
+        return Redirect("/FoodTracker");
     }
 }
+
+
+
+
+        
+       
+        

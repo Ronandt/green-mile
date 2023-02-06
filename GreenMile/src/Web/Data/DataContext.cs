@@ -34,4 +34,5 @@ public class DataContext : IdentityDbContext<User>
     {
         Database.EnsureCreatedAsync();
     }
+
 }
