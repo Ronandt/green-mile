@@ -58,7 +58,7 @@
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label" asp-for="ExpiryDate"></label>
                         <div class="col-sm-10">
-                            <input class="form-control" asp-for="ExpiryDate" />
+                            <input class="form-control" asp-for="ExpiryDate" type="date" id="ExpiryDate" />
                             <span asp-validation-for="ExpiryDate" class="text-danger"></span>
                         </div>
                     </div>
@@ -116,3 +116,7 @@
     await Html.RenderPartialAsync("_ValidationScriptsPartial");
 }
 }
+
+<script>
+    document.getElementById("ExpiryDate").min = new Date().toISOString().split("T")[0];
+</script>

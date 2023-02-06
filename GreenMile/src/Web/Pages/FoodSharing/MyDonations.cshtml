@@ -96,7 +96,9 @@
                                         <div class="product-action-1">
                                             <a aria-label="Edit My Donations" class="action-btn" asp-page="/FoodSharing/EditDonationInfo" asp-route-id="@item.Id"><i
                                                 class="fi-rs-edit"></i></a>
-                                            <a aria-label="Quick view" class="action-btn" data-bs-toggle="modal" data-bs-target="#quickViewModal@(item.Id)"><i class="fi-rs-eye"></i></a>
+                                            <a aria-label="Quick view" class="action-btn" data-bs-toggle="modal" data-bs-target="#quickViewModal@(item.Id)" onclick="initMap('@item.Location')">
+                                                <i class="fi-rs-eye"></i>
+                                            </a>
                                         </div>
                                         <div class="product-badges product-badges-position product-badges-mrg">
                                             <span class="new">@item.Status</span>
@@ -142,12 +144,14 @@
                                                         </div>
                                                         <br>
                                                         <div class="detail-extralink mb-30">
-                                                           <p>Location</p>
+                                                           <p>Pick-Up Location</p>
+                                                           <p>@item.Location</p>
                                                         </div>
+                                                        <div id="map"></div>
                                                         <div class="font-xs">
                                                             <ul>
                                                                 
-                                                                <li class="mb-5">Date:<span class="text-brand">
+                                                                <li class="mb-5">Date Of Creation:<span class="text-brand">
                                                                         @String.Format("{0:MM/dd/yyyy}", item.Date)
                                                                         </span></li>
                                                             </ul>
@@ -200,4 +204,35 @@
     document.querySelector('.button-add-to-cart').onclick = function () {
         window.location.href = '/FoodSharing/EditDonationInfo';
     };
+</script>
+
+<style>
+    #map {
+        margin-top: 10px;
+        width: 80%;
+        height: 100px;
+        margin-bottom: 10px;
+    }
+</style>
+
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB8-8MPI9bBRCr3ny5hatCyihjlm1eT-kQ"></script>
+
+<script>
+    function initMap(location) {
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 14,
+        });
+
+        var geocoder = new google.maps.Geocoder();
+        geocoder.geocode({ 'address': location }, function (results, status) {
+            if (status === 'OK') {
+                map.setCenter(results[0].geometry.location);
+                var marker = new google.maps.Marker({
+                    map: map,
+                    position: results[0].geometry.location
+                });
+            }
+        });
+    }
 </script>
