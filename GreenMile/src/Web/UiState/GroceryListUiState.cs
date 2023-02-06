@@ -8,5 +8,8 @@ namespace Web.UiState
     {
         [BindProperty]
         public IList<GroceryFoodItem> GroceryFoodItems { get; set; }
+
+        [BindProperty]
+        public string? DeleteId { get; set; }
     }
 }

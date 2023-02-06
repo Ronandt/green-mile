@@ -27,5 +27,10 @@ namespace Web.Pages.GroceryList
            await _groceryFoodService.RetrieveFoodByHousehold(household);
 
         }
+
+        public async Task OnPostDeleteAsync()
+        {
+            await _groceryFoodService.Delete()
+        }
     }
 }
