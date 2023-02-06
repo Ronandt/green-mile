@@ -5,6 +5,7 @@
 @model Web.Pages.GroceryList.GroceriesModel;
 @inject UserManager<User> _userManager
 @inject IGroceryFoodService _groceryFoodService
+@inject CategoryService _categoryService
 @{
     var user = await _userManager.GetUserAsync(User);
     var foods = (await _groceryFoodService.RetrieveFoodByHousehold(user.HouseholdId ?? 0)).Value;
@@ -38,7 +39,7 @@
                                 <th scope="col"  style="margin-left:80px;"colspan="2">Product</th>
                                 <th scope="col">Quantity</th>
                                 <th scope="col">Category</th>
-                                <th scope="col">Add to basket</th>
+                                <th scope="col">Transfer to inventory</th>
                                 <th scope="col" class="end">Remove</th>
 
                             </tr>
@@ -59,20 +60,27 @@
                                     <td style="position: relative; right: 40px;"style="margin-right: 100px;"class="text-center detail-info" data-title="Stock">
                                         <div class="detail-extralink mr-15">
                                             <div class="detail-qty border radius">
-                                                <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
-                                                <span class="qty-val">@food.Quantity</span>
-                                                <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
+                                                <a href="#" onclick="down('@(food.Id)')" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
+
+                                                <span class="qty-val" id='@("value" + food.Id)'>@food.Quantity</span>
+                                                <input type="hidden" value="@food.Quantity" id='@("GroceryListUiState_Quantity" + food.Id)'/>
+                                                <a href="#" class="qty-up" onclick="up('@(food.Id)')"><i class="fi-rs-angle-small-up"></i></a>
                                             </div>
                                         </div>
                                     </td>
                                     <td style="position: relative; right: 40px;" class="text-center detail-info" data-title="Stock">
-                                        <span class="stock-status in-stock mb-0"> In Stock </span>
+                                        <span class="stock-status in-stock mb-0"> @((await _categoryService.RetrieveCategory(food.CategoryId ?? 0))?.Name)</span>
                                     </td>
-                                    <td class="text-right" data-title="Cart">
-                                        <button class="btn btn-sm">Add to cart</button>
+                                    <td class="text-right" style="position: relative; left: 40px;" data-title="Cart">
+                                        <button class="btn btn-sm">Transfer</button>
                                     </td>
                                     <td class="action text-center" style="position: relative; right: 40px;" data-title="Remove">
-                                        <button asp-asp-page-handler="Delete" href="#" class="text-body"><i class="fi-rs-trash"></i></button>
+                                        
+                                        <form method="POST">
+                                            <input type="hidden" asp-for="GroceryListUiState.DeleteId" value="@(food.Id)"/>
+                                            <button style="background:none; color: inherit; border: none; padding: 0; font:inherit; cursor: pointer; outline: inherit" type="submit" asp-page-handler="Delete" href="#" class="text-body"><i class="fi-rs-trash"></i></button>
+                                        </form>
+                                     
                                     </td>
                                 </tr>
                             }
@@ -86,4 +94,45 @@
             </div>
         </div>
     </div>
+
+
+        <script>
+    function up(id) {
+        document.getElementById("GroceryListUiState_Quantity" + id).value =  parseInt(document.getElementById("GroceryListUiState_Quantity" + id).value) + 1
+        document.getElementById("value" + id).textContent = document.getElementById("GroceryListUiState_Quantity" + id).value
+
+            fetch('/api/grocerylist/' + id, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    value: document.getElementById("GroceryListUiState_Quantity" + id).value
+                })
+            })
+                .then(res => {
+                    return res.json()
+                })
+                .then(data => console.log(data))
+    }
+
+    function down(id) {
+        document.getElementById("GroceryListUiState_Quantity" + id).value = Math.max(1, document.getElementById("GroceryListUiState_Quantity" + id   ).value - 1)
+        document.getElementById("value" + id).textContent = document.getElementById("GroceryListUiState_Quantity" + id).value
+          fetch('/api/grocerylist/' + id, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    value: document.getElementById("GroceryListUiState_Quantity" + id).value
+                })
+            })
+                .then(res => {
+                    return res.json()
+                })
+                .then(data => console.log(data))
+    }
+</script>
+ 
 </main>

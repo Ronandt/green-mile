@@ -39,6 +39,13 @@ namespace Web.Services
             await _dataContext.SaveChangesAsync();
         }
 
+        public async Task<GroceryFoodItem> RetrieveGroceryItem(string id)
+        {
+            return await _dataContext.GroceryFood.FindAsync(id);
+        }
+
+       
+
 
         public async Task Delete(string id)
         {

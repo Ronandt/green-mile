@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 using Web.Models;
 using Web.Services;
+using Web.UiState;
 
 namespace Web.Pages.GroceryList
 {
@@ -13,6 +14,8 @@ namespace Web.Pages.GroceryList
     {
         private readonly IGroceryFoodService _groceryFoodService;
         private readonly UserManager<User> _userManager;
+        [BindProperty]
+        public GroceryListUiState GroceryListUiState { get; set; }
 
         public GroceriesModel(IGroceryFoodService groceryFoodService, UserManager<User> userManager)
         {
@@ -28,9 +31,11 @@ namespace Web.Pages.GroceryList
 
         }
 
-        public async Task OnPostDeleteAsync()
+        public async Task<IActionResult> OnPostDeleteAsync()
         {
-            await _groceryFoodService.Delete()
+            await _groceryFoodService.Delete(GroceryListUiState.DeleteId);
+            return Redirect("/grocerylist/groceries");
+           
         }
     }
 }

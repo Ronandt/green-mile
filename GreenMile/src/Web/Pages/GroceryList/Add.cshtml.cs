@@ -14,24 +14,28 @@ namespace Web.Pages.GroceryList
     {
         [BindProperty,Required]
         public AddGroceryUiState GroceryUiState { get; set; }
+
+        public List<Category> Categories { get; set; }
         private readonly IImageService _imageService;
         private readonly IHouseholdService _householdService;
         private readonly IGroceryFoodService _foodService;
         private readonly UserManager<User> _userManager;
+        private readonly CategoryService _categoryService;
 
-        public AddModel(IGroceryFoodService foodService, IImageService imageService, IHouseholdService householdService, UserManager<User> userManager)
+        public AddModel(IGroceryFoodService foodService, IImageService imageService, IHouseholdService householdService, UserManager<User> userManager, CategoryService categoryService)
         {
             _foodService = foodService;
             _imageService = imageService;
             _householdService = householdService;
             _userManager = userManager;
+            _categoryService = categoryService;
         }
 
  
 
-        public void OnGet()
+        public async Task OnGet()
         {
-
+            Categories = await _categoryService.RetrieveCategories();
         }
 
         public async Task<IActionResult> OnPost()
@@ -46,7 +50,9 @@ namespace Web.Pages.GroceryList
                 HouseholdId = user.HouseholdId?? 0,
                     Name = GroceryUiState.Name,
                     Quantity = GroceryUiState.Quantity,
-                    ImageFilePath = await _imageService.StoreImage(GroceryUiState.Image)
+                    ImageFilePath = await _imageService.StoreImage(GroceryUiState.Image),
+                    CategoryId = GroceryUiState.Category
+                    
                 };
                 await _foodService.Add(item);
        

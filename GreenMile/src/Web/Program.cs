@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 using OpenAI.GPT3.Extensions;
 
 using Web.Data;
@@ -31,6 +31,7 @@ builder.Services.AddTransient<UserManager<User>>();
 builder.Services.AddScoped<DonationService>();
 builder.Services.AddScoped<CustomFoodService>();
 builder.Services.AddScoped<DonationRequestService>();
+builder.Services.AddScoped<CategoryService>();
 
 builder.Services.AddDbContext<DataContext>(options =>
 {
@@ -79,7 +80,7 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 // NOTE: Stores to server memory
 // TODO: Change to externals stores to allow horizontal scalling
 builder.Services.AddDistributedMemoryCache();
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);

@@ -32,9 +32,22 @@
                                         </div>
                                      
 
-                                        Quantity
+                                        <div class="row mb-3" style="margin-top: 50px; margin-bottom: 1000px;">
+<label class="col-sm-2 col-form-label" asp-for="GroceryUiState.Category">
+</label>
+<div>
+@Html.DropDownListFor(m => m.GroceryUiState.Category,
+new SelectList(Model.Categories, "Id", "Name"), "-- Select --",
+new {@class = "form-select"})
+<span asp-validation-for="GroceryUiState.Category"
+class="text-danger"></span>
+</div>
+</div>
+
+
+                                      <div style="margin-top: 40px;">Quantity</div>
                         <br />
-                                        <div class="detail-extralink mr-15" style="margin-bottom: 20px;">
+                                        <div class="detail-extralink mr-15" style="margin-bottom:30px; ">
                                             <div class="detail-qty border radius">
                                                 <a onclick="down()" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
                                                 <span id="value" class="qty-val">1</span>

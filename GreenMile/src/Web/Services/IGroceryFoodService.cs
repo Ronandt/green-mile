@@ -16,7 +16,7 @@ namespace Web.Services
 
         public Task Delete(string id);
 
-
+        public  Task<GroceryFoodItem> RetrieveGroceryItem(string id);
 
         public  Task<Result<ICollection<GroceryFoodItem>>> RetrieveFoodByHousehold(int householdId);
      
