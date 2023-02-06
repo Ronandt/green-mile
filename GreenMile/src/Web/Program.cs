@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 using Web.Data;
+using Web.Hubs;
 using Web.Models;
 using Web.Services;
 
@@ -19,9 +20,11 @@ builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IHouseholdService, HouseholdService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<RecipeService>();
+// Food Sharing Services
 builder.Services.AddScoped<DonationService>();
 builder.Services.AddScoped<CustomFoodService>();
 builder.Services.AddScoped<DonationRequestService>();
+builder.Services.AddSignalR();
 
 builder.Services.AddDbContext<DataContext>(options =>
 {
@@ -97,5 +100,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
+app.MapHub<ChatHub>("/chatHub");
+
 
 app.Run();
