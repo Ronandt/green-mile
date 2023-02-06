@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
+using Web.Lib;
 using Web.Models;
 using Web.Services;
 
@@ -14,61 +15,126 @@ namespace Web.Pages.FoodTracker
     {
         private readonly FoodItemService _fooditemService;
         private readonly UserManager<User> _userManager;
-        private readonly IHostEnvironment _environment;
+        private readonly IHttpContextAccessor _http;
+        private readonly IHouseholdService _householdService;
+        private readonly FoodCategoryService _foodcategoryService;
+        private IWebHostEnvironment _environment;
 
-        public AddFoodItemModel(FoodItemService fooditemService, UserManager<User> userManager, IHostEnvironment environment)
+        public AddFoodItemModel(IHttpContextAccessor http, IHouseholdService householdService, FoodItemService fooditemService, IWebHostEnvironment environment, FoodCategoryService foodCategoryService,UserManager<User> userManager)
         {
             _fooditemService = fooditemService;
-            _userManager = userManager;
             _environment = environment;
+            _foodcategoryService = foodCategoryService;
+            _http = http;
+            _householdService = householdService;
+            _userManager = userManager;
         }
+        public static List<Category> Categories { get; set; } = new();
 
-        [BindProperty, Required, MinLength(1), MaxLength(20)]
+        [BindProperty, Required]
+        public string Category { get; set; }
+
+        [BindProperty, Required]
         public string Name { get; set; }
+
         [BindProperty, Required, MinLength(0), MaxLength(100)]
         public string Description { get; set; }
+
         [BindProperty, Required, Range(1, 100, ErrorMessage = " Choose between 1 - 100")]
         public int Quantity { get; set; }
+
         [BindProperty, Required]
         public DateTime ExpiryDate { get; set; }
 
         [BindProperty, Required]
-        public IFormFile Image { get; set; }
+        public IFormFile? ImageFilePath { get; set; }
 
-        public void OnGet() { }
+        [BindProperty, Required]
+        public double Weight { get; set; }
+
+        [BindProperty, Required]
+        public double CarbonFoodprint { get;set;}
+
+     
+        //public string householdName { get; set; }
+
+
+        public async Task OnGetAsync()
+        {
+            Categories = _foodcategoryService.GetAll();
+            //var user = await _userManager.GetUserAsync(HttpContext.User);
+            //var household = ( await _householdService.RetrieveHouseholdDetails(user.HouseholdId ?? -1)).Value;
+            //householdName = household.Name;
+
+        }
+
+
 
         public async Task<IActionResult> OnPostAsync()
         {
+
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            var userId = (await _userManager.GetUserAsync(HttpContext.User)).Id;
-            var user = await _userManager.Users
-                .Include(u => u.Household)
-                .FirstAsync(u => u.Id == userId);
 
-            var household = user.Household;
 
-            var newFood = new FoodItem()
+            if (ModelState.IsValid)
             {
-                Household = household,
-                Name = Name,
-                Description = Description,
-                Quantity = Quantity,
-                ExpiryDate = ExpiryDate
-            };
+                if (ImageFilePath != null)
+                {
+                    if (ImageFilePath.Length > 2 * 1024 * 1024)
+                    {
+                        ModelState.AddModelError("Upload", "File size cannot exceed 2MB.");
+                        return Page();
+                    }
 
-            var uploadFolder = "Uploads";
-            var imageFile = Guid.NewGuid() + Path.GetExtension(Image.FileName);
-            var imagePath = Path.Combine(_environment.ContentRootPath, "wwwroot", uploadFolder, imageFile);
-            using var fileStream = new FileStream(imagePath, FileMode.Create);
-            await Image.CopyToAsync(fileStream);
-            newFood.ImageFilePath = string.Format("/{0}/{1}", uploadFolder, imageFile);
+                    var uploadsFolder = "uploads";
+                    var imageFile = Guid.NewGuid() + Path.GetExtension(ImageFilePath.FileName);
+                    var imagePath = Path.Combine(_environment.ContentRootPath, "wwwroot", uploadsFolder, imageFile);
+                    using var fileStream = new FileStream(imagePath, FileMode.Create);
+                    await ImageFilePath.CopyToAsync(fileStream);
+                    var ImageURL = string.Format("/{0}/{1}", uploadsFolder, imageFile);
 
-            _fooditemService.AddFoodItem(newFood);
-            return Redirect("/FoodTracker");
+                    var user = await _userManager.GetUserAsync(HttpContext.User);
+                    var household = (await _householdService.RetrieveHouseholdDetails(user.HouseholdId ?? -1)).Value;
+                    //var householdName = _http.HttpContext?.Session.GetString(SessionVariable.HousholdName);
+                    //var household = (await _householdService.RetrieveHouseholdDetailsByName(householdName)).Value;
+                    //var category = _foodcategoryService.GetCategoryByName(Category);
+                    var newfood = new FoodItem()
+                    {
+                        Household = household,
+                        Name = Name,
+                        Description = Description,
+                        Quantity = Quantity,
+                        ExpiryDate = ExpiryDate,
+                        ImageFilePath = ImageURL,
+                        Category = "Fruit",
+                        CarbonFootprint = 1.1,
+                        Weight = 1.1,
+                        IsCustom = true,
+                        Status = true
+                    };
+
+                    var newcat = new Category()
+                    {
+                        Name = "Fruit",
+                        Description = "Healthy for the body"
+                    };
+
+                    _foodcategoryService.AddCategory(newcat);
+                    _fooditemService.AddFoodItem(newfood);
+                    return Redirect("/FoodTracker");
+                }
+
+               
+
+            }
+            return Page();
+
+
+           
         }
     }
 
