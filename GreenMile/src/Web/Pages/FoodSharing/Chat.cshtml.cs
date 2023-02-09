@@ -18,6 +18,7 @@ namespace Web.Pages.FoodSharing
 
         [BindProperty]
         public string MyUser { get; set; }
+
         public ChatModel(UserManager<User> userManager)
         {
             _userManager = userManager;

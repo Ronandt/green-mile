@@ -1,5 +1,4 @@
-﻿
-var connection = new signalR.HubConnectionBuilder().withUrl("/chathub").build();
+﻿var connection = new signalR.HubConnectionBuilder().withUrl("/Chathub").build();
 
 //Disable send button until connection is established
 $("#sendMessage").prop('disabled', true);
@@ -37,5 +36,14 @@ $("#sendMessage").click(function () {
             return console.error(err.toString());
         });
     }
+
+    var encodedMsg = sender + " says " + message;
+    var li = document.createElement("li");
+    li.textContent = encodedMsg;
+    $("#messagesList").append(li);
+
+
     event.preventDefault();
+
 });
+

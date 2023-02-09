@@ -100,9 +100,12 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.MapRazorPages();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapHub<ChatHub>("/Chathub");
+});
 
-app.MapHub<ChatHub>("/chatHub");
+app.MapRazorPages();
 
 
 app.Run();
