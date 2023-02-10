@@ -59,15 +59,6 @@ connection.start().then(function () {
   return console.error(err.toString());
 });
 
-document.getElementById("sendButton").addEventListener("click", function (event) {
-  var userId = document.getElementById("userId").value;
-  var text = document.getElementById("messageInput").value;
-  connection.invoke("SendMessage", userId, text).catch(function (err) {
-    return console.error(err.toString());
-  });
-  event.preventDefault();
-});
-
 function deleteMessage(e) {
   var id = e.parentElement.parentElement.id;
   var messageId = id.split("_")[1]
@@ -75,3 +66,22 @@ function deleteMessage(e) {
     return console.error(err.toString());
   })
 }
+
+function sendMessage() {
+  var messageInput = document.getElementById("messageInput");
+  var userId = document.getElementById("userId").value;
+  var text = messageInput.value;
+  if (text == "")
+  {
+    return;
+  }
+  messageInput.value = "";
+  connection.invoke("SendMessage", userId, text).catch(function (err) {
+    return console.error(err.toString());
+  });
+}
+
+document.getElementById("messageForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  sendMessage();
+})
