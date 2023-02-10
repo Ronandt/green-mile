@@ -10,6 +10,12 @@
     var user = await _userManager.GetUserAsync(User);
     var foods = (await _groceryFoodService.RetrieveFoodByHousehold(user.HouseholdId ?? 0)).Value;
 }
+
+
+
+<style>
+
+</style>
 <main class="main">
     <div class="page-header breadcrumb-wrap">
         <div class="container">
@@ -49,8 +55,15 @@
                             {
                                 <tr class="pt-30">
                                     <td class="custome-checkbox pl-30">
-                                        <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox1" value="" />
-                                        <label class="form-check-label" for="exampleCheckbox1"></label>
+
+                                     @if(food.InBasket) {
+
+                                                                                 <input class="form-check-input active" checked type="checkbox" name="@("checkbox" + food.Id)" id="@("checkbox" + food.Id)" onclick='toggleBasket("@(food.Id)")' value="" />
+                                            <label type="checkbox"  checked="checked" class="form-check-label active" for="@("checkbox" + food.Id)"></label>
+                                        } else {
+                                            <input class="form-check-input active" type="checkbox" name="@("checkbox" + food.Id)" id="@("checkbox" + food.Id)" onclick='toggleBasket("@(food.Id)")' value="" />
+                                            <label type="checkbox"  class="form-check-label" for="@("checkbox" + food.Id)"></label>
+                                        }
                                     </td>
                                     <td class="image product-thumbnail pt-40"><img src="@food.ImageFilePath" alt="#" /></td>
                                     <td class="product-des product-name">
@@ -132,6 +145,21 @@
                     return res.json()
                 })
                 .then(data => console.log(data))
+    }
+
+
+
+    function toggleBasket(id) {
+
+            fetch('/api/grocerylist/change/' + id, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    
+                })
+            })
     }
 </script>
  
