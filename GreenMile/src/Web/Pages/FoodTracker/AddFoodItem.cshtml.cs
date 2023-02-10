@@ -110,7 +110,7 @@ namespace Web.Pages.FoodTracker
                         Quantity = Quantity,
                         ExpiryDate = ExpiryDate,
                         ImageFilePath = ImageURL,
-                        Category = "Fruit",
+                        Category = Category,
                         CarbonFootprint = 1.1,
                         Weight = 1.1,
                         IsCustom = true,
