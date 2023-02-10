@@ -10,11 +10,13 @@ using OpenAI.GPT3.Extensions;
 using Web.Data;
 using Web.Models;
 using Web.Services;
+using Web.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddSignalR();
 
 // In-house Services
 builder.Services.AddScoped<FoodItemService>();
@@ -29,6 +31,7 @@ builder.Services.AddOpenAIService();
 builder.Services.AddScoped<DonationService>();
 builder.Services.AddScoped<CustomFoodService>();
 builder.Services.AddScoped<DonationRequestService>();
+builder.Services.AddScoped<MessageService>();
 
 builder.Services.AddDbContext<DataContext>(options =>
 {
@@ -61,7 +64,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(30);
     options.Lockout.MaxFailedAccessAttempts = 5;
     options.Lockout.AllowedForNewUsers = true;
-    
+
 });
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -108,5 +111,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.MapRazorPages();
+app.MapHub<HouseholdHub>("/householdHub");
 
 app.Run();

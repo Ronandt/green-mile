@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Web.Migrations
 {
-    public partial class first : Migration
+    public partial class Message : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -134,6 +134,7 @@ namespace Web.Migrations
                     HouseholdId = table.Column<int>(type: "INTEGER", nullable: true),
                     Disabled = table.Column<bool>(type: "INTEGER", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    ImageURL = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -285,6 +286,7 @@ namespace Web.Migrations
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: false),
                     ExpiryDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    CarbonFootprint = table.Column<double>(type: "REAL", nullable: false),
                     Quantity = table.Column<int>(type: "INTEGER", nullable: false),
                     ImageFilePath = table.Column<string>(type: "TEXT", nullable: false),
                     IsCustom = table.Column<bool>(type: "INTEGER", nullable: false)
@@ -297,6 +299,33 @@ namespace Web.Migrations
                         column: x => x.HouseholdId,
                         principalTable: "Household",
                         principalColumn: "HouseholdId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Messages",
+                columns: table => new
+                {
+                    Key = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserId = table.Column<string>(type: "TEXT", nullable: true),
+                    HouseholdId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Text = table.Column<string>(type: "TEXT", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Messages", x => x.Key);
+                    table.ForeignKey(
+                        name: "FK_Messages_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Messages_Household_HouseholdId",
+                        column: x => x.HouseholdId,
+                        principalTable: "Household",
+                        principalColumn: "HouseholdId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -341,6 +370,36 @@ namespace Web.Migrations
                         column: x => x.FoodItemId,
                         principalTable: "FoodItems",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GroceryFood",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Quantity = table.Column<int>(type: "INTEGER", nullable: false),
+                    ExtraNote = table.Column<string>(type: "TEXT", nullable: true),
+                    InBasket = table.Column<bool>(type: "INTEGER", nullable: false),
+                    HouseholdId = table.Column<int>(type: "INTEGER", nullable: true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: true),
+                    CarbonFootprint = table.Column<double>(type: "REAL", nullable: true),
+                    ImageFilePath = table.Column<string>(type: "TEXT", nullable: true),
+                    CategoryId = table.Column<int>(type: "INTEGER", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GroceryFood", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_GroceryFood_Categories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Categories",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_GroceryFood_Household_HouseholdId",
+                        column: x => x.HouseholdId,
+                        principalTable: "Household",
+                        principalColumn: "HouseholdId");
                 });
 
             migrationBuilder.CreateIndex(
@@ -431,10 +490,30 @@ namespace Web.Migrations
                 column: "HouseholdId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_GroceryFood_CategoryId",
+                table: "GroceryFood",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GroceryFood_HouseholdId",
+                table: "GroceryFood",
+                column: "HouseholdId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Household_OwnerId",
                 table: "Household",
                 column: "OwnerId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_HouseholdId",
+                table: "Messages",
+                column: "HouseholdId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_UserId",
+                table: "Messages",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Notifications_UserId",
@@ -499,6 +578,12 @@ namespace Web.Migrations
 
             migrationBuilder.DropTable(
                 name: "FoodItemCategories");
+
+            migrationBuilder.DropTable(
+                name: "GroceryFood");
+
+            migrationBuilder.DropTable(
+                name: "Messages");
 
             migrationBuilder.DropTable(
                 name: "Notifications");
