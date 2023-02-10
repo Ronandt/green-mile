@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
+using Web.Data;
 using Web.Models;
 using Web.Services;
 
@@ -12,8 +13,10 @@ namespace Web.API
     public class GroceryListController : ControllerBase
     {
         private readonly IGroceryFoodService _foodService;
-        public GroceryListController(IGroceryFoodService foodService) {
+        private readonly DataContext _dataContext;
+        public GroceryListController(IGroceryFoodService foodService, DataContext dataContext) {
             _foodService = foodService;
+            _dataContext = dataContext;
         
         
         }
@@ -44,6 +47,18 @@ namespace Web.API
         public async Task Put(string id, [FromBody] Value value)
         {
             await _foodService.ChangeQuantity(await _foodService.RetrieveGroceryItem(id), value.value);
+        }
+
+        //api/grocerylist/change/id
+
+        [HttpPut("change/{id}")]
+        public async Task ChangePut(string id)
+        {
+           var values =  await _dataContext.GroceryFood.FindAsync(id);
+          
+            values.InBasket = !values.InBasket;
+            _dataContext.GroceryFood.Update(values);
+            await _dataContext.SaveChangesAsync();
         }
 
         // DELETE api/<GroceryListController>/5
