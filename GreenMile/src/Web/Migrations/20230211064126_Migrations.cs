@@ -303,6 +303,7 @@ namespace Web.Migrations
                     CarbonFootprint = table.Column<double>(type: "REAL", nullable: false),
                     Quantity = table.Column<int>(type: "INTEGER", nullable: false),
                     Weight = table.Column<double>(type: "REAL", nullable: false),
+                    Cost = table.Column<double>(type: "REAL", nullable: false),
                     ImageFilePath = table.Column<string>(type: "TEXT", nullable: false),
                     Category = table.Column<string>(type: "TEXT", nullable: false),
                     IsCustom = table.Column<bool>(type: "INTEGER", nullable: false),

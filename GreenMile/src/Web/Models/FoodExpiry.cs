@@ -3,7 +3,7 @@
     public class FoodExpiry
     {
         public string Category { get; set; }
-        public string Cost { get; set; }
-        public string Weight { get; set; }
+        public double Cost { get; set; }
+        public double Weight { get; set; }
     }
 }

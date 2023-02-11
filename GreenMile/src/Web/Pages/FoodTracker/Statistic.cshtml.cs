@@ -54,7 +54,7 @@ namespace Web.Pages.FoodTracker
             // weight & cost of each category
             foreach (var food in FoodItemList)
             {
-                if (food.ExpiryDate < DateTime.Now)
+                if (food.ExpiryDate <= DateTime.Now)
                 { 
                     if(food.Category == "Fruit")
                     {
@@ -64,6 +64,7 @@ namespace Web.Pages.FoodTracker
                     }
                     if (food.Category == "Vegetable")
                     {
+                        
                         Vegetable.Category = "Vegetable";
                         Vegetable.Cost += 10;
                         Vegetable.Weight += food.Weight;
@@ -80,24 +81,22 @@ namespace Web.Pages.FoodTracker
                         Dairy.Cost += 10;
                         Dairy.Weight += food.Weight;
                     }
+                    Activity.Name = food.Name;
+                    Activity.Date = DateTime.Now.ToString();
+                    Activity.Type = "Expired";
+                    Activitylist.Add(Activity);
                     // cost of expired food
-                    Waste_cost += 13;
+                    Waste_cost += food.Cost;
                 }
                 else if (food.ExpiryDate >= DateTime.Now){
                     // cost of current inventory
-                    Inventory_cost += 12;
+                    Inventory_cost += food.Cost;
 
                     //recent activity
                     Activity.Name = food.Name;
                     Activity.Date = food.ExpiryDate.ToString();
-                    if(food.ExpiryDate == DateTime.Now)
-                    {
-                        Activity.Type = "Expired";
-                    }
-                    else
-                    {
-                        Activity.Type = "New";
-                    }
+                    Activity.Type = "New";
+                  
                     Activitylist.Add(Activity);
                     
                 }
