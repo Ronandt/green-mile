@@ -36,6 +36,7 @@ namespace Web.Pages.GroceryList
             await _groceryFoodService.Delete(GroceryListUiState.DeleteId);
             return Redirect("/grocerylist/groceries");
            
+
         }
     }
 }

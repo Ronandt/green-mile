@@ -2,6 +2,8 @@
 @model Web.Pages.GroceryList.AddModel
 @{
 }
+
+
 <main class="main pages">
     <div class="page-content">
         <div class="container">
@@ -30,8 +32,10 @@
                                                 <span asp-validation-for="GroceryUiState.Name" class="text-danger"></span>
                                             </div>
                                         </div>
-                                     
 
+                                        Description & Extra Information<br />
+                                        <textarea class="form-control" style="height:100%;" asp-for="GroceryUiState.Description" rows="7" placeholder="What's up?" required></textarea>
+                                        <button class="btn btn-primary" type="button" onclick="generate();return false" style="margin-top: 20px;" id="genimg">Generate Grocery Description</button>
                                         <div class="row mb-3" style="margin-top: 50px; margin-bottom: 1000px;">
 <label class="col-sm-2 col-form-label" asp-for="GroceryUiState.Category">
 </label>
@@ -95,5 +99,60 @@ class="text-danger"></span>
         document.getElementById("GroceryUiState_Quantity").value = Math.max(1, document.getElementById("GroceryUiState_Quantity").value - 1)
         document.getElementById("value").textContent = document.getElementById("GroceryUiState_Quantity").value
     }
+</script>
+
+<script>
+    async function generate() {
+        document.getElementById("genimg").disabled = true
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/openAIHub")
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+
+
+
+        async function start(callback) {
+            try {
+                await connection.start();
+                console.log("SignalR Connected.");
+                callback()
+
+            } catch (err) {
+                console.log(err);
+                setTimeout(start, 4999);
+            }
+        };
+
+        connection.onclose(async () => {
+            
+        });
+
+        // Start the connection.
+        start(() => {
+            connection.stream("queryGPT", "Generate extra information or description about a" + document.getElementById("GroceryUiState_Name").value + "in the context of a grocery list that helps the user know that is the item. Don't include anything unncessary but make it quite descriptive.").subscribe({
+
+
+                next: (item) => {
+                    var des = document.getElementById("GroceryUiState_Description")
+
+                    des.value += item.replace("\n", " ")
+                },
+                complete: () => {
+                    console.log("End")
+
+                },
+                error: (err) => {
+                    console.log(err);
+                },
+
+            })
+        });
+
+         document.getElementById("genimg").disabled = false
+
+    }
+    
+
+   
 </script>
 

@@ -45,7 +45,7 @@
                                 <th scope="col"  style="margin-left:80px;"colspan="2">Product</th>
                                 <th scope="col">Quantity</th>
                                 <th scope="col">Category</th>
-                                <th scope="col">Transfer to inventory</th>
+                                <th scope="col">Actions</th>
                                 <th scope="col" class="end">Remove</th>
 
                             </tr>
@@ -65,7 +65,7 @@
                                             <label type="checkbox"  class="form-check-label" for="@("checkbox" + food.Id)"></label>
                                         }
                                     </td>
-                                    <td class="image product-thumbnail pt-40"><img src="@food.ImageFilePath" alt="#" /></td>
+                                    <td class="image product-thumbnail pt-40" style="position:relative;bottom: 15px;"><img src="@food.ImageFilePath" alt="#" /></td>
                                     <td class="product-des product-name">
                                         <h6><a class="product-name mb-10" style="position: relative; right: 40px;" href="shop-product-right.html">@food.Name</a></h6>
                              
@@ -84,9 +84,17 @@
                                     <td style="position: relative; right: 40px;" class="text-center detail-info" data-title="Stock">
                                         <span class="stock-status in-stock mb-0"> @((await _categoryService.RetrieveCategory(food.CategoryId ?? 0))?.Name)</span>
                                     </td>
-                                    <td class="text-right" style="position: relative; left: 40px;" data-title="Cart">
-                                        <button class="btn btn-sm">Transfer</button>
+
+                                    <td class="text-right" style="position: relative; left: 40px;bottom: 10px;" data-title="Cart">
+
+                                        <button data-bs-toggle="modal" data-bs-target="#quickViewModal-@(food.Id)"
+                                            style="background-color: black; color:white" href="#"
+                                            class="btn btn-sm btn-warning rounded font-sm mt-15">
+                                           View
+                                        </button>
+
                                     </td>
+
                                     <td class="action text-center" style="position: relative; right: 40px;" data-title="Remove">
                                         
                                         <form method="POST">
@@ -96,6 +104,88 @@
                                      
                                     </td>
                                 </tr>
+
+
+
+
+
+
+
+
+
+
+
+                                <div class="modal fade custom-modal" id="quickViewModal-@(food.Id)" tabindex="-1"
+                                 aria-labelledby="quickViewModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                            <div class="modal-body">
+                                                <div class="row">
+                      
+                                                    <img src="@food.ImageFilePath" alt="#"  style="margin-bottom: 20px;height: 300px;object-fit:cover;border-radius:50px;"/>
+                                                    <div class="detail-info pr-30 pl-30">
+                                                    
+                                                        <h3 class="title-detail" style="margin-bottom: 20px;">
+                                                            <a style=""
+                                                           href="shop-product-right.html" class="text-heading">
+                                                             @(food.Name)
+
+                                                            </a>
+                                                        </h3>
+
+                                                        <div style="margin-bottom:20px;">
+                                            
+                                                            @if(String.IsNullOrEmpty(food.Description)) {
+                                                                <span style="font-weight:bold;">No Description</span>
+                                                            } else
+                                                            {
+                                                                <div>
+                                                                    @(food.Description)
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                        <span class="stock-status in-stock mb-0"> @((await _categoryService.RetrieveCategory(food.CategoryId ?? 0))?.Name)</span>
+                                                        <div style="margin-top: 20px;">
+                                                            <div class="detail-extralink mr-15">
+                                                                <div class="detail-qty border radius">
+                                                              
+
+                                                                    <span style="position:relative;left: 8px;"class="qty-val" id='@("values" + food.Id)'>@food.Quantity</span>
+                                                                    <input type="hidden" value="@food.Quantity" id='@("GroceryListUiState_Quantity" + food.Id)' />
+                                                                   
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+
+
+                                                    <!-- Detail Info -->
+                                                    <div style="margin-top: 30px;margin-left:10px" class="text-start">
+
+
+
+
+
+
+
+
+                                                        <button data-bs-dismiss="modal" aria-label="Close"
+                                                            class="btn btn-lg btn-brand rounded font-sm mt-15">
+                                                      Close
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
                             }
                   
                 
@@ -110,9 +200,12 @@
 
 
         <script>
+
     function up(id) {
-        document.getElementById("GroceryListUiState_Quantity" + id).value =  parseInt(document.getElementById("GroceryListUiState_Quantity" + id).value) + 1
-        document.getElementById("value" + id).textContent = document.getElementById("GroceryListUiState_Quantity" + id).value
+            let vals = Math.max(1, parseInt(document.getElementById("value" + id).textContent) + 1)
+       
+            document.getElementById("value" + id).textContent =vals
+        document.getElementById("value" + id).textContent = vals
 
             fetch('/api/grocerylist/' + id, {
                 method: 'PUT',
@@ -130,8 +223,9 @@
     }
 
     function down(id) {
-        document.getElementById("GroceryListUiState_Quantity" + id).value = Math.max(1, document.getElementById("GroceryListUiState_Quantity" + id   ).value - 1)
-        document.getElementById("value" + id).textContent = document.getElementById("GroceryListUiState_Quantity" + id).value
+            let vals = Math.max(1, document.getElementById("value" + id).textContent - 1)
+        document.getElementById("value" + id).textContent = vals
+        document.getElementById("value" + id).textContent = vals
           fetch('/api/grocerylist/' + id, {
                 method: 'PUT',
                 headers: {
@@ -162,5 +256,9 @@
             })
     }
 </script>
- 
+
+
+
+
+
 </main>

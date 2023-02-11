@@ -41,7 +41,7 @@ namespace Web.Pages.GroceryList
         public async Task<IActionResult> OnPost()
         {
             var user = await _userManager.GetUserAsync(User);
-            if(user != null)
+            if(!(user is null))
             {
                 var item = new GroceryFoodItem()
                 {
@@ -51,7 +51,8 @@ namespace Web.Pages.GroceryList
                     Name = GroceryUiState.Name,
                     Quantity = GroceryUiState.Quantity,
                     ImageFilePath = await _imageService.StoreImage(GroceryUiState.Image),
-                    CategoryId = GroceryUiState.Category
+                    CategoryId = GroceryUiState.Category,
+                    Description = GroceryUiState.Description
                     
                 };
                 await _foodService.Add(item);
