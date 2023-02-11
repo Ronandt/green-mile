@@ -10,6 +10,7 @@ using OpenAI.GPT3.Extensions;
 using Web.Data;
 using Web.Models;
 using Web.Services;
+using Web.API;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +35,7 @@ builder.Services.AddScoped<CustomFoodService>();
 builder.Services.AddScoped<DonationRequestService>();
 builder.Services.AddScoped<CategoryService>();
 builder.Services.AddTransient<OpenAIHub>();
+builder.Services.AddScoped<GoogleAIService>();
 builder.Services.AddDbContext<DataContext>(options =>
 {
     if (builder.Environment.IsDevelopment())

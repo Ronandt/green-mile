@@ -14,7 +14,7 @@
                             <div class="login_wrap widget-taber-content background-white">
                                 <div class="padding_eight_all bg-white">
                                     <div class="heading_s1" style="margin-top:100px; margin-bottom: 30px;">
-                                        <h1 class="mb-5">Create Your Food Item</h1>
+                                        <h1 class="mb-5">Add item to grocery list</h1>
 
                                     </div>
                                     <div asp-validation-summary="All" class="text-danger"></div>
@@ -100,7 +100,29 @@ class="text-danger"></span>
         document.getElementById("value").textContent = document.getElementById("GroceryUiState_Quantity").value
     }
 </script>
+<script>
 
+    const fileInput = document.getElementById("GroceryUiState_Image")
+    fileInput.addEventListener("change", (event) => {
+    const file = event.target.files[0]
+    const formData = new FormData();
+    formData.append("file", file)
+
+    fetch("/api/google", {
+        method: "POST",
+        body: formData
+    }).then((response) => {
+        return response.text()
+    }).then((data) => {
+        document.getElementById("GroceryUiState_Name").value = data
+    }).catch((error) => {
+            document.getElementById("GroceryUiState_Name").value = "Unknown"
+    })
+
+    })
+
+
+</script>
 <script>
     async function generate() {
         document.getElementById("genimg").disabled = true

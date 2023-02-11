@@ -85,7 +85,7 @@
                                         <span class="stock-status in-stock mb-0"> @((await _categoryService.RetrieveCategory(food.CategoryId ?? 0))?.Name)</span>
                                     </td>
 
-                                    <td class="text-right" style="position: relative; left: 40px;bottom: 10px;" data-title="Cart">
+                                    <td class="text-right" style="position: relative; right: 1px;bottom: 10px;" data-title="Cart">
 
                                         <button data-bs-toggle="modal" data-bs-target="#quickViewModal-@(food.Id)"
                                             style="background-color: black; color:white" href="#"
