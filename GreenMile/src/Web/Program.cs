@@ -15,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddSignalR();
 
 // In-house Services
 builder.Services.AddScoped<FoodItemService>();
@@ -32,7 +33,7 @@ builder.Services.AddScoped<DonationService>();
 builder.Services.AddScoped<CustomFoodService>();
 builder.Services.AddScoped<DonationRequestService>();
 builder.Services.AddScoped<CategoryService>();
-
+builder.Services.AddTransient<OpenAIHub>();
 builder.Services.AddDbContext<DataContext>(options =>
 {
     if (builder.Environment.IsDevelopment())
@@ -119,6 +120,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-app.MapRazorPages();
 
+app.MapRazorPages();
+app.MapHub<OpenAIHub>("/openAIHub");
 app.Run();

@@ -13,7 +13,9 @@ namespace Web.UiState
 
         public int Quantity { get; set; }
 
-        public int Category { get; set; }  
+        public int Category { get; set; }
+
+        public string? Description { get; set; } = "";
 
        
         
