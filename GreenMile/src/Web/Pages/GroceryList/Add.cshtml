@@ -104,20 +104,24 @@ class="text-danger"></span>
 
     const fileInput = document.getElementById("GroceryUiState_Image")
     fileInput.addEventListener("change", (event) => {
+     
     const file = event.target.files[0]
-    const formData = new FormData();
-    formData.append("file", file)
+    if(!file) {
+    return;
+    }
+        const formData = new FormData();
+        formData.append("file", file)
 
-    fetch("/api/google", {
-        method: "POST",
-        body: formData
-    }).then((response) => {
-        return response.text()
-    }).then((data) => {
-        document.getElementById("GroceryUiState_Name").value = data
-    }).catch((error) => {
+        fetch("/api/google", {
+            method: "POST",
+            body: formData
+        }).then((response) => {
+            return response.text()
+        }).then((data) => {
+            document.getElementById("GroceryUiState_Name").value = data
+        }).catch((error) => {
             document.getElementById("GroceryUiState_Name").value = "Unknown"
-    })
+        })
 
     })
 
