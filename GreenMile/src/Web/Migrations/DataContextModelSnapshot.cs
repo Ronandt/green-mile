@@ -395,6 +395,9 @@ namespace Web.Migrations
                     b.Property<int>("HouseholdId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("TEXT");

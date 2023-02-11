@@ -11,8 +11,8 @@ using Web.Data;
 namespace Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230131005857_Message")]
-    partial class Message
+    [Migration("20230211113204_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -396,6 +396,9 @@ namespace Web.Migrations
 
                     b.Property<int>("HouseholdId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Text")
                         .IsRequired()

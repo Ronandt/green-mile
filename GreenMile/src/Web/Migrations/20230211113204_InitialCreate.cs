@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Web.Migrations
 {
-    public partial class Message : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -310,6 +310,7 @@ namespace Web.Migrations
                     UserId = table.Column<string>(type: "TEXT", nullable: true),
                     HouseholdId = table.Column<int>(type: "INTEGER", nullable: false),
                     Text = table.Column<string>(type: "TEXT", nullable: false),
+                    ImagePath = table.Column<string>(type: "TEXT", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>

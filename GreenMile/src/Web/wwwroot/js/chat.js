@@ -6,7 +6,8 @@ var connection = new signalR.HubConnectionBuilder().withUrl("/householdHub").bui
 //Disable the send button until connection is established.
 document.getElementById("sendButton").disabled = true;
 
-connection.on("ReceiveMessage", function (userName, id, message, time) {
+connection.on("ReceiveMessage", function (messageViewModel) {
+  let { key: id, username: userName, message, createdAt: time, imagePath } = messageViewModel;
   var isUser = document.getElementById("username").value == userName
   console.log(userName)
   console.log(document.getElementById("username").value)
@@ -18,6 +19,16 @@ connection.on("ReceiveMessage", function (userName, id, message, time) {
   container.className = !isUser ? "text-white px-2 rounded" : "px-2 border rounded ms-auto";
   container.style = !isUser ? "background-color: #33764e;" : "";
   container.id = `message_${id}`;
+  if (imagePath != null)
+  {
+    var img = document.createElement('img');
+    container.appendChild(img);
+    img.src = "/" + imagePath;
+    img.width = 400;
+    img.height = 300;
+    img.style.objectFit = "cover";
+    img.loading = "lazy";
+  }
   var nameAndTrashRow = document.createElement("div");
   container.appendChild(nameAndTrashRow);
   nameAndTrashRow.className = "d-flex justify-content-between align-items-center"
@@ -67,21 +78,43 @@ function deleteMessage(e) {
   })
 }
 
-function sendMessage() {
+async function sendMessage() {
+  const toBase64 = file => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+
   var messageInput = document.getElementById("messageInput");
+  var fileInput = document.getElementById("fileInput")
   var userId = document.getElementById("userId").value;
   var text = messageInput.value;
   if (text == "")
   {
     return;
   }
+  var base64Image = null
+  if (fileInput.files.length != 0)
+  {
+    base64Image = await toBase64(fileInput.files[0])
+  }
   messageInput.value = "";
-  connection.invoke("SendMessage", userId, text).catch(function (err) {
-    return console.error(err.toString());
-  });
+  fileInput.value = "";
+  if (base64Image != null)
+  {
+    connection.invoke("SendMessageWithImage", userId, text, base64Image).catch(function (err) {
+      return console.error(err.toString());
+    });
+  }
+  else {
+    connection.invoke("SendMessage", userId, text).catch(function (err) {
+      return console.error(err.toString());
+    });
+  }
 }
 
-document.getElementById("messageForm").addEventListener("submit", (e) => {
+document.getElementById("messageForm").addEventListener("submit", async (e) => {
   e.preventDefault();
-  sendMessage();
+  await sendMessage();
 })

@@ -16,7 +16,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.AddSignalR();
+builder.Services.AddSignalR(options =>
+{
+    options.MaximumReceiveMessageSize = 5000 * 1024; // 5 MB or 5000 KB
+});
 
 // In-house Services
 builder.Services.AddScoped<FoodItemService>();
