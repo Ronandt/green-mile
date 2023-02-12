@@ -11,6 +11,9 @@ namespace Web.UiState
         [BindProperty]
         public string? DeleteId { get; set; }
 
+        [BindProperty]
+        public IFormFile? JsonFile { get; set; }
+
 
     }
 }

@@ -1,3 +1,6 @@
+using System.ComponentModel.DataAnnotations;
+using System.Xml.Linq;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -30,19 +33,29 @@ namespace Web.Pages.FoodSharing
         [BindProperty]
         public int CustomFoodId { get; set; }
 
+        [BindProperty] 
+        public int DonationId { get; set; }
+
         [BindProperty]
         public string? Name { get; set; }
 
         [BindProperty]
-        public string? Description { get; set; }
+        public string? Category { get; set; }
 
         [BindProperty]
+        public string? Description { get; set; }
+
+        [BindProperty, Required, DataType(DataType.Date), Display(Name = "Expiry Date")]
+
         public DateTime? ExpiryDate { get; set; }
 
         [BindProperty]
         public IFormFile? Upload { get; set; }
 
         public string Image { get; set; }
+
+        [BindProperty]
+        public string Status { get; set; }
 
         public IActionResult OnGet(int id)
         {
@@ -52,8 +65,13 @@ namespace Web.Pages.FoodSharing
                 return NotFound();
 
             CustomFoodId = donation.CustomFood.Id;
-
+            DonationId = donation.Id;
+            Name = donation.CustomFood.Name;
+            Category = donation.CustomFood.Category;
+            Description= donation.CustomFood.Description;
+            ExpiryDate = donation.CustomFood.ExpiryDate;
             Image = donation.CustomFood.Image;
+            Status = donation.Status.ToString();
 
             return Page();
 
@@ -65,10 +83,29 @@ namespace Web.Pages.FoodSharing
                 return Page();
 
             var customFood = await _customFoodService.GetCustomFoodById(CustomFoodId);
+            var donation  = _donationService.GetDonationById(DonationId);
+
+            if (Status == DonationStatus.ACTIVE.ToString())
+            {
+                donation!.Status = DonationStatus.ACTIVE;
+            }
+            else if (Status == DonationStatus.RESERVED.ToString())
+            {
+                donation!.Status = DonationStatus.RESERVED;
+            }
+            else if (Status == DonationStatus.COMPLETED.ToString())
+            {
+                donation!.Status = DonationStatus.COMPLETED;
+            }
+            else if (Status == DonationStatus.CANCELLED.ToString())
+            {
+                donation!.Status = DonationStatus.CANCELLED;
+            }
 
             customFood!.Name = Name ?? customFood.Name;
-            customFood.Description = Description ?? customFood.Description;
-            customFood.ExpiryDate = ExpiryDate ?? customFood.ExpiryDate;
+            customFood!.Category = Category ?? customFood.Category;
+            customFood!.Description = Description ?? customFood.Description;
+            customFood!.ExpiryDate = ExpiryDate ?? customFood.ExpiryDate;
             
             if (Upload is not null)
             {
@@ -80,9 +117,12 @@ namespace Web.Pages.FoodSharing
                 customFood.Image = string.Format("/{0}/{1}", uploadFolder, imageFile);
             }
 
+            await _donationService.UpdateDonation(donation);
             await _customFoodService.Update(customFood);
 
-            return Redirect("/FoodSharing");
+            TempData["FlashMessage.Type"] = "success";
+            TempData["FlashMessage.Text"] = "You have successfully updated the food item";
+            return Redirect("/FoodSharing/Mydonations");
         }
     }
 }

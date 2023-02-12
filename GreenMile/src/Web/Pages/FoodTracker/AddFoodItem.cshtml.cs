@@ -51,6 +51,8 @@ namespace Web.Pages.FoodTracker
 
         [BindProperty, Required]
         public double Weight { get; set; }
+        [BindProperty, Required]
+        public double Cost { get; set; }
 
         [BindProperty, Required]
         public double CarbonFoodprint { get;set;}
@@ -114,6 +116,7 @@ namespace Web.Pages.FoodTracker
                         Category = Category,
                         CarbonFootprint = 1.1,
                         Weight = 1.1,
+                        Cost = Cost,
                         IsCustom = true,
                         Status = true
                     };
