@@ -15,7 +15,14 @@ namespace Web.Services
         }
 
 
+        public List<FoodItem> GetAllForRecipe()
+        {
+            return _context.FoodItems.ToList();
+        }
+
+
         public List<FoodItem> GetAll(Household household)
+
         {
 
 
