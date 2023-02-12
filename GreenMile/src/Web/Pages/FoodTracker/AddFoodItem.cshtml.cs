@@ -53,6 +53,10 @@ namespace Web.Pages.FoodTracker
         public double Weight { get; set; }
 
         [BindProperty, Required]
+        public double Cost { get; set; }
+
+
+        [BindProperty, Required]
         public double CarbonFoodprint { get;set;}
 
      
@@ -62,6 +66,9 @@ namespace Web.Pages.FoodTracker
         public async Task OnGetAsync()
         {
             Categories = _foodcategoryService.GetAll();
+
+            ExpiryDate = DateTime.Now;
+
             //var user = await _userManager.GetUserAsync(HttpContext.User);
             //var household = ( await _householdService.RetrieveHouseholdDetails(user.HouseholdId ?? -1)).Value;
             //householdName = household.Name;
@@ -110,9 +117,12 @@ namespace Web.Pages.FoodTracker
                         Quantity = Quantity,
                         ExpiryDate = ExpiryDate,
                         ImageFilePath = ImageURL,
-                        Category = "Fruit",
+
+                        Category = Category,
                         CarbonFootprint = 1.1,
                         Weight = 1.1,
+                        Cost = Cost,
+
                         IsCustom = true,
                         Status = true
                     };
@@ -125,6 +135,7 @@ namespace Web.Pages.FoodTracker
 
                     _foodcategoryService.AddCategory(newcat);
                     _fooditemService.AddFoodItem(newfood);
+                    TempData["success"] = "Food added successgfully!";
                     return Redirect("/FoodTracker");
                 }
 

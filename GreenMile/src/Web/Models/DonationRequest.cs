@@ -22,6 +22,7 @@ namespace Web.Models
 public enum RequestStatus
 {
     PENDING,
+    CANCELLED,
     ACCEPTED,
     DONE,
 }
