@@ -148,6 +148,8 @@
                                                 Enter your food:<br>
                                                 <input class="form-control" type="text" id="food" style="margin-bottom:20px; "placeholder="Enter what you want to cook to obtain ingredients for your list!"/>
                                                 <a class="btn btn-info" id="btn2">Generate Grocery List</a>
+
+                                            
                                             </div>
                                         </div>
                                     </div>
@@ -246,6 +248,7 @@
 
         document.getElementById("btn2").addEventListener("click", function () {
             document.getElementById("food").disabled = true
+            document.getElementById("btn2").innerHTML = "Loading..."
             const data = {
                 response: document.getElementById("food").value
             };
@@ -264,6 +267,7 @@
                     link.download = 'GeneratedGroceryList.json';
                     link.click();
                          document.getElementById("food").disabled = false
+                            document.getElementById("btn2").innerHTML = "Generate Grocery List"
                 })
                 .catch(error => console.error("Error:", error));
         });
