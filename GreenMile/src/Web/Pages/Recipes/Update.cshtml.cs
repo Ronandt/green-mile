@@ -9,27 +9,38 @@ namespace Web.Pages.Recipes
 {
     public class UpdateModel : PageModel
     {
+
         private readonly RecipeService _recipeService;
+        private readonly FoodItemService _foodItemService;
         private IWebHostEnvironment _webHostEnvironment;
-        public UpdateModel(RecipeService recipeService, IWebHostEnvironment webHostEnvironment)
+
+
+        public UpdateModel(RecipeService recipeService, IWebHostEnvironment webHostEnvironment, FoodItemService foodItemService)
         {
             _recipeService = recipeService;
             _webHostEnvironment = webHostEnvironment;
+            _foodItemService = foodItemService;
         }
 
         [BindProperty]
         public Recipe CurrentRecipe { get; set; } = new();
         public IFormFile? image { get; set; }
-        public List<String> ingredients { get; set; } = new();
+        public List<String> testIngredientList { get; set; } = new();
+        public List<FoodItem> IngredientList;
 
 
-        public IActionResult OnGet(string id)
+        public IActionResult OnGet(int id)
         {
+
+            IngredientList = _foodItemService.GetAllForRecipe();
+            //testIngredientList.Add("First ingredient");
+            //testIngredientList.Add("Second ingredient");
+            //testIngredientList.Add("Third ingredient");
+
             Recipe? recipe = _recipeService.GetRecipeById(id);
             if(recipe == null)
             {
-                TempData["FlashMessage.Type"] = "danger";
-                TempData["FlashMessage.Text"] = "Recipe not found!";
+                TempData["error"] = "Recipe not found!";
                 return Redirect("/Recipes/BackendView");
             }
             CurrentRecipe = recipe;
@@ -40,7 +51,7 @@ namespace Web.Pages.Recipes
         }
         public IActionResult OnPost()
         {
-            if (ModelState.IsValid)
+            if (true)   
             { 
                 if (image != null)
                 {
@@ -54,11 +65,10 @@ namespace Web.Pages.Recipes
 
                 }
                 _recipeService.UpdateRecipe(CurrentRecipe);
-                TempData["FlashMessage.Type"] = "success";
-                TempData["FlashMessage.Text"] = CurrentRecipe.recipeName + " successfully updated!";
+                TempData["success"] = CurrentRecipe.recipeName + " successfully updated!";
                 return Redirect("/Recipes/Index");
             }
-            return Page();
+            //return Page();
         }
     }
 }
