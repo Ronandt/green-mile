@@ -12,6 +12,7 @@
   <ItemGroup>
     <PackageReference Include="Betalgo.OpenAI.GPT3" Version="6.6.6" />
     <PackageReference Include="Google.Apis" Version="1.59.0" />
+    <PackageReference Include="Google.Apis.CloudNaturalLanguage.v1" Version="1.59.0.2844" />
     <PackageReference Include="Google.Cloud.Storage.V1" Version="4.3.0" />
     <PackageReference Include="Google.Cloud.Vision.V1" Version="3.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="6.0.2" />

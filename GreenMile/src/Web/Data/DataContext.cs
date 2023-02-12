@@ -23,6 +23,7 @@ public class DataContext : IdentityDbContext<User>
     public DbSet<Review> Reviews { get; set; }
 
 
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);

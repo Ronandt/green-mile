@@ -187,14 +187,25 @@ namespace Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+<<<<<<<< HEAD:GreenMile/src/Web/Migrations/20230211064126_Migrations.Designer.cs
+========
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+>>>>>>>> 841c5e6b305064703a1d9bee327f7af4e720866d:GreenMile/src/Web/Migrations/DataContextModelSnapshot.cs
                     b.Property<DateTime>("ExpiryDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Image")
+<<<<<<<< HEAD:GreenMile/src/Web/Migrations/20230211064126_Migrations.Designer.cs
+========
+                        .IsRequired()
+>>>>>>>> 841c5e6b305064703a1d9bee327f7af4e720866d:GreenMile/src/Web/Migrations/DataContextModelSnapshot.cs
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -212,12 +223,19 @@ namespace Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("CustomFoodId")
+                    b.Property<int>("CustomFoodId")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
+<<<<<<<< HEAD:GreenMile/src/Web/Migrations/20230211064126_Migrations.Designer.cs
+========
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+>>>>>>>> 841c5e6b305064703a1d9bee327f7af4e720866d:GreenMile/src/Web/Migrations/DataContextModelSnapshot.cs
                     b.Property<int>("Status")
                         .HasColumnType("INTEGER");
 
@@ -277,9 +295,12 @@ namespace Web.Migrations
                     b.Property<string>("Category")
                         .IsRequired()
                         .HasColumnType("TEXT");
+<<<<<<<< HEAD:GreenMile/src/Web/Migrations/20230211064126_Migrations.Designer.cs
 
                     b.Property<double>("Cost")
                         .HasColumnType("REAL");
+========
+>>>>>>>> 841c5e6b305064703a1d9bee327f7af4e720866d:GreenMile/src/Web/Migrations/DataContextModelSnapshot.cs
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -406,6 +427,34 @@ namespace Web.Migrations
                         .IsUnique();
 
                     b.ToTable("Household");
+                });
+
+            modelBuilder.Entity("Web.Models.MessageHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("DonationRequestId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DonationRequestId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ChatMessages");
                 });
 
             modelBuilder.Entity("Web.Models.Notification", b =>
@@ -627,7 +676,9 @@ namespace Web.Migrations
                 {
                     b.HasOne("Web.Models.CustomFood", "CustomFood")
                         .WithMany()
-                        .HasForeignKey("CustomFoodId");
+                        .HasForeignKey("CustomFoodId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Web.Models.User", "User")
                         .WithMany()
@@ -705,6 +756,23 @@ namespace Web.Migrations
                         .HasForeignKey("Web.Models.Household", "OwnerId");
 
                     b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("Web.Models.MessageHistory", b =>
+                {
+                    b.HasOne("Web.Models.DonationRequest", "DonationRequest")
+                        .WithMany()
+                        .HasForeignKey("DonationRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Web.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("DonationRequest");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Web.Models.Notification", b =>

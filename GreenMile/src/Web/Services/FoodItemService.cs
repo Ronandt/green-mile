@@ -1,3 +1,5 @@
+
+
 using Web.Data;
 using Web.Models;
 
@@ -17,20 +19,32 @@ namespace Web.Services
             return _context.FoodItems.ToList();
         }
         public IEnumerable<FoodItem> GetAll(Household household)
+
+        public List<FoodItem> GetAll(Household household)
         {
-            return _context.FoodItems
-                .Where(f => f.Household == household)
-                .ToList();
+
+
+            return _context.FoodItems.Where(x => x.Household.Equals(household)).ToList();
+
         }
 
         public async Task<FoodItem?> GetFoodItemById(int id)
         {
-            return await _context.FoodItems.FindAsync(id);
+
+
+            return _context.FoodItems.FirstOrDefault(x => x.Id.Equals(id));
         }
 
-        public void AddFoodItem(FoodItem fooditem)
+            public void AddFoodItem(FoodItem fooditem)
         {
             _context.FoodItems.Add(fooditem);
+            _context.SaveChanges();
+        }
+
+
+        public void UpdateFoodItem(FoodItem fooditem)
+        {
+            _context.FoodItems.Update(fooditem);
             _context.SaveChanges();
         }
 
@@ -40,10 +54,6 @@ namespace Web.Services
             _context.SaveChanges();
         }
 
-        public async Task Update(FoodItem item)
-        {
-            _context.FoodItems.Update(item);
-            await _context.SaveChangesAsync();
-        }
+
     }
 }
