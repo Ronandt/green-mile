@@ -12,7 +12,7 @@ namespace Web.Models
         public string? OwnerId { get; set; } = null;
         public string? Address { get; set;}
         public string? InviteLink { get; set; } = Guid.NewGuid().ToString();
-
+        public ICollection<GroceryFoodItem> GroceryItems { get; set; } = new Collection<GroceryFoodItem>();
 
     }
 }

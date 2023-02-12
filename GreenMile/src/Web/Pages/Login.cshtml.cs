@@ -37,6 +37,7 @@ public class LoginModel : PageModel
     {
         if (ModelState.IsValid)
         {
+
             var identityResult = await _signInManager.PasswordSignInAsync(UserName, Password, RememberMe, true);
             if (identityResult.Succeeded)
             {
@@ -55,5 +56,12 @@ public class LoginModel : PageModel
             ModelState.AddModelError("", "Username or Password incorrect.");
         }
         return Page();
+    }
+
+    public async Task<IActionResult> OnPostGoogleAsync()
+    {
+
+        return new ChallengeResult("Google", _signInManager.ConfigureExternalAuthenticationProperties("Google", "/ExternalLogin"));
+
     }
 }

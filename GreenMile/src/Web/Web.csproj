@@ -1,15 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
+ 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>c47f1649-d0f9-4d21-959f-2fc8cb255f28</UserSecretsId>
+    <UserSecretsId>c148a576-44cd-43d3-bc29-2956f158af4a</UserSecretsId>
   </PropertyGroup>
 
+
   <ItemGroup>
+    <PackageReference Include="Betalgo.OpenAI.GPT3" Version="6.6.6" />
+    <PackageReference Include="Google.Apis" Version="1.59.0" />
+    <PackageReference Include="Google.Cloud.Storage.V1" Version="4.3.0" />
     <PackageReference Include="Google.Cloud.Vision.V1" Version="3.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="6.0.2" />
+
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.12" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.12">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -24,6 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Pages\GroceryList\" />
     <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 
