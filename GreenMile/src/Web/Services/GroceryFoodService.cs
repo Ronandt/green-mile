@@ -96,11 +96,10 @@ namespace Web.Services
             List<GroceryFoodItem> foodItems;
             dynamic array = JsonConvert.DeserializeObject(json);
            List<GroceryFoodItem> why = JsonConvert.DeserializeObject<List<GroceryFoodItem>>(array);
-            foreach (var item in why)
-            {
-                Console.WriteLine(item.Id);
-            }
-        
+            why.ForEach(x => x.Id = Guid.NewGuid().ToString()
+);
+
+
            why.ForEach(x =>
             {
                 x.HouseholdId = householdId;
