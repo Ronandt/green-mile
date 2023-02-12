@@ -30,7 +30,7 @@ namespace Web.API
         [HttpPost]
         public async Task<string> Post(Prompt prompt)
         {
-            string prePrompt = $"You will think up of 2 ingredients that make up a {prompt.Response} in the JSON format of Id, Name, Quantity (set this to 1), ExtraNote, InBasket (set this to false), Description (It must be a description of that ingredient), HouseholdId, CategoryId (CategoryId must be an integer that the food follows. 1 - Fruits, 2- Vegetables, 3- Meat, 4- Fruits, 5- Others), CarbonFootprint (set as 0), ImageFilePath (Set as null). The two ingredients have to be part of one array. Your output cannot have any extra text above or below the json array";
+            string prePrompt = $"You will think up of 2 ingredients that make up a {prompt.Response} in the JSON format of Id, Name, Quantity (set this to 1), ExtraNote, InBasket (set this to false), Description (It must be a description of that ingredient), HouseholdId, CategoryId (CategoryId must be an integer that the food follows. 1 - Fruits, 2- Vegetables, 3- Meat, 4- Dairy, 5- Others), CarbonFootprint (set as 0), ImageFilePath (Set as null). The two ingredients have to be part of one array. Your output cannot have any extra text above or below the json array";
             OpenAI.GPT3.ObjectModels.ResponseModels.CompletionCreateResponse promptResult = await _openAIApiService.GenerateDavinciPrompt(prePrompt + prompt.Response);
             Prompt response = new Prompt()
             {

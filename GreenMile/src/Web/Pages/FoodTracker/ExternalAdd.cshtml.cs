@@ -63,11 +63,6 @@ namespace Web.Pages.FoodTracker
         public async Task OnGetAsync(string name,string image,string weight)
         {
             //Categories = _foodcategoryService.GetAll();
-            Categories.Add( new Category { Id = 1, Name = "Fruit", Description = "healthy" });
-            Categories.Add(new Category { Id = 2, Name = "Meat", Description = "yummy" });
-            Categories.Add(new Category { Id = 3, Name = "Vegetable", Description = "healthy" });
-            Categories.Add(new Category { Id = 4, Name = "Dairy", Description = "tasty" });
-
             Name = name;
             ImageFilePath = image;
             ExpiryDate = DateTime.Now;
@@ -129,13 +124,8 @@ namespace Web.Pages.FoodTracker
                         Status = true
                     };
 
-                    var newcat = new Category()
-                    {
-                        Name = "Fruit",
-                        Description = "Healthy for the body"
-                    };
-
-                    _foodcategoryService.AddCategory(newcat);
+            
+            
                     _fooditemService.AddFoodItem(newfood);
                     TempData["success"] = "Food added successgfully!";
                     return Redirect("/FoodTracker");

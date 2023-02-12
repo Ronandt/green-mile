@@ -65,13 +65,7 @@ namespace Web.Pages.FoodTracker
             Name = household.Name;
             Count = FoodItemList.Count();
 
-            var newcategory = new Category()
-            {
-                Name = "Fruit",
-                Description = "Fruits are healthy"
-
-            };
-            _foodcategoryService.AddCategory(newcategory);
+         
 
         }
        
