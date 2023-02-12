@@ -7,7 +7,7 @@ using Web.Services;
 
 namespace Web.Pages.Recipes
 {
-    public class DetailsModel : PageModel
+    public class BackendReviewsModel : PageModel
     {
         private readonly RecipeService _recipeService;
         private readonly FoodItemService _foodItemService;
@@ -15,7 +15,7 @@ namespace Web.Pages.Recipes
         private readonly UserManager<User> _userManager;
         public Recipe currentRecipe { get; set; } = new();
 
-        public DetailsModel(RecipeService recipeService, FoodItemService foodItemService, ReviewService reviewService, UserManager<User> userManager)
+        public BackendReviewsModel(RecipeService recipeService, FoodItemService foodItemService, ReviewService reviewService, UserManager<User> userManager)
         {
             _recipeService = recipeService;
             _foodItemService = foodItemService;
@@ -43,9 +43,9 @@ namespace Web.Pages.Recipes
             {
                 HttpContext.Session.SetInt32("recipeID", id);
             }
-            
+
             List<string> result = currentRecipe.ingredients?.Split(',').ToList();
-            foreach(var ingredientID in result)
+            foreach (var ingredientID in result)
             {
                 //int index = Int32.Parse(ingredientID);
                 FoodItem foodItem = _foodItemService.GetFoodItemById(Int32.Parse(ingredientID)).Result;
@@ -53,18 +53,19 @@ namespace Web.Pages.Recipes
             }
             allReviews = _reviewService.getAllReviews(id);
             averageRating = 0;
-            foreach(var ratings in allReviews)
+            foreach (var ratings in allReviews)
             {
                 averageRating += ratings.rating;
             }
-            if (allReviews.Count == 0)
+            if(allReviews.Count == 0)
             {
                 averageRating = 0;
             }
             else
             {
                 averageRating = (averageRating / allReviews.Count) * 20;
-            } //multiply by 20 since we are displaying it as a width percentage (style)
+            }
+            ; //multiply by 20 since we are displaying it as a width percentage (style)
 
         }
         public IActionResult OnPost()
@@ -72,7 +73,7 @@ namespace Web.Pages.Recipes
             if (ModelState.IsValid)
             {
 
-            
+
                 User loggedInUser = _userManager.GetUserAsync(User).Result;
                 if (loggedInUser == null)
                 {
@@ -81,15 +82,15 @@ namespace Web.Pages.Recipes
                 else
                 {
                     System.Diagnostics.Debug.WriteLine("RATING: " + review.rating.ToString());
-                   
-                        var NewReview = new Review()
-                        {
-                            userID = loggedInUser.Id.ToString(),
-                            recipeID = (int)HttpContext.Session.GetInt32("recipeID"),
-                            description = (review.description is null) ? "User has not provided a description" : review.description.ToString(),
-                            rating = review.rating
-                        };
-                        _reviewService.addReview(NewReview);
+
+                    var NewReview = new Review()
+                    {
+                        userID = loggedInUser.Id.ToString(),
+                        recipeID = (int)HttpContext.Session.GetInt32("recipeID"),
+                        description = (review.description is null) ? "User has not provided a description" : review.description.ToString(),
+                        rating = review.rating
+                    };
+                    _reviewService.addReview(NewReview);
 
 
 
@@ -101,6 +102,20 @@ namespace Web.Pages.Recipes
             return RedirectToPage("/Recipes/Details");
             //return Page();
 
+        }
+
+        public IActionResult OnGetDelete(int id)
+        {
+            //Recipe? recipe = _recipeService.GetRecipeById(id);
+            //TempData["success"] = recipe.recipeName + " successfully Deleted!";
+            //_recipeService.DeleteRecipe(recipe);
+            //RecipeList = _recipeService.GetAll();
+            Review? deleteReview = _reviewService.GetReviewById(id);
+
+            _reviewService.deleteReview(deleteReview);
+            TempData["success"] = "Review successfully deleted!";
+
+            return RedirectToPage("/Recipes/BackendReviews");
         }
     }
 }
