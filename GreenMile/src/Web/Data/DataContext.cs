@@ -20,6 +20,7 @@ public class DataContext : IdentityDbContext<User>
     public DbSet<MessageHistory> ChatMessages { get; set; }
 
     public DbSet<GroceryFoodItem> GroceryFood { get; set; }
+    public DbSet<Message> Messages { get; set; }
     public DbSet<Review> Reviews { get; set; }
 
 
@@ -33,7 +34,7 @@ public class DataContext : IdentityDbContext<User>
     .HasOne(u => u.OwnerOf)
     .WithOne(h => h.Owner)
     .HasForeignKey<Household>(h => h.OwnerId).IsRequired(false);
-      
+
     }
 
     public DataContext(DbContextOptions options) : base(options)
