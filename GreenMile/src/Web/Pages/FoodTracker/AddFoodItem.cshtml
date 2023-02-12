@@ -53,7 +53,13 @@
         <div class="col-sm-12">
             <input type="text" class="form-control" asp-for="Weight" />
         </div>
+         <label class="col-sm-2 col-form-label" asp-for="Cost">Cost of Food</label>
         <span asp-validation-for="Weight" class="text-danger"></span>
+         <div class="col-sm-12">
+            <input type="text" class="form-control" asp-for="Cost" />
+        </div>
+        <span asp-validation-for="Cost" class="text-danger"></span>
+         
        
 
         <label class="col-sm-2 col-form-label" asp-for="ExpiryDate">Expiry Date</label>
