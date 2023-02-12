@@ -12,8 +12,16 @@ namespace Web.Models
         public DateTime ExpiryDate { get; set; }
         public double CarbonFootprint { get; set; }
         public int Quantity { get; set; }
+        public double Weight { get; set; }
+        public double Cost { get; set; }
         public string ImageFilePath { get; set; } = string.Empty;
         public ICollection<Category> Categories { get; set; } = new List<Category>();
-        public bool IsCustom { get; set; } = false;
+        public string Category { get; set; }
+        public bool IsCustom { get; set; } 
+
+        public bool Status { get; set; } 
+
+
+
     }
 }

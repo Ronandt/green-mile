@@ -41,10 +41,9 @@ namespace Web.Pages.Recipes
         }
         public IActionResult OnPost()
         {
-            TempData["FlashMessage.Type"] = "danger";
-            TempData["FlashMessage.Text"] = ModelState.IsValid + "THIS IS THE MODELSTATE";
-            if (true) //ModelState.IsValid //model state is invalid bc idk how the table works LOL
-            { 
+            IngredientList = _foodItemService.GetAllForRecipe();
+            if (ModelState.IsValid)
+            {  
                 if (image != null)
                 {
 
@@ -59,16 +58,15 @@ namespace Web.Pages.Recipes
                 Recipe? recipe = _recipeService.GetRecipeById(CurrentRecipe.Id);
                 if(recipe != null)
                 {
-                    TempData["FlashMessage.Type"] = "danger";
-                    TempData["FlashMessage.Text"] = CurrentRecipe.recipeName + " already exists!";
+                    TempData["error"] = CurrentRecipe.recipeName + " already exists!";
                     return Page();
                 }
                 _recipeService.AddRecipe(CurrentRecipe);
-                TempData["FlashMessage.Type"] = "success";
-                TempData["FlashMessage.Text"] = CurrentRecipe.recipeName + " successfully added!";
+                TempData["success"] = CurrentRecipe.recipeName + " successfully added!";
                 return Redirect("/Recipes/Index");
             }
-            //return Page();
+            TempData["error"] = "Please fill in all the fields.";
+            return Page();
         }
     }
 }

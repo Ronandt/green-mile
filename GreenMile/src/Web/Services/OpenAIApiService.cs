@@ -1,5 +1,6 @@
 ﻿using OpenAI.GPT3.Interfaces;
 
+
 namespace Web.Services
 {
     public class OpenAIApiService
@@ -28,12 +29,36 @@ namespace Web.Services
             });
 
 
+
             if (imageResult.Successful)
             {
                 return string.Join("\n", imageResult.Results[0].Url);
             }
             throw new InvalidProgramException(nameof(prompt));
 
+        }
+
+        public async IAsyncEnumerable<OpenAI.GPT3.ObjectModels.ResponseModels.CompletionCreateResponse> GenerateDavinciPromptStream(string prompt)
+        {
+            if (prompt is null)
+            {
+                throw new ArgumentNullException(nameof(prompt));
+            }
+        
+           await foreach (var token in _openAIService.Completions.CreateCompletionAsStream(new OpenAI.GPT3.ObjectModels.RequestModels.CompletionCreateRequest()
+            {
+                Prompt = prompt,
+                MaxTokens = 1000,
+                Stream = true,
+                User = "TestUser",
+
+            })) {
+
+                yield return token;
+
+            }
+            
+         
         }
     }
 }

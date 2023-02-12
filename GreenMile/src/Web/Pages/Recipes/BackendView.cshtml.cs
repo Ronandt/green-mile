@@ -26,13 +26,12 @@ namespace Web.Pages.Recipes
         public PageResult OnGetDelete(int id)
         {
             Recipe? recipe = _recipeService.GetRecipeById(id);
-            
-            TempData["FlashMessage.Type"] = "success";
-            TempData["FlashMessage.Text"] = recipe.recipeName + " successfully Deleted!";
+            TempData["success"] = recipe.recipeName + " successfully Deleted!";
             _recipeService.DeleteRecipe(recipe);
             RecipeList = _recipeService.GetAll();
             return Page();
         }
+
 
     }
 }

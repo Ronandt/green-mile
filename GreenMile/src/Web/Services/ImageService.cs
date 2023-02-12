@@ -2,8 +2,11 @@
 
 using Microsoft.AspNetCore.Identity;
 
+using Web.Data;
 using Web.Models;
 using Web.Utils;
+
+using static OpenAI.GPT3.ObjectModels.SharedModels.IOpenAiModels;
 
 namespace Web.Services
 {
@@ -13,14 +16,18 @@ namespace Web.Services
         public static readonly string destinationFolder = "uploads";
         private readonly IWebHostEnvironment _env;
         private readonly UserManager<User> _userManager;
+
+        private readonly DataContext _dataContext;
        
-        public ImageService(IWebHostEnvironment env, UserManager<User> userManager)
+        public ImageService(IWebHostEnvironment env, UserManager<User> userManager, DataContext dataContext)
         {
             _env = env;
             _userManager = userManager;
+    
+            _dataContext = dataContext;
         }
 
-       async Task<Result<string>> IImageService.RetrieveImage(User user)
+        async Task<Result<string>> IImageService.RetrieveImage(User user)
         {
             if(user is null)
             {
@@ -39,16 +46,17 @@ namespace Web.Services
             {
                 return Result<string>.Failure("Upload size is too big!");
             }
-          
-                string imageFile = Guid.NewGuid() + Path.GetExtension(image.FileName);
-                string imagePath = Path.Combine(_env.ContentRootPath, "wwwroot", destinationFolder, imageFile);
-                using var fileStream = new FileStream(imagePath, FileMode.Create);
-                await image.CopyToAsync(fileStream);
-                user.ImageURL = $"/{destinationFolder}/{imageFile}";
+
+            var imagePath = $"/{destinationFolder}/{BaseStoreImage(image)}";
+
+
+                user.ImageURL = imagePath;
             await _userManager.UpdateAsync(user);
                 return Result<string>.Success("Upload successful!", imagePath);
             
         }
+
+        
 
         async Task IImageService.StoreImageFromUrl(string url, User user)
         {
@@ -65,6 +73,35 @@ namespace Web.Services
             }
         }
 
+        async Task<string> IImageService.StoreImage(IFormFile image)
+        {
+            if (image == null)
+            {
+                return "Image is null!";
+            }
+            else if (image.Length > UploadSize)
+            {
+                return "Upload size is too big!";
+            }
+
+            var imagePath = $"/{destinationFolder}/{await BaseStoreImage(image)}";
+
+
+           
+            return  imagePath;
+        }
+
+        private async Task<string> BaseStoreImage(IFormFile image)
+        {
+            string imageFile = Guid.NewGuid() + Path.GetExtension(image.FileName);
+            string imagePath = Path.Combine(_env.ContentRootPath, "wwwroot", destinationFolder, imageFile);
+            using var fileStream = new FileStream(imagePath, FileMode.Create);
+            await image.CopyToAsync(fileStream);
+            return imageFile;
+
+        }
+
+     
     }
 
   
