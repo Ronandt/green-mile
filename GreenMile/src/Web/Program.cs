@@ -150,12 +150,9 @@ app.MapHub<ChatHub>("/Chathub");
 
 
 
-
-app.MapRazorPages();
 app.MapHub<HouseholdHub>("/householdHub");
 app.MapHub<NotificationHub>("/notificationHub");
-app.MapHub<OpenAIHub>("/openAIHub");
-app.MapHub<ChatHub>("/Chathub");
+
 
 
 app.Run();

@@ -27,26 +27,33 @@ namespace Web.Pages.Account.Households
 
         public async Task<IActionResult> OnGetAsync()
         {
-
-            int user = (int)(await _userManager.GetUserAsync(User)).HouseholdId;
-            if (!await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(User), "Member"))
+            try
             {
-                return Redirect("/account/transferhousehold");
-            }
-            if (user != null)
-            {
-                Utils.Result<Household> household = await _householdService.RetrieveHouseholdDetails(user);
-                if (household.Status == Utils.Status.SUCCESS && household.Value != null)
+                int user = (int)(await _userManager.GetUserAsync(User))?.HouseholdId;
+                if (!await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(User), "Member"))
                 {
-                    HouseholdDetailsUiState.Users = household?.Value?.Users;
+                    return Redirect("/account/transferhousehold");
                 }
-                else
+                if (user != null)
                 {
-                    Console.WriteLine("OI YOU FUCK");
-                }
+                    Utils.Result<Household> household = await _householdService.RetrieveHouseholdDetails(user);
+                    if (household.Status == Utils.Status.SUCCESS && household.Value != null)
+                    {
+                        HouseholdDetailsUiState.Users = household?.Value?.Users;
+                    }
+                    else
+                    {
+                        Console.WriteLine("OI YOU FUCK");
+                    }
 
+                }
+                return Page();
+            } catch(Exception e)
+            {
+                return Redirect("/");
             }
             return Page();
+ 
 
         }
 
