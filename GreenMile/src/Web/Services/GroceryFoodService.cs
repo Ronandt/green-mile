@@ -14,14 +14,16 @@ namespace Web.Services
             _dataContext = dataContext;
         }
 
-        public async Task Add(GroceryFoodItem groceryItem)
+        public async Task<Boolean> Add(GroceryFoodItem groceryItem)
         {
             if(groceryItem is null)
             {
                 throw new ArgumentNullException(nameof(groceryItem));
             }
 
-           await _dataContext.AddAsync(groceryItem);
+           await _dataContext.GroceryFood.AddAsync(groceryItem);
+            await _dataContext.SaveChangesAsync();
+            return true;
         }
 
         public async Task ChangeQuantity(GroceryFoodItem groceryItem, int quantity)
@@ -36,6 +38,13 @@ namespace Web.Services
            _dataContext.Update(groceryItem);
             await _dataContext.SaveChangesAsync();
         }
+
+        public async Task<GroceryFoodItem> RetrieveGroceryItem(string id)
+        {
+            return await _dataContext.GroceryFood.FindAsync(id);
+        }
+
+       
 
 
         public async Task Delete(string id)

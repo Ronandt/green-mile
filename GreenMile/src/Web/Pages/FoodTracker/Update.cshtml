@@ -28,9 +28,7 @@
         </div>
         <span asp-validation-for="Name" class="text-danger"></span>
         <label class="col-sm-2 col-form-label" asp-for="Category"></label>
-        @*  <div class="col-sm-12">
-            <input type="text" class="form-control" asp-for="Category" />
-        </div>*@
+
         <div class="col-sm-12">
             @Html.DropDownListFor(m => m.Category,
             new SelectList(UpdateModel.Categories, "Id", "Name"), @Model.Category,
@@ -64,7 +62,7 @@
         </div>
         <span asp-validation-for="ExpiryDate" class="text-danger"></span>
         
-         <label class="col-sm-2 col-form-label" asp-for="CarbonFoodprint">Carbon Foodprint</label>
+         <label class="col-sm-3 col-form-label" asp-for="CarbonFoodprint">Carbon Foodprint</label>
         <div class="col-sm-12">
             <input type="text" class="form-control" asp-for="CarbonFoodprint" />
         </div>
@@ -74,7 +72,7 @@
     </div>
     <div class="row mb-3">
          <div class="col-sm-12">
-              <input type="submit" value="Add to Inventory" class="btn btn-primary " />
+              <input type="submit" value="Confirm Update" class="btn btn-primary " />
          </div>
      </div>
 </div>

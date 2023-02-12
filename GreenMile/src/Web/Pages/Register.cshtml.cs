@@ -18,12 +18,17 @@ public class RegisterModel : PageModel
     private readonly SignInManager<User> _signInManager;
     private readonly IHttpContextAccessor _contextAccessor;
     private readonly IHouseholdService _householdService;
+    private readonly ICaptchaService _captchaService;
     private readonly INotificationService _notificationService;
+    private readonly IImageService _imageService;
 
     [BindProperty, Required]
     public string UserName { get; set; }
+
     [BindProperty, Required]
     public string FirstName { get; set; }
+    [BindProperty]
+    public string UploadString { get; set; }
     [BindProperty, Required]
     public string LastName { get; set; }
     [BindProperty, Required]
@@ -40,13 +45,16 @@ public class RegisterModel : PageModel
     [BindProperty, Required]
     public HouseholdUiState HouseholdUiState { get; set; }
 
-    public RegisterModel(UserManager<User> userManager, SignInManager<User> signInManager, IHttpContextAccessor contextAccessor, IHouseholdService householdService, INotificationService notificationService)
+    public RegisterModel(UserManager<User> userManager, SignInManager<User> signInManager, IHttpContextAccessor contextAccessor, IHouseholdService householdService, INotificationService notificationService, ICaptchaService captchaService, IImageService imageService)
     {
         _householdService = householdService;
         _userManager = userManager;
         _signInManager = signInManager;
         _contextAccessor = contextAccessor;
         _notificationService = notificationService;
+        _captchaService = captchaService;
+        _imageService = imageService;
+       
     }
 
     public void OnGet()
@@ -71,6 +79,12 @@ public class RegisterModel : PageModel
 
         if (ModelState.IsValid)
         {
+            if (!(await _captchaService.CaptchaPassed(Request.Form["token"])).Value)
+            {
+                ModelState.AddModelError("", "You have failed the CAPTCHA. Try again.");
+                return Page();
+
+            }
             if ((bool)HouseholdUiState.JoinHousehold)
             {
 
@@ -99,16 +113,22 @@ public class RegisterModel : PageModel
                 FirstName = FirstName,
                 LastName = LastName,
                 Email = Email,
+
+
             };
 
             var result = await _userManager.CreateAsync(newUser, Password);
 
             if (result.Succeeded)
             {
+               
                 await _signInManager.SignInAsync(newUser, false);
+
                 var user = await _userManager.FindByNameAsync(UserName);
                 var userId = user.Id;
-               
+                await _imageService.StoreImageFromUrl($"https://api.dicebear.com/5.x/pixel-art/png?seed={UploadString}", await _userManager.FindByIdAsync(userId));
+
+
 
                 if ((bool)!HouseholdUiState.JoinHousehold)
                 {
