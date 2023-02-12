@@ -285,6 +285,8 @@ namespace Web.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<double>("Cost")
+                        .HasColumnType("REAL");
 
                     b.Property<string>("Description")
                         .IsRequired()
