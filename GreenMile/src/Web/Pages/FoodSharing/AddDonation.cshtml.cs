@@ -18,7 +18,7 @@ namespace Web.Pages.FoodSharing
         private readonly DonationService _donationService;
         private readonly CustomFoodService _customFoodService;
         private readonly UserManager<User> _userManager;
-        private IWebHostEnvironment _environment;
+        private readonly IWebHostEnvironment _environment;
         public AddDonationModel(DonationService donationService,
             CustomFoodService customFoodService,
             UserManager<User> userManager,
@@ -32,34 +32,50 @@ namespace Web.Pages.FoodSharing
         }
 
         [BindProperty, Required, MinLength(1), MaxLength(20)]
-        public string Name { get; set; }
-        [BindProperty, Required, MinLength(0), MaxLength(100)]
-        public string Description { get; set; }
-        
+        public string Name { get; set; } = string.Empty;
+
+        [BindProperty, Required, MinLength(0), MaxLength(100)] 
+        public string Description { get; set; } = string.Empty;
+
+        [BindProperty, Required, DataType(DataType.Date),Display(Name = "Expiry Date")]
+        [FutureDate(7, ErrorMessage = "Expiry date must be at least 7 days from now")]
+        public DateTime ExpiryDate { get; set; } = DateTime.Now;
+
         [BindProperty, Required]
-        public DateTime ExpiryDate { get; set; }
+        public string Category { get; set; } = string.Empty;
 
         [BindProperty, Required]
         public IFormFile? Upload { get; set; }
 
         public Donation MyDonation { get; set; } = new();
 
+        [BindProperty, Required]
+        [RegularExpression(@"^[0-9]{6}$", ErrorMessage = "6 digits only"), Display(Name = "Pick-Up Location")]
+        public string Location { get; set; } = string.Empty;
         public void OnGet()
         {
-
+            
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
             if (ModelState.IsValid)
             {
-                if (Upload != null)
+                if (Upload == null)
+                {
+                    ModelState.AddModelError("Upload", "Please Upload Image");
+                    return Page();
+                }
+                else
                 {
                     if (Upload.Length > 2 * 1024 * 1024)
                     {
                         ModelState.AddModelError("Upload", "File size cannot exceed 2MB.");
                         return Page();
                     }
+
+                    // Check for ExpiryDate
+
 
                     // Get User
                     var userId = (await _userManager.GetUserAsync(HttpContext.User)).Id;
@@ -68,11 +84,11 @@ namespace Web.Pages.FoodSharing
                     // Food Item Input
                     var newFood = new CustomFood()
                     {
-                      
+
                         Name = Name,
                         Description = Description,
                         ExpiryDate = ExpiryDate,
-                        
+                        Category = Category,
                     };
 
                     // Uploads Destination
@@ -93,13 +109,14 @@ namespace Web.Pages.FoodSharing
                         User = user,
                         CustomFood = newFood,
                         Status = DonationStatus.ACTIVE,
+                        Location = Location
                     };
 
                     _donationService.AddDonation(donation);
 
                     TempData["FlashMessage.Type"] = "success";
                     TempData["FlashMessage.Text"] = string.Format("Donation Offer {0} is created Of Food", Name);
-                    return Redirect("/FoodSharing/Index");
+                    return RedirectToPage("/FoodSharing/MyDonations");
                 }
             }
             return Page();

@@ -76,9 +76,23 @@
  
  
   <!--End header-->
-    <main class="main">
+   
+
+  <main class="main">
         <div class="page-header mt-30 mb-50">
             <div class="container">
+                <div class="row">
+                      <div class="col-xl-11">
+                          <input type="text" class="form-control" id="foodname"/>
+                      </div>
+                      <div class="col-xl-1">
+                          <button type="button" class="btn btn-primary" onclick="searchfood(document.getElementById('foodname').value)">Search</button>
+                      </div>
+                </div>
+                   <br/>
+                <div class="row" id="output" ></div>
+               
+                <br/>
                 <div class="archive-header">
                     <div class="row align-items-center">
                         <div class="col-xl-3">
@@ -451,6 +465,62 @@
             </div>
         </div>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script>
+
+function searchfood(q){
+    if(q.length === 0){
+        document.getElementById("output").innerHTML = "<h1 style='text-align: center;'>No Result Found</h1>";
+        document.getElementById("output").style.height = "100px";
+      
+    }else if(q !== ""){
+        
+        var xhr = new XMLHttpRequest();
+xhr.open("GET", "https://world.openfoodfacts.org/cgi/search.pl?search_terms=" + q + "&country=sg&search_simple=1&action=process&json=1", true);
+xhr.onreadystatechange = function() {
+  if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+    var res = JSON.parse(xhr.responseText);
+    var products = res.products;
+    var productList = "";
+    for (var i = 0; i < products.length; i++) {
+      var product = products[i];
+      var productName = product.product_name || "Product Name Not Available";
+      var imageUrl = product.image_front_url || "";
+      var weight = parseFloat(product.product_quantity) / 1000;
+      var str_weight = weight.toString();
+      //var cat = product.categories || "Category Not Available";
+      //productList += "<h1>" + productName + "</h1><br/><img src='" + imageUrl + "' width='400px'/><br/>";
+      productList += "<div class='col-2'><div class='card'> <img src='" + imageUrl + "' width='200px' height='200px'/><div class='card-body'><h5 class='card-title'>" + productName+"</h5><a aria-label='Add Item' class='action-btn' href='/FoodTracker/ExternalAdd?name="+productName+"&image="+imageUrl+"&weight="+str_weight+"' asp-route-id=''>Add Food Item</a></div></div></div>"
+      
+      console.log(weight);  
+     
+      document.getElementById("output").style.height = "200px";
+      document.getElementById("output").style.overflowY = "auto";
+  }
+    document.getElementById("output").innerHTML = productList;
+    console.log("done2");
+    if(products.length === 0 ){
+       document.getElementById("output").style.height = "100px";
+       
+    document.getElementById("output").innerHTML = "<h1 style='text-align: center;'>No Result Found</h1>";
+   
+}
+  }
+};
+xhr.send();
+
+    }
+
+
+//<div class="card" style="width: 18rem;">
+//  <img src="productImageUrl" class="card-img-top" alt="productName">
+//  <div class="card-body">
+//    <h5 class="card-title">productName</h5>
+//  </div>
+//</div>
+}
+    </script>
     <!-- Vendor JS-->
     <script src="assets/js/vendor/modernizr-3.6.0.min.js"></script>
     <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
@@ -476,5 +546,4 @@
     <script src="./assets/js/shop.js?v=5.6"></script>
   
    
-
-
+    
