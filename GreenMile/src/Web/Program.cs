@@ -10,7 +10,11 @@ using OpenAI.GPT3.Extensions;
 using Web.Data;
 using Web.Models;
 using Web.Services;
+
+using Web.Utils;
+
 using Web.API;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +31,11 @@ builder.Services.AddTransient<IGroceryFoodService, GroceryFoodService>();
 builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<OpenAIApiService>();
 builder.Services.AddScoped<RecipeService>();
+
+
+builder.Services.AddScoped<ChatService>();
+
+
 builder.Services.AddScoped<ICaptchaService, CaptchaService>();
 builder.Services.AddOpenAIService();
 builder.Services.AddTransient<UserManager<User>>();
@@ -36,6 +45,7 @@ builder.Services.AddScoped<DonationRequestService>();
 builder.Services.AddScoped<CategoryService>();
 builder.Services.AddTransient<OpenAIHub>();
 builder.Services.AddScoped<GoogleAIService>();
+
 builder.Services.AddDbContext<DataContext>(options =>
 {
     if (builder.Environment.IsDevelopment())
@@ -44,6 +54,7 @@ builder.Services.AddDbContext<DataContext>(options =>
         var devConnectionString = builder.Configuration.GetConnectionString("dev");
         options.UseSqlite(connectionString: devConnectionString);
     }
+
     else if (builder.Environment.IsProduction())
     {
         // Setup MySQL Connection
@@ -124,5 +135,12 @@ app.MapControllers();
 
 
 app.MapRazorPages();
+
+
+
+app.MapRazorPages();
 app.MapHub<OpenAIHub>("/openAIHub");
+app.MapHub<ChatHub>("/Chathub");
+
+
 app.Run();
