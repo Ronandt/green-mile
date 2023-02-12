@@ -18,7 +18,7 @@
                                         <div class="form-group-2">
                                             <label class="col-sm-2 col-form-label">Image</label>
                                             <div class="col-sm-10">
-                                                <input type="file" accept="image/*" asp-for="Upload" class="form-control" onchange="showImgPreview(this)" />
+                                                <input id = "image" type="file" accept="image/*" asp-for="Upload" class="form-control" onchange="showImgPreview(this)" />
                                                 <span asp-validation-for="Upload" class="text-danger"></span>
                                             </div>
                                             <img id="imgPreview" style="height:300px;width:300px;object-fit:cover; margin-top: 10px; display:none"
@@ -27,7 +27,7 @@
                                         <div class="form-group">
                                             <label class="col-sm-2 col-form-label" asp-for="Name"></label>
                                             <div class="col-sm-10">
-                                                <input type="text" asp-for="Name" class="form-control" />
+                                                <input id="name" type="text" asp-for="Name" class="form-control" />
                                                 <span asp-validation-for="Name" class="text-danger"></span>
                                             </div>
                                         </div>
@@ -155,4 +155,26 @@
 
 <script>
     document.getElementById("ExpiryDate").min = new Date().toISOString().split("T")[0];
+</script>
+<script>
+    const fileInput = document.getElementById("image")
+    fileInput.addEventListener("change", (event) => {
+        const file = event.target.files[0]
+        if (!file) {
+            return;
+        }
+        const formData = new FormData();
+        formData.append("file", file)
+
+        fetch("/api/google", {
+            method: "POST",
+            body: formData
+        }).then((response) => {
+            return response.text()
+        }).then((data) => {
+            document.getElementById("name").value = data
+        }).catch((error) => {
+            document.getElementById("name").value = "Unkown"
+        })
+    })
 </script>
