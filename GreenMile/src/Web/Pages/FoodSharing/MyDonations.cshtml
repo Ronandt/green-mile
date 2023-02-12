@@ -101,7 +101,21 @@
                                             </a>
                                         </div>
                                         <div class="product-badges product-badges-position product-badges-mrg">
+                                        @if(@item.Status == DonationStatus.ACTIVE)
+                                        {
                                             <span class="new">@item.Status</span>
+                                        }
+                                        else if(@item.Status == DonationStatus.RESERVED)
+                                        {
+                                            <span class="sale">@item.Status</span>
+                                        }
+                                        else if(@item.Status == DonationStatus.CANCELLED)
+                                        {
+                                            <span class="hot">@item.Status</span>
+                                        }
+                                        else{
+                                            <span class="sale">@item.Status</span>
+                                        }
                                         </div>
                                     </div>
                                     <div class="product-content-wrap">
@@ -137,8 +151,10 @@
                                                             class="text-heading">@item.CustomFood.Name</a></h3>
                                                         
                                                         <div class="food-description">
+                                                            <h3 class="badge bg-secondary">@item.CustomFood.Category</h3>
+                                                            <br>
+                                                            <br>
                                                             <p>
-                                                                @item.CustomFood.Category <br>
                                                                 @item.CustomFood.Description
                                                             </p>
                                                         </div>
@@ -146,6 +162,7 @@
                                                         <div class="detail-extralink mb-30">
                                                            <p>Pick-Up Location</p>
                                                            <p>@item.Location</p>
+                                                           <div id="map"></div>
                                                         </div>
                                                         <div id="map"></div>
                                                         <div class="font-xs">
