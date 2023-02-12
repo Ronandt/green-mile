@@ -10,7 +10,7 @@ namespace Web.API
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GroceryListController : ControllerBase
+    public class GroceryListController : Controller
     {
         private readonly IGroceryFoodService _foodService;
         private readonly DataContext _dataContext;
@@ -29,9 +29,11 @@ namespace Web.API
 
         // GET api/<GroceryListController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            return "value";
+            string? json = await _foodService.ExportGroceryList(id);
+        
+            return Json(json);
         }
 
         // POST api/<GroceryListController>

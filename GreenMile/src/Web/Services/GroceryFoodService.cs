@@ -1,4 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Text.Json;
+
+using Microsoft.EntityFrameworkCore;
+
+using Newtonsoft.Json;
 
 using Web.Data;
 using Web.Models;
@@ -8,6 +15,12 @@ namespace Web.Services
 {
     public class GroceryFoodService: IGroceryFoodService
     {
+        private static JsonSerializerOptions serializerOptions = new JsonSerializerOptions
+        {
+            MaxDepth = 10000,
+            WriteIndented= true
+            
+        };
         private readonly DataContext _dataContext;
         public GroceryFoodService(DataContext dataContext)
         {
@@ -63,6 +76,50 @@ namespace Web.Services
             var household =await _dataContext.Household.Where(h => h.HouseholdId == householdId).Include(x => x.GroceryItems).FirstOrDefaultAsync();
             return Result<ICollection<GroceryFoodItem>>.Success("Retrieved successfully", household.GroceryItems);
         }
+
+
+        public async Task<string> ExportGroceryList(int householdId)
+        {
+            List<GroceryFoodItem> r = (await RetrieveFoodByHousehold(householdId)).Value?.ToList();
+            r.ForEach(x => x.InBasket = false);
+            using var memoryStream = new MemoryStream();
+   
+            await System.Text.Json.JsonSerializer.SerializeAsync(memoryStream,r, serializerOptions);
+            var e =  Encoding.UTF8.GetString(memoryStream.ToArray());
+            return e;
+       
+     
+      
+
+        }
+
+        public async Task ImportGroceryList(int householdId, string json)
+        {
+            List<GroceryFoodItem> foodItems;
+            try
+            {
+                List<GroceryFoodItem> why = JsonConvert.DeserializeObject<List<GroceryFoodItem>>(json);
+                why.ForEach(x => x.Id = Guid.NewGuid().ToString()
+);
+
+
+                why.ForEach(x =>
+                {
+                    x.HouseholdId = householdId;
+                });
+
+                await _dataContext.AddRangeAsync(why);
+                await _dataContext.SaveChangesAsync();
+            } catch(Exception ex)
+            {
+
+            }
+  
+      
+
+        }
+
+
      
 
     }
