@@ -52,6 +52,8 @@ namespace Web.Pages.FoodTracker
 
         [BindProperty, Required]
         public double Weight { get; set; }
+        [BindProperty, Required]
+        public double Cost { get; set; }
 
         [BindProperty, Required]
         public double CarbonFoodprint { get; set; }
@@ -62,28 +64,13 @@ namespace Web.Pages.FoodTracker
 
         public async Task OnGetAsync(string name,string image,string weight)
         {
-            //Categories = _foodcategoryService.GetAll();
-            Categories.Add( new Category { Id = 1, Name = "Fruit", Description = "healthy" });
-            Categories.Add(new Category { Id = 2, Name = "Meat", Description = "yummy" });
-            Categories.Add(new Category { Id = 3, Name = "Vegetable", Description = "healthy" });
-            Categories.Add(new Category { Id = 4, Name = "Dairy", Description = "tasty" });
-                 
-                 
-            try
-            {
-                //string text = name;
-                //string apiKey = "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";
-               
-                //Console.WriteLine("done");
-                //Name = TranslateTextToEnglish(text,apiKey);
-                Console.WriteLine(Name);
+            Categories = _foodcategoryService.GetAll();
+            //Categories.Add( new Category { Id = 1, Name = "Fruit", Description = "healthy" });
+            //Categories.Add(new Category { Id = 2, Name = "Meat", Description = "yummy" });
+            //Categories.Add(new Category { Id = 3, Name = "Vegetable", Description = "healthy" });
+            //Categories.Add(new Category { Id = 4, Name = "Dairy", Description = "tasty" });
 
-            }
-            catch
-            {
-                Name = name;
-            }
-           
+            Name = name;
             ImageFilePath = image;
             ExpiryDate = DateTime.Now;
             try
@@ -101,31 +88,7 @@ namespace Web.Pages.FoodTracker
             //householdName = household.Name;
 
         }
-        //public string TranslateTextToEnglish(string text,string apiKey)
-        //{
-        //    using (var client = new HttpClient())
-        //    {
-        //        Console.WriteLine("done");
-        //        client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiKey);
-        //        var request = new
-        //        {
-        //            prompt = text,
-        //            max_tokens = 1024,
-        //            temperature = 0.5
-        //        };
-                
-        //        var content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
-        //        var response = client.PostAsync("https://api.openai.com/v1/engines/text-davinci-002/jobs", content).Result;
-        //        Console.WriteLine(response);
-        //        response.EnsureSuccessStatusCode();
-                
-        //        var responseString = response.Content.ReadAsStringAsync().Result;
-        //        dynamic responseJson = JsonConvert.DeserializeObject(responseString);
-        //        Console.WriteLine("done");
-        //        return responseJson.choices[0].text;
-        //    }
-        //}
-
+       
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -146,17 +109,7 @@ namespace Web.Pages.FoodTracker
                         ModelState.AddModelError("Upload", "File size cannot exceed 2MB.");
                         return Page();
                     }
-                    //byte[] bytes = Encoding.UTF8.GetBytes(ImageFilePath);
-                    //var memoryStream = new MemoryStream(bytes);
-
-                    //var formFile = new FormFile(memoryStream, 0, bytes.Length, ImageFilePath, ImageFilePath);
-
-                    //var uploadsFolder = "uploads";
-                    //var imageFile = Guid.NewGuid() + Path.GetFileName(ImageFilePath);
-                    //var imagePath = Path.Combine(_environment.ContentRootPath, "wwwroot", uploadsFolder, imageFile);
-                    //using var fileStream = new FileStream(imagePath, FileMode.Create);
-                    //await formFile.CopyToAsync(fileStream);
-                    //var ImageURL = string.Format("/{0}/{1}", uploadsFolder, imageFile);
+                   
 
                     var user = await _userManager.GetUserAsync(HttpContext.User);
                     var household = (await _householdService.RetrieveHouseholdDetails(user.HouseholdId ?? -1)).Value;
@@ -173,6 +126,7 @@ namespace Web.Pages.FoodTracker
                         ImageFilePath = ImageFilePath,
                         Category = Category,
                         CarbonFootprint = 1.1,
+                        Cost = Cost,
                         Weight = 1.1,
                         IsCustom = false,
                         Status = true

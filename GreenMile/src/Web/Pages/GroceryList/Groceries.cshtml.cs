@@ -47,5 +47,7 @@ namespace Web.Pages.GroceryList
             await _groceryFoodService.ImportGroceryList((int)(await _userManager.GetUserAsync(User)).HouseholdId, jsonString);
             return Redirect("/grocerylist/groceries");
         }
+
+        
     }
 }

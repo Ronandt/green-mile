@@ -57,6 +57,9 @@ namespace Web.Pages.FoodSharing
         [BindProperty]
         public string Status { get; set; }
 
+        [BindProperty]
+        public string Location { get; set; }
+
         public IActionResult OnGet(int id)
         {
             var donation = _donationService.GetDonationById(id);
@@ -72,7 +75,7 @@ namespace Web.Pages.FoodSharing
             ExpiryDate = donation.CustomFood.ExpiryDate;
             Image = donation.CustomFood.Image;
             Status = donation.Status.ToString();
-
+            Location = donation.Location;
             return Page();
 
         }
@@ -107,6 +110,8 @@ namespace Web.Pages.FoodSharing
             customFood!.Description = Description ?? customFood.Description;
             customFood!.ExpiryDate = ExpiryDate ?? customFood.ExpiryDate;
             
+            donation!.Location = Location ?? donation.Location;
+
             if (Upload is not null)
             {
                 var uploadFolder = "Uploads";

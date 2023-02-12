@@ -1,4 +1,4 @@
-
+    
 using System.ComponentModel.DataAnnotations;
 
 using Microsoft.AspNetCore.Identity;
@@ -132,15 +132,11 @@ public class UpdateModel : PageModel
         CurrentFoodItem.Status = true;
         CurrentFoodItem.IsCustom = true;
         
-        // Console.WriteLine("Success 4"); // Console.WriteLine($"{CurrentFoodItem.Id}");
-        // Console.WriteLine($"{CurrentFoodItem.Name}");
-        // Console.WriteLine($"{CurrentFoodItem.ImageFilePath}");
+      
 
         _foodItemService.UpdateFoodItem(CurrentFoodItem);
-        // Console.WriteLine("Success 5");
-        // Console.WriteLine($"{Name}");
-        // Console.WriteLine($"{ImageFilePath.ToString()}");
-        TempData["success"] = "Food added successgfully!";
+      
+        TempData["success"] = "Food updated successgfully!";
         return Redirect("/FoodTracker");
     }
 }

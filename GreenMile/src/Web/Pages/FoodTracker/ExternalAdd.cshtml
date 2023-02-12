@@ -9,11 +9,7 @@
     <div class="row mb-3">
         <label class="col-sm-2 col-form-label" >Food Image</label>
         <div class="col-sm-12">
-           @* <div class="row g-0">
-                <div class="col-4 col-md-2"></div>
-              <div class="col-sm-4 col-md-10"> <input type="file" accept="image/*" class="form-control" asp-for="ImageFilePath" onchange="showImgPreview(this)" style="border:none;" /></div>
-              
-            </div>*@
+          
                        
             <img id="imgPreview" class="rounded-circle" style="height:300px;width:300px;object-fit:cover"  src="@Model.ImageFilePath" />
              <input type="hidden" class="form-control" asp-for="ImageFilePath" value="@Model.ImageFilePath" />
@@ -28,9 +24,7 @@
         </div>
         <span asp-validation-for="Name" class="text-danger"></span>
         <label class="col-sm-2 col-form-label" asp-for="Category"></label>
-         @* <div class="col-sm-12" >
-            <input type="text" class="form-control" asp-for="Category" />
-        </div>*@
+       
         <div class="col-sm-12">
             @Html.DropDownListFor(m => m.Category,
             new SelectList(ExternalAddModel.Categories, "Id", "Name"), "-- Select --",
@@ -56,7 +50,11 @@
             <input type="text" class="form-control" asp-for="Weight" readonly  />
         </div>
         <span asp-validation-for="Weight" class="text-danger"></span>
-       
+        <label class="col-sm-2 col-form-label" asp-for="Cost">Cost of Food</label>
+         <div class="col-sm-12">
+            <input type="text" class="form-control" asp-for="Cost" />
+        </div>
+        <span asp-validation-for="Cost" class="text-danger"></span>
 
         <label class="col-sm-2 col-form-label" asp-for="ExpiryDate">Expiry Date</label>
         <div class="col-sm-12">
@@ -70,7 +68,7 @@
         </div>
         <span asp-validation-for="CarbonFoodprint" class="text-danger"></span>
          
-       @* <h1>@Model.householdName</h1>*@
+      
     </div>
     <div class="row mb-3">
          <div class="col-sm-12">
