@@ -62,6 +62,10 @@ public class UpdateModel : PageModel
     public async Task<IActionResult> OnGetAsync(int id)
     {
         CurrentFoodItem = await _foodItemService.GetFoodItemById(id);
+        Categories.Add(new Category { Id = 1, Name = "Fruit", Description = "healthy" });
+        Categories.Add(new Category { Id = 2, Name = "Meat", Description = "yummy" });
+        Categories.Add(new Category { Id = 3, Name = "Vegetable", Description = "healthy" });
+        Categories.Add(new Category { Id = 4, Name = "Dairy", Description = "tasty" });
 
         if (CurrentFoodItem is null)
         {
@@ -72,6 +76,7 @@ public class UpdateModel : PageModel
         Description = CurrentFoodItem.Description;
         Quantity = CurrentFoodItem.Quantity;
         ExpiryDate = CurrentFoodItem.ExpiryDate;
+        Category = CurrentFoodItem.Category;
 
 
         return Page();
@@ -91,6 +96,8 @@ public class UpdateModel : PageModel
                 ModelState.AddModelError("Upload", "File size cannot exceed 2MB.");
                 return Page();
             }
+           
+
 
             var uploadsFolder = "uploads";
             if (CurrentFoodItem.ImageFilePath != null)
@@ -133,7 +140,7 @@ public class UpdateModel : PageModel
         // Console.WriteLine("Success 5");
         // Console.WriteLine($"{Name}");
         // Console.WriteLine($"{ImageFilePath.ToString()}");
-
+        TempData["success"] = "Food added successgfully!";
         return Redirect("/FoodTracker");
     }
 }

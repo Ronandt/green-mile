@@ -26,14 +26,14 @@
         </div>
         <span asp-validation-for="Name" class="text-danger"></span>
         <label class="col-sm-2 col-form-label" asp-for="Category"></label>
-          <div class="col-sm-12">
+          @*<div class="col-sm-12">
             <input type="text" class="form-control" asp-for="Category" />
-        </div>
-       @* <div class="col-sm-12">
+        </div>*@
+        <div class="col-sm-12">
             @Html.DropDownListFor(m => m.Category,
             new SelectList(AddFoodItemModel.Categories, "Id", "Name"), "-- Select --",
             new {@class = "form-select"})
-        </div>*@
+        </div>
         <span asp-validation-for="Category" class="text-danger"></span>
 
          <label class="col-sm-2 col-form-label" asp-for="Description"></label>
@@ -49,9 +49,9 @@
         </div>
         <span asp-validation-for="Quantity" class="text-danger"></span>
 
-         <label class="col-sm-2 col-form-label" asp-for="Weight"></label>
+         <label class="col-sm-2 col-form-label" asp-for="Weight">Weight (kg)</label>
         <div class="col-sm-12">
-            <input type="text" class="form-control" asp-for="Weight" readonly value="1.1" />
+            <input type="text" class="form-control" asp-for="Weight" />
         </div>
         <span asp-validation-for="Weight" class="text-danger"></span>
        
