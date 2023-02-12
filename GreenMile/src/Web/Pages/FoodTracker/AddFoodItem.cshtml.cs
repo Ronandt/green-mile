@@ -51,10 +51,8 @@ namespace Web.Pages.FoodTracker
 
         [BindProperty, Required]
         public double Weight { get; set; }
-
         [BindProperty, Required]
         public double Cost { get; set; }
-
 
         [BindProperty, Required]
         public double CarbonFoodprint { get;set;}
@@ -66,9 +64,7 @@ namespace Web.Pages.FoodTracker
         public async Task OnGetAsync()
         {
             Categories = _foodcategoryService.GetAll();
-
             ExpiryDate = DateTime.Now;
-
             //var user = await _userManager.GetUserAsync(HttpContext.User);
             //var household = ( await _householdService.RetrieveHouseholdDetails(user.HouseholdId ?? -1)).Value;
             //householdName = household.Name;
@@ -117,12 +113,10 @@ namespace Web.Pages.FoodTracker
                         Quantity = Quantity,
                         ExpiryDate = ExpiryDate,
                         ImageFilePath = ImageURL,
-
                         Category = Category,
                         CarbonFootprint = 1.1,
                         Weight = 1.1,
                         Cost = Cost,
-
                         IsCustom = true,
                         Status = true
                     };

@@ -3,9 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-
 using Newtonsoft.Json;
-
 
 using Web.Data;
 using Web.Lib;
@@ -53,6 +51,7 @@ namespace Web.Pages.FoodTracker
         [BindProperty]
         public string action_type { get; set; }
 
+       
 
 
         public int Count { get; set; }

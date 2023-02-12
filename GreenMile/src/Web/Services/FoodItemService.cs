@@ -14,15 +14,12 @@ namespace Web.Services
             _context = context;
         }
 
-
         public List<FoodItem> GetAllForRecipe()
         {
             return _context.FoodItems.ToList();
         }
 
-
         public List<FoodItem> GetAll(Household household)
-
         {
 
 

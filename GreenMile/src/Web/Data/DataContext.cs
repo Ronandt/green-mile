@@ -22,6 +22,8 @@ public class DataContext : IdentityDbContext<User>
     public DbSet<GroceryFoodItem> GroceryFood { get; set; }
     public DbSet<Review> Reviews { get; set; }
 
+
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
