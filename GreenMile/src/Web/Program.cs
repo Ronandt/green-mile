@@ -136,12 +136,6 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 app.MapControllers();
-
-
-app.MapRazorPages();
-
-
-
 app.MapRazorPages();
 app.MapHub<OpenAIHub>("/openAIHub");
 app.MapHub<ChatHub>("/Chathub");
