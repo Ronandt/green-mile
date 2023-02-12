@@ -2,45 +2,85 @@
 @using Models
 @model Web.Pages.NotificationsModel
 
-<main class="pt-50">
-    <header>
-        <h4>
-            @(Model.Notifications is not null
-            ? Model.Notifications.Count()
-            : "Error") Notifications
-        </h4>
-    </header>
-    <table>
-        <thead>
-            <tr>
-                <th>System</th>
-                <th>Message</th>
-                <th>Read</th>
-                <th>Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (
-            Model.Notifications is not null
-            && Model.Notifications.Count() > 0
-            )
-            {
-                foreach (Notification notif in Model.Notifications)
+<main class="pt-50 row">
+    <div class="col-2"></div>
+    <div class="col-8">
+        <header>
+            <h4>
+                <span id="totalNotifications">
+                    @(Model.Notifications is not null
+                        ? Model.Notifications.Count()
+                        : "Error")
+                </span>
+                Notifications |
+                <span id="unreadNotifications">
+                    @(Model.Notifications is not null
+                        ? Model.Notifications.Count(n => n.Read == false)
+                        : "Error")
+                </span>
+                Unread
+            </h4>
+        </header>
+        <div class="d-flex gap-3">
+            <form method="post" asp-page-handler="ReadAll">
+                <button class="btn my-3" type="submit">
+                    <i class="fa fa-eye"></i>
+                    Read all
+                </button>
+            </form>
+            <form method="post" asp-page-handler="DeleteRead">
+                <button class="btn my-3" type="submit">
+                    <i class="fa fa-trash"></i>
+                    Delete read
+                </button>
+            </form>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>System</th>
+                    <th>Message</th>
+                    <th>Read</th>
+                    <th>Date</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                @if (
+                Model.Notifications is not null
+                && Model.Notifications.Count() > 0
+                )
                 {
-                    <tr>
-                        <td>@notif.System</td>
-                        <td>@notif.Message</td>
-                        <td>@(notif.Read ? "Read" : "Unread")</td>
-                        <td>@notif.Date</td>
+                    foreach (Notification notif in Model.Notifications)
+                    {
+                        <tr id="notification_@notif.Id">
+                            <td>@notif.System</td>
+                            <td>@notif.Message</td>
+                            <td>@(notif.Read ? "Read" : "Unread")</td>
+                            <td>@notif.Date</td>
+                            <td>
+                                @if (@notif.Read)
+                                {
+                                    <button class="btn" onclick="deleteNotification(this)">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                }
+                                else
+                                {
+                                    @:-
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr id="noNotification">
+                        <td colspan="5">No notifications yet.</td>
                     </tr>
                 }
-            }
-            else
-            {
-                <tr>
-                    <td colspan="4">No notifications yet.</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-2"></div>
 </main>

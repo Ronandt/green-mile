@@ -60,8 +60,12 @@
                                     @{
                                         if (signInManager.IsSignedIn(User))
                                         {
+                                            <a href="/notifications" class="mx-2">
+                                                <i class="fa-solid fa-bell"></i>
+                                            </a>
                                             <a href="/account/details">
-                                                <img class="svgInject" alt="GreenMile" src="~/imgs/theme/icons/icon-user.svg" />
+                                                <i class="fa-solid fa-user"></i>
+                                                @* <img class="svgInject" alt="GreenMile" src="~/imgs/theme/icons/icon-user.svg" /> *@
                                             </a>
                                             <a href="/account/details"><span class="lable ml-0">Account</span></a>
                                             <div class="cart-dropdown-wrap cart-dropdown-hm2 account-dropdown">
@@ -94,7 +98,7 @@
                                         {
                                             <a href="/login"><span class="lable ml-0">Sign in</span></a>
                                             <a href="/register" style="margin-left:15px"><span
-                                                class="lable ml-0">Register</span></a>
+                                                    class="lable ml-0">Register</span></a>
                                         }
                                     }
 
@@ -447,6 +451,10 @@
     <!-- Template  JS -->
     <script src="~/js/main.js?v=5.6"></script>
     <script src="~/js/shop.js?v=5.6"></script>
+    <!-- SignalR -->
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/notification.js"></script>
+
 </body>
 
 </html>

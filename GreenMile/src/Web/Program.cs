@@ -115,5 +115,6 @@ app.MapControllers();
 
 app.MapRazorPages();
 app.MapHub<HouseholdHub>("/householdHub");
+app.MapHub<NotificationHub>("/notificationHub");
 
 app.Run();

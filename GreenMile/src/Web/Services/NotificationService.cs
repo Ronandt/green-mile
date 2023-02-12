@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 using Web.Data;
 using Web.Models;
+using Web.Utils;
 
 namespace Web.Services;
 
@@ -11,11 +13,15 @@ namespace Web.Services;
 public class NotificationService : INotificationService
 {
     private readonly DataContext _context;
+    private readonly IHubContext<NotificationHub> _hubContext;
 
-    public NotificationService(DataContext context)
+    public NotificationService(DataContext context, IHubContext<NotificationHub> hubContext)
     {
         _context = context;
+        _hubContext = hubContext;
     }
+
+    public DbSet<Notification> Notifications => _context.Notifications;
 
     public async Task<IEnumerable<Notification>> GetNotifications(User user)
     {
@@ -46,6 +52,7 @@ public class NotificationService : INotificationService
             _context.Notifications.Add(notificationClone);
         }
         await _context.SaveChangesAsync();
+        await _hubContext.Clients.All.SendAsync(NotificationHub.ReceiveNotification, notification);
     }
 
     public async Task SendNotification(Notification notification, User user)
@@ -61,6 +68,9 @@ public class NotificationService : INotificationService
         notification.SetUser(user);
         _context.Notifications.Add(notification);
         await _context.SaveChangesAsync();
+        await _hubContext.Clients
+            .User(user.Id)
+            .SendAsync(NotificationHub.ReceiveNotification, notification);
     }
 
     public async Task SendNotification(Notification notification, IEnumerable<User> users)
@@ -86,6 +96,10 @@ public class NotificationService : INotificationService
             _context.Notifications.Add(notificationClone);
         }
         await _context.SaveChangesAsync();
+        var userIdList = users.Select(u => u.Id).ToList();
+        await _hubContext.Clients
+            .Users(userIdList)
+            .SendAsync(NotificationHub.ReceiveNotification, notification);
     }
 
     public async Task SendNotification(Notification notification, Household household)
@@ -114,6 +128,27 @@ public class NotificationService : INotificationService
             notificationClone.SetUser(user);
             _context.Notifications.Add(notificationClone);
         }
+        await _context.SaveChangesAsync();
+        var userIdList = household.Users.Select(u => u.Id).ToList();
+        await _hubContext.Clients
+            .Users(userIdList)
+            .SendAsync(NotificationHub.ReceiveNotification, notification);
+    }
+
+    public async Task<Notification?> FindById(int id)
+    {
+        return await Notifications.FindAsync(id);
+    }
+
+    public async Task Update(Notification notification)
+    {
+        Notifications.Update(notification);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task Delete(Notification notification)
+    {
+        Notifications.Remove(notification);
         await _context.SaveChangesAsync();
     }
 }
