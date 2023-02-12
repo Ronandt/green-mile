@@ -15,6 +15,7 @@ public class NotificationHub : Hub
     }
 
     public const string ReceiveNotification = "ReceiveNotification";
+    public const string ReceiveNotificationCount = "ReceiveNotificationCount";
 
     public async Task ReadNotification(int notificationId)
     {

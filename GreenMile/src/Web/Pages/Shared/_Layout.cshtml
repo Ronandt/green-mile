@@ -1,6 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Web.Models
+@using Web.Services
 @inject SignInManager<User> signInManager
+@inject INotificationService _notificationService;
 <!DOCTYPE html>
 <html lang="en">
 
@@ -56,13 +58,34 @@
                                         </select>
                                     </form>
                                 </div>
+                                @if (signInManager.IsSignedIn(User))
+                                {
+                                    var user = await signInManager.UserManager.GetUserAsync(User);
+                                    var count = await _notificationService.GetUnreadCount(user);
+
+                                    <div class="header-action-icon-2">
+                                        <a href="/notifications" class="mx-2">
+                                            <i class="fa-solid fa-bell"></i>
+                                            <span id="notificationCount" class="notificationCount">@count</span>
+                                            <style>
+                                                .notificationCount {
+                                                    background-color: red;
+                                                    color: white !important;
+                                                    padding: 2px;
+                                                    border-radius: 4px;
+                                                    position: absolute;
+                                                    top: -5px;
+                                                    right: 0;
+                                                }
+                                            </style>
+                                        </a>
+                                    </div>
+                                }
+
                                 <div class="header-action-icon-2">
                                     @{
                                         if (signInManager.IsSignedIn(User))
                                         {
-                                            <a href="/notifications" class="mx-2">
-                                                <i class="fa-solid fa-bell"></i>
-                                            </a>
                                             <a href="/account/details">
                                                 <i class="fa-solid fa-user"></i>
                                                 @* <img class="svgInject" alt="GreenMile" src="~/imgs/theme/icons/icon-user.svg" /> *@

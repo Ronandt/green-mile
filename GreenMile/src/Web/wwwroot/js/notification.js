@@ -35,6 +35,10 @@ connection.on("ReceiveNotification", function (notification) {
   unread.innerText = unum + 1
 });
 
+connection.on("ReceiveNotificationCount", function (count) {
+  var counter = document.getElementById("notificationCount");
+  counter.innerText = count;
+});
 
 function deleteNotification(e) {
   var row = e.parentElement.parentElement;

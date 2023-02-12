@@ -71,6 +71,13 @@ public class NotificationService : INotificationService
         await _hubContext.Clients
             .User(user.Id)
             .SendAsync(NotificationHub.ReceiveNotification, notification);
+        await _hubContext.Clients
+            .User(user.Id)
+            .SendAsync(
+                NotificationHub.ReceiveNotificationCount,
+                Notifications
+                    .Where(n => n.Read == false)
+                    .Count(n => n.User == user));
     }
 
     public async Task SendNotification(Notification notification, IEnumerable<User> users)
@@ -100,6 +107,17 @@ public class NotificationService : INotificationService
         await _hubContext.Clients
             .Users(userIdList)
             .SendAsync(NotificationHub.ReceiveNotification, notification);
+
+        foreach (var user in users)
+        {
+            await _hubContext.Clients
+                .User(user.Id)
+                .SendAsync(
+                    NotificationHub.ReceiveNotificationCount,
+                    Notifications
+                        .Where(n => n.Read == false)
+                        .Count(n => n.User == user));
+        }
     }
 
     public async Task SendNotification(Notification notification, Household household)
@@ -133,6 +151,17 @@ public class NotificationService : INotificationService
         await _hubContext.Clients
             .Users(userIdList)
             .SendAsync(NotificationHub.ReceiveNotification, notification);
+
+        foreach (var user in household.Users)
+        {
+            await _hubContext.Clients
+                .User(user.Id)
+                .SendAsync(
+                    NotificationHub.ReceiveNotificationCount,
+                    Notifications
+                        .Where(n => n.Read == false)
+                        .Count(n => n.User == user));
+        }
     }
 
     public async Task<Notification?> FindById(int id)
@@ -150,5 +179,12 @@ public class NotificationService : INotificationService
     {
         Notifications.Remove(notification);
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<int> GetUnreadCount(User user)
+    {
+        return await Notifications
+            .Where(n => n.User == user)
+            .CountAsync(n => n.Read == false);
     }
 }
