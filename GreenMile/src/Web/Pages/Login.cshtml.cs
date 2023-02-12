@@ -41,15 +41,15 @@ public class LoginModel : PageModel
             var identityResult = await _signInManager.PasswordSignInAsync(UserName, Password, RememberMe, true);
             if (identityResult.Succeeded)
             {
-                var user = await _userManager.Users
-                    .Include(u => u.Household)
+                //var user = await _userManager.Users
+                    //.Include(u => u.Household)
                     // Using First(...) is more efficient because Users are
                     // guaranteed to have a unique Username (registration check).
                     // This avoids the overhead of Single(...)'s uniqueness
                     // check and improves performance.
-                    .FirstAsync(u => u.UserName == UserName);
-                _http.HttpContext.Session.SetString(SessionVariable.UserName, user.UserName);
-                _http.HttpContext.Session.SetString(SessionVariable.UserId, user.Id);
+                   // .FirstOrDefaultAsync(u => u.UserName == UserName);
+                _http.HttpContext.Session.SetString(SessionVariable.UserName, "");
+                _http.HttpContext.Session.SetString(SessionVariable.UserId, "");
                // _http.HttpContext.Session.SetString(SessionVariable.HousholdName, user.Household.Name);
                 return RedirectToPage("/Index");
             }

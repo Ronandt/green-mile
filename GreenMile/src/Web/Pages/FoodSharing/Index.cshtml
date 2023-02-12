@@ -128,14 +128,15 @@
                                                                     <span class="text-heading">@item.CustomFood.Name</span>
                                                                 </h3>
                                                                 <div class="food-description">
+                                                                    <h3 class="badge bg-secondary">@item.CustomFood.Category</h3>
+                                                                    <br>
+                                                                    <br>
                                                                     <p>
-                                                                        @item.CustomFood.Category <br>
                                                                         @item.CustomFood.Description
                                                                     </p>
                                                                 </div>
                                                                 <div id="map"></div>
                                                                 <div class="detail-extralink mb-30">
-
                                                                     <form method="post">
                                                                     <input asp-for = "DonationId" value= "@item.Id" hidden>
                                                                     <div class="product-extra-link2">

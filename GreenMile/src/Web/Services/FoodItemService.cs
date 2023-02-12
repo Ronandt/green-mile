@@ -20,6 +20,7 @@ namespace Web.Services
         }
 
         public List<FoodItem> GetAll(Household household)
+
         {
 
 
@@ -34,7 +35,7 @@ namespace Web.Services
             return _context.FoodItems.FirstOrDefault(x => x.Id.Equals(id));
         }
 
-            public void AddFoodItem(FoodItem fooditem)
+        public void AddFoodItem(FoodItem fooditem)
         {
             _context.FoodItems.Add(fooditem);
             _context.SaveChanges();

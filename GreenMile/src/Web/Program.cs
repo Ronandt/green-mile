@@ -10,6 +10,7 @@ using OpenAI.GPT3.Extensions;
 using Web.Data;
 using Web.Models;
 using Web.Services;
+using Web.Utils;
 
 using Web.Utils;
 
@@ -20,7 +21,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.AddSignalR();
+builder.Services.AddSignalR(options =>
+{
+    options.MaximumReceiveMessageSize = 5000 * 1024; // 5 MB or 5000 KB
+});
 
 // In-house Services
 builder.Services.AddScoped<FoodItemService>();
@@ -42,6 +46,7 @@ builder.Services.AddTransient<UserManager<User>>();
 builder.Services.AddScoped<DonationService>();
 builder.Services.AddScoped<CustomFoodService>();
 builder.Services.AddScoped<DonationRequestService>();
+builder.Services.AddScoped<MessageService>();
 builder.Services.AddScoped<ReviewService>();
 
 builder.Services.AddScoped<CategoryService>();
@@ -83,8 +88,6 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Lockout.MaxFailedAccessAttempts = 5;
     options.Lockout.AllowedForNewUsers = true;
     options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+!&*()~|`#%^,";
-
-
 });
 
 builder.Services.AddAuthentication().AddGoogle(googleOptions =>
@@ -92,16 +95,17 @@ builder.Services.AddAuthentication().AddGoogle(googleOptions =>
     googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
     googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
     googleOptions.CallbackPath = "/signin-google";
-    
+
 });
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 // NOTE: Stores to server memory
 // TODO: Change to externals stores to allow horizontal scalling
 builder.Services.AddDistributedMemoryCache();
-builder.Services.AddControllers().AddNewtonsoftJson(options => {
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+{
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-    
-    }
+
+}
  );
 builder.Services.AddSession(options =>
 {
@@ -148,6 +152,8 @@ app.MapHub<ChatHub>("/Chathub");
 
 
 app.MapRazorPages();
+app.MapHub<HouseholdHub>("/householdHub");
+app.MapHub<NotificationHub>("/notificationHub");
 app.MapHub<OpenAIHub>("/openAIHub");
 app.MapHub<ChatHub>("/Chathub");
 

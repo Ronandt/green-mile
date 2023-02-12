@@ -59,7 +59,17 @@
                                 <td>@item.Id</td>
                                 <td>@item.Donation.CustomFood.Name</td>
                                 <td>@String.Format("{0:MM/dd/yyyy}", item.Date)</td>
-                                <td>@item.Status</td>
+                                @if(@item.Status == RequestStatus.PENDING)
+                                {
+                                    <td><span class="badge rounded-pill bg-secondary">@item.Status</span></td>
+                                }
+                                else if(@item.Status == RequestStatus.ACCEPTED)
+                                {
+                                    <td><span class="badge rounded-pill bg-success">@item.Status</span></td>
+                                }
+                                else{
+                                    <td><span class="badge rounded-pill bg-info text-dark">@item.Status</span></td>
+                                }
                                 <td>
                                     <button type="button" title="View" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#quickViewModal@(item.Id)" onclick="initMap('@item.Donation.Location')">
                                         <i class="fa fa-eye"></i>
@@ -91,8 +101,10 @@
                                                                 </h3>
 
                                                                 <div class="food-description">
+                                                                   <h3 class="badge bg-secondary">@item.Donation.CustomFood.Category</h3>
+                                                                    <br>
+                                                                    <br>
                                                                     <p>
-                                                                        @item.Donation.CustomFood.Category <br>
                                                                         @item.Donation.CustomFood.Description
                                                                     </p>
                                                                 </div>
@@ -167,3 +179,33 @@
         }      
     </div>
 </main>
+<style>
+    #map {
+        margin-top: 10px;
+        width: 80%;
+        height: 100px;
+        margin-bottom: 10px;
+    }
+</style>
+
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB8-8MPI9bBRCr3ny5hatCyihjlm1eT-kQ"></script>
+
+<script>
+    function initMap(location) {
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 14,
+        });
+
+        var geocoder = new google.maps.Geocoder();
+        geocoder.geocode({ 'address': location }, function (results, status) {
+            if (status === 'OK') {
+                map.setCenter(results[0].geometry.location);
+                var marker = new google.maps.Marker({
+                    map: map,
+                    position: results[0].geometry.location
+                });
+            }
+        });
+    }
+</script>
