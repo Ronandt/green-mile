@@ -14,6 +14,19 @@
 
 
 <style>
+    .file-input-wrapper {
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+    }
+
+        .file-input-wrapper input[type=file] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+        }
 
 </style>
 <main class="main">
@@ -30,6 +43,16 @@
             <div class="col-xl-10 col-lg-12 m-auto">
                 <div class="mb-50">
                     <a class="btn btn-primary" href="/grocerylist/add" style="position:relative;left: 1100px; top: 80px">Add items</a>
+                            <a class="btn btn-info"  id="btn" onclick="download();return false;" style="position:relative;left: 800px; top: 80px">Export List</a>
+                    
+                    <div class="file-input-wrapper" style="position:relative;left: 480px; top: 100px;cursor: pointer">
+                        <button class="btn btn-info">Import List</button>
+                        <form method="POST" id="form" enctype="multipart/form-data">
+                            <input type="file" asp-for="GroceryListUiState.JsonFile" accept=".json" />
+                        </form>
+                  
+                    </div>
+                
                     <h1 class="heading-2 mb-10">Grocery List</h1>
                     <h6 class="text-body">There are <span class="text-brand">@foods.Count</span> products in this list</h6>
                 </div>
@@ -198,9 +221,32 @@
         </div>
     </div>
 
-
         <script>
 
+            const input = document.getElementById("GroceryListUiState_JsonFile");
+input.addEventListener("change", async (event) => {
+
+  const file = event.target.files[0];
+  const reader = new FileReader();
+  reader.readAsText(file);
+  reader.onload = function() {
+    const json = JSON.parse(reader.result);
+    console.log(json);
+  };
+  document.getElementById("form").submit();
+});
+
+            document.getElementById("btn").addEventListener("click", function() {
+            fetch("/api/grocerylist/@(user.HouseholdId)")
+                .then(response => response.json())
+                .then(data => {
+                    const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+                    const link = document.createElement("a");
+                    link.href = URL.createObjectURL(blob);
+                    link.download = "GroceryList.json";
+                    link.click();
+                });
+});
     function up(id) {
             let vals = Math.max(1, parseInt(document.getElementById("value" + id).textContent) + 1)
        
@@ -255,6 +301,8 @@
                 })
             })
     }
+
+         
 </script>
 
 

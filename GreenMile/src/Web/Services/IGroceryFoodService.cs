@@ -19,6 +19,8 @@ namespace Web.Services
         public  Task<GroceryFoodItem> RetrieveGroceryItem(string id);
 
         public  Task<Result<ICollection<GroceryFoodItem>>> RetrieveFoodByHousehold(int householdId);
-     
+        public Task<string> ExportGroceryList(int householdId);
+        public Task ImportGroceryList(int householdId, string json);
+
     }
 }
