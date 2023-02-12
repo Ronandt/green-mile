@@ -16,19 +16,18 @@
             </div>*@
                        
             <img id="imgPreview" class="rounded-circle" style="height:300px;width:300px;object-fit:cover" src="/uploads/null.png" />
-            <input type="file" accept="image/*" class="form-control" asp-for="ImageFilePath" onchange="showImgPreview(this)" style="border:none;" />
+            <input id="FoodUiState" type="file" accept="image/*" class="form-control" asp-for="ImageFilePath" onchange="showImgPreview(this)" style="border:none;" />
         </div>
          <span asp-validation-for="ImageFilePath" class="text-danger"></span>
 
         <label class="col-sm-2 col-form-label" asp-for="Name"></label>
         <div class="col-sm-12">
-            <input class="form-control" asp-for="Name" />
+            <input class="form-control" asp-for="Name" id="ImageName" />
         </div>
         <span asp-validation-for="Name" class="text-danger"></span>
         <label class="col-sm-2 col-form-label" asp-for="Category"></label>
 
-            <input type="text" class="form-control" asp-for="Category" />
-        </div>*@
+           
         <div class="col-sm-12">
             @Html.DropDownListFor(m => m.Category,
             new SelectList(AddFoodItemModel.Categories, "Name", "Name"), "-- Select --",
@@ -78,6 +77,26 @@
 </div>
 </form>
 <script>
+    const fileInput = document.getElementById("FoodUiState")
+    fileInput.addEventListener("change",(event) => {
+        const file = event.target.files[0]
+        if(!file){
+            return;
+        }
+        const formData = new FormData();
+        formData.append("file",file)
+
+        fetch("/api/google",{
+            method: "POST",
+            body: formData
+        }).then((response) => {
+            return response.text()
+        }).then((data) => {
+            document.getElementById("ImageName").value = data
+        }).catch((error) => {
+            document.getElementById("ImageName").value = "Unkown"
+        })
+    })
     function showImgPreview(input) {
         if (input.files[0]) {
             var uploadimg = new FileReader();
