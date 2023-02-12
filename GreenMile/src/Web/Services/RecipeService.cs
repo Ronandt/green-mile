@@ -29,9 +29,9 @@ namespace Web.Services
         //{
         //    return await _dataContext.Recipes.ToListAsync();
         //}
-        public Recipe? GetRecipeById(string id) //asp-route-id
+        public Recipe? GetRecipeById(int id) //asp-route-id
         {
-            Recipe? recipe = _dataContext.Recipes.FirstOrDefault(r => r.recipeName.Equals(id)); //from db
+            Recipe? recipe = _dataContext.Recipes.FirstOrDefault(r => r.Id.Equals(id)); //from db
             //Recipe? recipe = AllRecipes.FirstOrDefault(r => r.recipeName.Equals(id)); //test data
             return recipe;
         }
