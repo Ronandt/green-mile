@@ -20,6 +20,8 @@ public class DataContext : IdentityDbContext<User>
     public DbSet<MessageHistory> ChatMessages { get; set; }
 
     public DbSet<GroceryFoodItem> GroceryFood { get; set; }
+    public DbSet<Review> Reviews { get; set; }
+
 
 
     protected override void OnModelCreating(ModelBuilder builder)

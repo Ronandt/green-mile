@@ -53,7 +53,6 @@ namespace Web.Pages.FoodTracker
 
        
 
-        
 
         public int Count { get; set; }
         public string Name { get; set; }
@@ -65,7 +64,6 @@ namespace Web.Pages.FoodTracker
             FoodItemList = _fooditemService.GetAll(household);
             Name = household.Name;
             Count = FoodItemList.Count();
-
 
             var newcategory = new Category()
             {

@@ -42,9 +42,13 @@ builder.Services.AddTransient<UserManager<User>>();
 builder.Services.AddScoped<DonationService>();
 builder.Services.AddScoped<CustomFoodService>();
 builder.Services.AddScoped<DonationRequestService>();
+builder.Services.AddScoped<ReviewService>();
+
 builder.Services.AddScoped<CategoryService>();
 builder.Services.AddTransient<OpenAIHub>();
 builder.Services.AddScoped<GoogleAIService>();
+
+builder.Services.AddScoped<ReviewService>();
 
 builder.Services.AddDbContext<DataContext>(options =>
 {
@@ -136,6 +140,13 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 app.MapControllers();
+app.MapRazorPages();
+app.MapHub<OpenAIHub>("/openAIHub");
+app.MapHub<ChatHub>("/Chathub");
+
+
+
+
 app.MapRazorPages();
 app.MapHub<OpenAIHub>("/openAIHub");
 app.MapHub<ChatHub>("/Chathub");
