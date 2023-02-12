@@ -47,7 +47,7 @@ namespace Web.Services
                 return Result<string>.Failure("Upload size is too big!");
             }
 
-            var imagePath = $"/{destinationFolder}/{BaseStoreImage(image)}";
+            var imagePath = $"/{destinationFolder}/{await BaseStoreImage(image)}";
 
 
                 user.ImageURL = imagePath;
