@@ -5,7 +5,6 @@ var connection = new signalR.HubConnectionBuilder().withUrl("/notificationHub").
 connection.on("ReceiveNotification", function (notification) {
   // var noNotif = document.getElementById("noNotification");
   // noNotif.remove();
-
   console.log(notification);
   let { id, message, system, date, read } = notification;
   var tableBody = document.getElementById('tableBody');
@@ -36,9 +35,6 @@ connection.on("ReceiveNotification", function (notification) {
   unread.innerText = unum + 1
 });
 
-connection.start()
-  .then(() => console.log("Okay"))
-  .catch(err => console.log(err));
 
 function deleteNotification(e) {
   var row = e.parentElement.parentElement;
@@ -50,3 +46,42 @@ function deleteNotification(e) {
   var tnum = parseInt(total.innerText)
   total.innerText = tnum - 1
 }
+
+function readNotification(e) {
+  let { id: idPackage } = e;
+  var id = parseInt(idPackage.split("_")[1]);
+  connection.invoke("ReadNotification", id)
+    .then(() => {
+      var row = document.getElementById(`notificationActions_${id}`);
+      var newButton = document.createElement('button');
+      row.appendChild(newButton);
+      newButton.className = "btn"
+      var icon = document.createElement('i');
+      newButton.appendChild(icon);
+      icon.className = "fa fa-trash";
+      newButton.addEventListener('click', () => deleteNotification(newButton))
+      var readCol = document.getElementById(`notificationRead_${id}`);
+      readCol.innerText = "Read"
+      var unread = document.getElementById('unreadNotifications')
+      var unum = parseInt(unread.innerText)
+      unread.innerText = unum - 1
+    })
+    .catch(err => console.log(err))
+}
+
+async function start() {
+  try {
+    await connection.start();
+    console.log("SignalR Connected.");
+  } catch (err) {
+    console.log(err);
+    setTimeout(start, 5000);
+  }
+}
+
+connection.onclose(async () => {
+  await start();
+});
+
+// Start the connection.
+start();
