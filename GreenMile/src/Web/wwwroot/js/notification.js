@@ -1,10 +1,12 @@
 "use strict";
 
-var connection = new signalR.HubConnectionBuilder().withUrl("/notificationHub").build();
+var notificationConnection = new signalR.HubConnectionBuilder().withUrl("/notificationHub").build();
 
-connection.on("ReceiveNotification", function (notification) {
-  // var noNotif = document.getElementById("noNotification");
-  // noNotif.remove();
+notificationConnection.on("ReceiveNotification", function (notification) {
+  var noNotif = document.getElementById("noNotification");
+  if (noNotif != null) {
+    noNotif.remove();
+  }
   console.log(notification);
   let { id, message, system, date, read } = notification;
   var tableBody = document.getElementById('tableBody');
@@ -35,7 +37,7 @@ connection.on("ReceiveNotification", function (notification) {
   unread.innerText = unum + 1
 });
 
-connection.on("ReceiveNotificationCount", function (count) {
+notificationConnection.on("ReceiveNotificationCount", function (count) {
   var counter = document.getElementById("notificationCount");
   counter.innerText = count;
 });
@@ -44,17 +46,28 @@ function deleteNotification(e) {
   var row = e.parentElement.parentElement;
   let { id } = row;
   var notificationId = id.split("_")[1]
-  connection.invoke("DeleteNotification", parseInt(notificationId)).catch(err => console.log(err));
+  notificationConnection.invoke("DeleteNotification", parseInt(notificationId)).catch(err => console.log(err));
   row.remove();
   var total = document.getElementById('totalNotifications')
   var tnum = parseInt(total.innerText)
   total.innerText = tnum - 1
+
+  if (parseInt(total.innerText) == 0) {
+    var tableBody = document.getElementById('tableBody');
+    var noNotif = document.createElement('tr');
+    tableBody.appendChild(noNotif)
+    noNotif.id = "noNotification";
+    var innerMsg = document.createElement('td');
+    noNotif.appendChild(innerMsg)
+    innerMsg.colSpan = 5;
+    innerMsg.textContent = "No notifications yet."
+  }
 }
 
 function readNotification(e) {
   let { id: idPackage } = e;
   var id = parseInt(idPackage.split("_")[1]);
-  connection.invoke("ReadNotification", id)
+  notificationConnection.invoke("ReadNotification", id)
     .then(() => {
       var row = document.getElementById(`notificationActions_${id}`);
       var newButton = document.createElement('button');
@@ -75,7 +88,7 @@ function readNotification(e) {
 
 async function start() {
   try {
-    await connection.start();
+    await notificationConnection.start();
     console.log("SignalR Connected.");
   } catch (err) {
     console.log(err);
@@ -83,7 +96,7 @@ async function start() {
   }
 }
 
-connection.onclose(async () => {
+notificationConnection.onclose(async () => {
   await start();
 });
 

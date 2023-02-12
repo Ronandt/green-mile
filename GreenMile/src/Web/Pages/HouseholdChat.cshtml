@@ -5,6 +5,7 @@
 @using Web.Services
 @inject UserManager<User> _userManager;
 @inject MessageService _messageService;
+@inject IHouseholdService _householdService;
 @{
     var user = await _userManager.GetUserAsync(User);
     var userId = user?.Id;
@@ -23,7 +24,12 @@
         <div class="col-lg-8 col-12">
             <div class="card my-3">
                 <div class="card-header">
+                    @{
+                        var count = (await
+                        _householdService.RetrieveHouseholdDetails((int)householdId)).Value.Users.Count();
+                    }
                     <h3>Chat</h3>
+                    <small>@count Members</small>
                 </div>
                 <div class="card-body">
                     <div id="messagesList" class="d-flex flex-column gap-3 align-items-start overflow-scroll"

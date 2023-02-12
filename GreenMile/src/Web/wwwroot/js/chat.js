@@ -1,12 +1,12 @@
 "use strict";
 
-var connection = new signalR.HubConnectionBuilder().withUrl("/householdHub").build();
+var chatConnection = new signalR.HubConnectionBuilder().withUrl("/householdHub").build();
 
 
 //Disable the send button until connection is established.
 document.getElementById("sendButton").disabled = true;
 
-connection.on("ReceiveMessage", function (messageViewModel) {
+chatConnection.on("ReceiveMessage", function (messageViewModel) {
   let { key: id, username: userName, message, createdAt: time, imagePath } = messageViewModel;
   var isUser = document.getElementById("username").value == userName
   console.log(userName)
@@ -19,8 +19,7 @@ connection.on("ReceiveMessage", function (messageViewModel) {
   container.className = !isUser ? "text-white px-2 rounded" : "px-2 border rounded ms-auto";
   container.style = !isUser ? "background-color: #33764e;" : "";
   container.id = `message_${id}`;
-  if (imagePath != null)
-  {
+  if (imagePath != null) {
     var img = document.createElement('img');
     container.appendChild(img);
     img.src = "/" + imagePath;
@@ -57,14 +56,14 @@ connection.on("ReceiveMessage", function (messageViewModel) {
   messageList.scrollTop = messageList.scrollHeight;
 });
 
-connection.on("ReceiveDeleteMessage", function (messageId) {
+chatConnection.on("ReceiveDeleteMessage", function (messageId) {
   console.log(`Received instruction to delete message_${messageId}`);
   document.getElementById(`message_${messageId}`).remove();
 })
 
-connection.start().then(function () {
+chatConnection.start().then(function () {
   document.getElementById("sendButton").disabled = false;
-  connection.invoke("JoinGroup", document.getElementById("householdId").value)
+  chatConnection.invoke("JoinGroup", document.getElementById("householdId").value)
     .catch(err => console.log(err))
 }).catch(function (err) {
   return console.error(err.toString());
@@ -73,7 +72,7 @@ connection.start().then(function () {
 function deleteMessage(e) {
   var id = e.parentElement.parentElement.id;
   var messageId = id.split("_")[1]
-  connection.invoke("DeleteMessage", messageId).catch(function (err) {
+  chatConnection.invoke("DeleteMessage", messageId).catch(function (err) {
     return console.error(err.toString());
   })
 }
@@ -90,25 +89,22 @@ async function sendMessage() {
   var fileInput = document.getElementById("fileInput")
   var userId = document.getElementById("userId").value;
   var text = messageInput.value;
-  if (text == "")
-  {
+  if (text == "") {
     return;
   }
   var base64Image = null
-  if (fileInput.files.length != 0)
-  {
+  if (fileInput.files.length != 0) {
     base64Image = await toBase64(fileInput.files[0])
   }
   messageInput.value = "";
   fileInput.value = "";
-  if (base64Image != null)
-  {
-    connection.invoke("SendMessageWithImage", userId, text, base64Image).catch(function (err) {
+  if (base64Image != null) {
+    chatConnection.invoke("SendMessageWithImage", userId, text, base64Image).catch(function (err) {
       return console.error(err.toString());
     });
   }
   else {
-    connection.invoke("SendMessage", userId, text).catch(function (err) {
+    chatConnection.invoke("SendMessage", userId, text).catch(function (err) {
       return console.error(err.toString());
     });
   }
