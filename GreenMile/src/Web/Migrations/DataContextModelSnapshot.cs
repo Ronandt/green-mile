@@ -17,6 +17,21 @@ namespace Web.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.12");
 
+            modelBuilder.Entity("CategoryFoodItem", b =>
+                {
+                    b.Property<int>("CategoriesId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("FoodItemsId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("CategoriesId", "FoodItemsId");
+
+                    b.HasIndex("FoodItemsId");
+
+                    b.ToTable("CategoryFoodItem");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -155,16 +170,11 @@ namespace Web.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("FoodItemId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("FoodItemId");
 
                     b.ToTable("Categories");
                 });
@@ -262,6 +272,13 @@ namespace Web.Migrations
                     b.Property<double>("CarbonFootprint")
                         .HasColumnType("REAL");
 
+<<<<<<< HEAD
+=======
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+>>>>>>> main
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -285,6 +302,12 @@ namespace Web.Migrations
 
                     b.Property<int>("Quantity")
                         .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("Weight")
+                        .HasColumnType("REAL");
 
                     b.HasKey("Id");
 
@@ -562,6 +585,21 @@ namespace Web.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("CategoryFoodItem", b =>
+                {
+                    b.HasOne("Web.Models.Category", null)
+                        .WithMany()
+                        .HasForeignKey("CategoriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Web.Models.FoodItem", null)
+                        .WithMany()
+                        .HasForeignKey("FoodItemsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -611,13 +649,6 @@ namespace Web.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Web.Models.Category", b =>
-                {
-                    b.HasOne("Web.Models.FoodItem", null)
-                        .WithMany("Categories")
-                        .HasForeignKey("FoodItemId");
                 });
 
             modelBuilder.Entity("Web.Models.Donation", b =>
@@ -720,11 +751,6 @@ namespace Web.Migrations
                         .HasForeignKey("HouseholdId");
 
                     b.Navigation("Household");
-                });
-
-            modelBuilder.Entity("Web.Models.FoodItem", b =>
-                {
-                    b.Navigation("Categories");
                 });
 
             modelBuilder.Entity("Web.Models.Household", b =>
