@@ -17,7 +17,9 @@ namespace Web.Services
     {
         private static JsonSerializerOptions serializerOptions = new JsonSerializerOptions
         {
-            MaxDepth = 10000
+            MaxDepth = 10000,
+            WriteIndented= true
+            
         };
         private readonly DataContext _dataContext;
         public GroceryFoodService(DataContext dataContext)
@@ -94,19 +96,26 @@ namespace Web.Services
         public async Task ImportGroceryList(int householdId, string json)
         {
             List<GroceryFoodItem> foodItems;
-            dynamic array = JsonConvert.DeserializeObject(json);
-           List<GroceryFoodItem> why = JsonConvert.DeserializeObject<List<GroceryFoodItem>>(array);
-            why.ForEach(x => x.Id = Guid.NewGuid().ToString()
+            try
+            {
+                List<GroceryFoodItem> why = JsonConvert.DeserializeObject<List<GroceryFoodItem>>(json);
+                why.ForEach(x => x.Id = Guid.NewGuid().ToString()
 );
 
 
-           why.ForEach(x =>
-            {
-                x.HouseholdId = householdId;
-            });
+                why.ForEach(x =>
+                {
+                    x.HouseholdId = householdId;
+                });
 
-           await _dataContext.AddRangeAsync(why);
-            await _dataContext.SaveChangesAsync();  
+                await _dataContext.AddRangeAsync(why);
+                await _dataContext.SaveChangesAsync();
+            } catch(Exception ex)
+            {
+
+            }
+  
+      
 
         }
 

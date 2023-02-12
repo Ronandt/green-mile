@@ -240,7 +240,7 @@ input.addEventListener("change", async (event) => {
             fetch("/api/grocerylist/@(user.HouseholdId)")
                 .then(response => response.json())
                 .then(data => {
-                    const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+                    const blob = new Blob([data], { type: "application/json" });
                     const link = document.createElement("a");
                     link.href = URL.createObjectURL(blob);
                     link.download = "GroceryList.json";
