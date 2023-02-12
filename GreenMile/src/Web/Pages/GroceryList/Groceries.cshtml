@@ -44,7 +44,7 @@
                 <div class="mb-50">
                     <a class="btn btn-primary" href="/grocerylist/add" style="position:relative;left: 1100px; top: 80px">Add items</a>
                             <a class="btn btn-info"  id="btn" onclick="download();return false;" style="position:relative;left: 800px; top: 80px">Export List</a>
-                    
+                  
                     <div class="file-input-wrapper" style="position:relative;left: 480px; top: 100px;cursor: pointer">
                         <button class="btn btn-info">Import List</button>
                         <form method="POST" id="form" enctype="multipart/form-data">
@@ -52,7 +52,13 @@
                         </form>
                   
                     </div>
-                
+           
+                    
+                                        <button data-bs-toggle="modal" data-bs-target="#quickViewModal"
+                                           href="#"
+                            class="btn btn-info" style="position:relative;left: 80px; top: 80px">
+                                         Generate Grocery List
+                                        </button>
                     <h1 class="heading-2 mb-10">Grocery List</h1>
                     <h6 class="text-body">There are <span class="text-brand">@foods.Count</span> products in this list</h6>
                 </div>
@@ -88,7 +94,7 @@
                                             <label type="checkbox"  class="form-check-label" for="@("checkbox" + food.Id)"></label>
                                         }
                                     </td>
-                                    <td class="image product-thumbnail pt-40" style="position:relative;bottom: 15px;"><img src="@food.ImageFilePath" alt="#" /></td>
+                                    <td class="image product-thumbnail pt-40" style="position:relative;bottom: 15px;"><img src="@(food.ImageFilePath ?? "https://uxwing.com/wp-content/themes/uxwing/download/food-and-drinks/meal-food-icon.png")"  alt="#" /></td>
                                     <td class="product-des product-name">
                                         <h6><a class="product-name mb-10" style="position: relative; right: 40px;" href="shop-product-right.html">@food.Name</a></h6>
                              
@@ -132,6 +138,22 @@
 
 
 
+                                <div class="modal fade custom-modal" id="quickViewModal" tabindex="-1"
+                                 aria-labelledby="quickViewModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                            <div class="modal-body">
+                                                Enter your food:<br>
+                                                <input class="form-control" type="text" id="food" style="margin-bottom:20px; "placeholder="Enter what you want to cook to obtain ingredients for your list!"/>
+                                                <a class="btn btn-info" id="btn2">Generate Grocery List</a>
+
+                                            
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
 
 
@@ -147,7 +169,7 @@
                                             <div class="modal-body">
                                                 <div class="row">
                       
-                                                    <img src="@food.ImageFilePath" alt="#"  style="margin-bottom: 20px;height: 300px;object-fit:cover;border-radius:50px;"/>
+                                                    <img src="@(food.ImageFilePath ?? "https://uxwing.com/wp-content/themes/uxwing/download/food-and-drinks/meal-food-icon.png")" alt="#"  style="margin-bottom: 20px;height: 300px;object-fit:cover;border-radius:50px;"/>
                                                     <div class="detail-info pr-30 pl-30">
                                                     
                                                         <h3 class="title-detail" style="margin-bottom: 20px;">
@@ -221,7 +243,34 @@
         </div>
     </div>
 
+
         <script>
+
+        document.getElementById("btn2").addEventListener("click", function () {
+            document.getElementById("food").disabled = true
+            document.getElementById("btn2").innerHTML = "Loading..."
+            const data = {
+                response: document.getElementById("food").value
+            };
+
+            fetch("/api/gpt", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => response.text())
+                .then( data => {
+                    let link = document.createElement('a');
+                    link.href = URL.createObjectURL(new Blob([data], { type: 'application/json' }));
+                    link.download = 'GeneratedGroceryList.json';
+                    link.click();
+                         document.getElementById("food").disabled = false
+                            document.getElementById("btn2").innerHTML = "Generate Grocery List"
+                })
+                .catch(error => console.error("Error:", error));
+        });
 
             const input = document.getElementById("GroceryListUiState_JsonFile");
 input.addEventListener("change", async (event) => {

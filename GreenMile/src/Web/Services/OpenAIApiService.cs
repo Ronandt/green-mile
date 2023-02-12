@@ -60,5 +60,22 @@ namespace Web.Services
             
          
         }
+
+        public async Task<OpenAI.GPT3.ObjectModels.ResponseModels.CompletionCreateResponse> GenerateDavinciPrompt(string prompt)
+        {
+            if (prompt is null)
+            {
+                throw new ArgumentNullException(nameof(prompt));
+            }
+            return await _openAIService.Completions.CreateCompletion(new OpenAI.GPT3.ObjectModels.RequestModels.CompletionCreateRequest()
+            {
+                Prompt = prompt,
+                MaxTokens = 1000,
+
+                User = "TestUser",
+
+            });
+
+        }
     }
 }
