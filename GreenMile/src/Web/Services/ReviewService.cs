@@ -22,5 +22,18 @@ namespace Web.Services
         {
             return _dataContext.Reviews.Where(review => review.recipeID == id).ToList();
         }
+
+        public void deleteReview(Review review)
+        {
+            _dataContext.Reviews.Remove(review);
+            _dataContext.SaveChanges();
+        }
+
+        public Review? GetReviewById(int id) //asp-route-id
+        {
+            Review? review = _dataContext.Reviews.FirstOrDefault(r => r.Id.Equals(id)); //from db
+            //Recipe? recipe = AllRecipes.FirstOrDefault(r => r.recipeName.Equals(id)); //test data
+            return review;
+        }
     }
 }
