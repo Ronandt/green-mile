@@ -120,12 +120,9 @@ namespace Web.Pages.FoodSharing
             await _donationService.UpdateDonation(donation);
             await _customFoodService.Update(customFood);
 
-            
-
-
             TempData["FlashMessage.Type"] = "success";
             TempData["FlashMessage.Text"] = "You have successfully updated the food item";
-            return Redirect("/FoodSharing");
+            return Redirect("/FoodSharing/Mydonations");
         }
     }
 }

@@ -303,6 +303,33 @@ namespace Web.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ChatMessages",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserId = table.Column<string>(type: "TEXT", nullable: true),
+                    DonationRequestId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Text = table.Column<string>(type: "TEXT", nullable: false),
+                    Timestamp = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChatMessages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ChatMessages_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ChatMessages_DonationRequests_DonationRequestId",
+                        column: x => x.DonationRequestId,
+                        principalTable: "DonationRequests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Categories",
                 columns: table => new
                 {
@@ -392,6 +419,16 @@ namespace Web.Migrations
                 name: "IX_Categories_FoodItemId",
                 table: "Categories",
                 column: "FoodItemId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ChatMessages_DonationRequestId",
+                table: "ChatMessages",
+                column: "DonationRequestId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ChatMessages_UserId",
+                table: "ChatMessages",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DonationRequests_DonationId",
@@ -498,7 +535,7 @@ namespace Web.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "DonationRequests");
+                name: "ChatMessages");
 
             migrationBuilder.DropTable(
                 name: "FoodItemCategories");
@@ -513,16 +550,19 @@ namespace Web.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Donations");
+                name: "DonationRequests");
 
             migrationBuilder.DropTable(
                 name: "Categories");
 
             migrationBuilder.DropTable(
-                name: "CustomFoods");
+                name: "Donations");
 
             migrationBuilder.DropTable(
                 name: "FoodItems");
+
+            migrationBuilder.DropTable(
+                name: "CustomFoods");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

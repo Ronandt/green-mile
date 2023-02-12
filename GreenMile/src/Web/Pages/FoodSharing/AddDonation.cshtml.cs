@@ -116,7 +116,7 @@ namespace Web.Pages.FoodSharing
 
                     TempData["FlashMessage.Type"] = "success";
                     TempData["FlashMessage.Text"] = string.Format("Donation Offer {0} is created Of Food", Name);
-                    return Redirect("/FoodSharing/Index");
+                    return RedirectToPage("/FoodSharing/MyDonations");
                 }
             }
             return Page();

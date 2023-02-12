@@ -22,13 +22,6 @@ namespace Web.Services
         {
             return _context.DonationRequests.OrderBy(m => m.Id).ToList();
         }
-        public List<DonationRequest> GetRequestByUser(string userId)
-        {
-            return _context.DonationRequests
-                .Include(d => d.Donation.CustomFood)
-                .Where(x => x.Recipient.Id == userId)
-                .ToList();
-        }
 
         public async Task Update(DonationRequest request)
         {
@@ -39,7 +32,7 @@ namespace Web.Services
         {
             return _context.DonationRequests
                 .Include(d => d.Donation.CustomFood)
-                .Where(x => x.Donor.Id == userId)
+                .Where(x => x.Donor.Id == userId && x.Status != RequestStatus.CANCELLED)
                 .ToList();
         }
 
@@ -54,10 +47,10 @@ namespace Web.Services
         }
 
        
-        public List<DonationRequest> GetRequestsByUser(string id)
+        public List<DonationRequest> GetRequestsByRecipient(string id)
         {
             return _context.DonationRequests
-                .Include(d => d.Donation)
+                .Include(d => d.Donation.CustomFood)
                 .Where(x => x.Recipient.Id.Equals(id))
                 .OrderByDescending(m => m.Date)
                 .ToList();

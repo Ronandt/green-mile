@@ -1,7 +1,6 @@
 ﻿@page
 @model Web.Pages.FoodSharing.IndexModel
-@{
-}
+
 
 <main class="main">
     <div class="page-header mt-30 mb-75">
@@ -76,6 +75,7 @@
                     </div>
                     <div class="loop-grid pr-30">
                         <div class="row">
+
                             @{
                                 @foreach (var item in Model.DonationList)
                                 {
@@ -201,32 +201,30 @@
                             <h5 class="section-title style-1 mb-30">Category</h5>
                             <ul>
                                 <li>
-                                    <a href="shop-grid-right.html"> <img src="assets/imgs/theme/icons/category-1.svg"
-                                            alt="" />Fresh produce</a><span class="count">30</span>
+                                    <a href="#"> <img src="assets/imgs/theme/icons/category-1.svg"
+                                            alt="" />Fresh produce</a><span class="count">@Model.Freshproduce</span>
                                 </li>
                                 <li>
-                                    <a href="shop-grid-right.html"> <img src="assets/imgs/theme/icons/category-2.svg"
-                                            alt="" />Canned food</a><span class="count">35</span>
+                                    <a href="#"> <img src="assets/imgs/theme/icons/category-2.svg"
+                                            alt="" />Canned food</a><span class="count">@Model.Cannedfood</span>
                                 </li>
                                 <li>
-                                    <a href="shop-grid-right.html"> <img src="assets/imgs/theme/icons/category-3.svg"
+                                    <a href="#"> <img src="assets/imgs/theme/icons/category-3.svg"
                                              alt="" />Snacks
-                                    </a><span class="count">42</span>
+                                    </a><span class="count">@Model.Snacks</span>
                                 </li>
                                 <li>
-                                    <a href="shop-grid-right.html"> <img src="assets/imgs/theme/icons/category-4.svg"
+                                    <a href="#"> <img src="assets/imgs/theme/icons/category-4.svg"
                                              alt="" />Beverages
-                                    </a><span class="count">68</span>
+                                    </a><span class="count">@Model.Beverages</span>
                                 </li>
                                 <li>
-                                    <a href="shop-grid-right.html"> <img src="assets/imgs/theme/icons/category-5.svg"
+                                    <a href="#"> <img src="assets/imgs/theme/icons/category-5.svg"
                                              alt="" />Meats
-                                    </a><span class="count">87</span>
+                                    </a><span class="count">@Model.Meats</span>
                                 </li>
                             </ul>
-                        </div>
-                        <!-- Product sidebar Widget -->
-                       
+                        </div>                       
                     </div>
                 </div>
             </div>

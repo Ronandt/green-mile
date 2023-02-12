@@ -28,7 +28,7 @@ namespace Web.Pages.FoodSharing
         public async Task<IActionResult> OnGet()
         {
             var userId = (await _userManager.GetUserAsync(HttpContext.User)).Id;
-            DonationRequestList = _donationRequestService.GetRequestByUser(userId);
+            DonationRequestList = _donationRequestService.GetRequestsByRecipient(userId);
             MyRequestCount = DonationRequestList.Count;
             return Page();
         }

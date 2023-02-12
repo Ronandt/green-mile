@@ -1,49 +1,75 @@
-﻿var connection = new signalR.HubConnectionBuilder().withUrl("/Chathub").build();
+﻿"use strict";
 
-//Disable send button until connection is established
-$("#sendMessage").prop('disabled', true);
+var connection = new signalR.HubConnectionBuilder().withUrl("/Chathub").configureLogging(signalR.LogLevel.Information).build();
 
-connection.on("ReceiveMessage", function (user, message) {
-    var msg = message.replace(/&/g, "&").replace(/</g, "<").replace(/>/g, ">");
-    var encodedMsg = user + ": says " + msg;
-    var li = document.createElement("li");
-    li.textContent = encodedMsg;
-    $("#messagesList").append(li);
+//Disable the send button until connection is established.
+document.getElementById("sendButton").disabled = true; 
+connection.on("ReceiveMessage", function (userName, id, message, time) {
+    var isUser = document.getElementById("username").value == userName
+    var container = document.createElement("div");
+    document.getElementById("messagesList").appendChild(container);
+    container.className = !isUser ? "text-white px-2 rounded" : "px-2 border rounded ms-auto";
+    container.style = !isUser ? "background-color: #33764e;" : "";
+    container.id = `message_${id}`;
+    
+    var nameAndTrashRow = document.createElement("div");
+    container.appendChild(nameAndTrashRow);
+    nameAndTrashRow.className = "d-flex justify-content-between align-items-center"
+
+    var userNameText = document.createElement("strong");
+    nameAndTrashRow.appendChild(userNameText);
+    userNameText.textContent = userName;
+
+    var messageBody = document.createElement("div");
+    container.appendChild(messageBody);
+    messageBody.className = "d-flex gap-3"
+
+    var messageText = document.createElement("p");
+    messageBody.appendChild(messageText)
+    messageText.textContent = message;
+    messageText.className = !isUser ? "text-white" : "";
+
+    var messageTime = document.createElement("small");
+    messageBody.appendChild(messageTime);
+    messageTime.textContent = time;
+    messageTime.className = "small text-muted";
+
+    var messageList = document.getElementById("messagesList");
+    messageList.scrollTop = messageList.scrollHeight;
 });
 
+connection.on("ReceiveDeleteMessage", function (messageId) {
+    console.log(`Received instruction to delete message_${messageId}`);
+    document.getElementById(`message_${messageId}`).remove();
+})
+
 connection.start().then(function () {
-    $("#sendMessage").prop('disabled', false);
+    document.getElementById("sendButton").disabled = false;
+    connection.invoke("JoinGroup", parseInt(document.getElementById("requestId").value))
+    console.log(document.getElementById("requestId").value)
 }).catch(function (err) {
     return console.error(err.toString());
 });
 
 
-$("#sendMessage").click(function () {
 
-    var sender = $("#sender").val();
-    var receiver = $("#receiver").val();
-    var message = $("#message").val();
+function sendMessage() {
+    var messageInput = document.getElementById("messageInput");
+    var userId = document.getElementById("userId").value;
+    var text = messageInput.value;
+    var requestId = parseInt(document.getElementById("requestId").value);
 
-    if (receiver != "") {
-        //send to a user
-        connection.invoke("SendMessageToGroup", sender, receiver, message).catch(function (err) {
-            return console.error(err.toString());
-        });
+    if (text == "") {
+        return;
     }
-    else {
-        //send to all
-        connection.invoke("SendMessage", sender, message).catch(function (err) {
-            return console.error(err.toString());
-        });
-    }
+    messageInput.value = "";
+    connection.invoke("SendMessage", userId, text, requestId).catch(function (err) {
+        return console.error(err.toString());
+    });
+}
 
-    var encodedMsg = sender + " says " + message;
-    var li = document.createElement("li");
-    li.textContent = encodedMsg;
-    $("#messagesList").append(li);
-
-
-    event.preventDefault();
-
-});
+document.getElementById("messageForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    sendMessage();
+})
 

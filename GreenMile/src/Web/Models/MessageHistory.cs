@@ -6,9 +6,9 @@ namespace Web.Models
     {
         [Key]
         public int Id { get; set; }
-        public string Sender { get; set; }
-        public string Receiver { get; set; }
+        public User User { get; set; }
+        public DonationRequest DonationRequest { get; set; }
         public string Text { get; set; }
-        public DateTime Timestamp { get; set; }
+        public DateTime Timestamp { get; set; } = DateTime.Now;
     }
 }

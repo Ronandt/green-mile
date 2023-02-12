@@ -4,14 +4,15 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 using Web.Data;
-using Web.Hubs;
 using Web.Models;
 using Web.Services;
+using Web.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddSignalR();
 
 // In-house Services
 builder.Services.AddScoped<FoodItemService>();
@@ -24,8 +25,7 @@ builder.Services.AddScoped<RecipeService>();
 builder.Services.AddScoped<DonationService>();
 builder.Services.AddScoped<CustomFoodService>();
 builder.Services.AddScoped<DonationRequestService>();
-
-builder.Services.AddSignalR();
+builder.Services.AddScoped<ChatService>();
 
 builder.Services.AddDbContext<DataContext>(options =>
 {
@@ -35,6 +35,7 @@ builder.Services.AddDbContext<DataContext>(options =>
         var devConnectionString = builder.Configuration.GetConnectionString("dev");
         options.UseSqlite(connectionString: devConnectionString);
     }
+
     else if (builder.Environment.IsProduction())
     {
         // Setup MySQL Connection
@@ -100,10 +101,7 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapHub<ChatHub>("/Chathub");
-});
+app.MapHub<ChatHub>("/Chathub");
 
 app.MapRazorPages();
 

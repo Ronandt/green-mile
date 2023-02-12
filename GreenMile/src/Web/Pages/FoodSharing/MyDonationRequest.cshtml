@@ -120,27 +120,11 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <button type="button" title="Chat" class="btn btn-info">
+                                    <a type="button" title="Chat" class="btn btn-info" asp-page="/FoodSharing/DonationChat" asp-route-id="@item.Id">
                                         <i class="fa-solid fa-comment"></i>
-                                    </button>
+                                    </a>
                                 </td>
-                                @if (item.Status == RequestStatus.CANCELLED)
-                                {
-                                    <td>
-                                        <button type="button" title="Cancel" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal_@(item.Id)" disabled>
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                    </td>
-                                }
-                                else if (item.Status == RequestStatus.DONE)
-                                {
-                                    <td>
-                                        <button type="button" title="Cancel" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal_@(item.Id)" disabled>
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                    </td>
-                                }
-                                else
+                                @if (item.Status == RequestStatus.PENDING)
                                 {
                                     <td>
                                         <form method="post" asp-page-handler="Cancel" asp-route-id="@item.Id">
@@ -148,8 +132,8 @@
                                                 <i class="fa-solid fa-trash"></i>
                                             </button>
                                             <!-- The Modal -->
-                                            <div class="modal" id="myModal_@(item.Id)">
-                                                <div class="modal-dialog">
+                                            <div class="modal" tabindex="-1" role="dialog" id="myModal_@(item.Id)">
+                                                <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
                                                         <!-- Modal Header -->
                                                         <div class="modal-header">
@@ -164,8 +148,7 @@
 
                                                         <!-- Modal footer -->
                                                         <div class="modal-footer">
-                                                            <input type="submit" value="Delete" class="btn btn-danger">
-
+                                                            <button type="submit" class="btn btn-primary">Yes</button>
                                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                                         </div>
                                                     </div>

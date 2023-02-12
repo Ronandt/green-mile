@@ -11,8 +11,8 @@ using Web.Data;
 namespace Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230206170423_Messages")]
-    partial class Messages
+    [Migration("20230211065205_hi")]
+    partial class hi
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -355,13 +355,8 @@ namespace Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Receiver")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Sender")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("DonationRequestId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -370,9 +365,16 @@ namespace Web.Migrations
                     b.Property<DateTime>("Timestamp")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Messages");
+                    b.HasIndex("DonationRequestId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ChatMessages");
                 });
 
             modelBuilder.Entity("Web.Models.Notification", b =>
@@ -647,6 +649,23 @@ namespace Web.Migrations
                         .HasForeignKey("Web.Models.Household", "OwnerId");
 
                     b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("Web.Models.MessageHistory", b =>
+                {
+                    b.HasOne("Web.Models.DonationRequest", "DonationRequest")
+                        .WithMany()
+                        .HasForeignKey("DonationRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Web.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("DonationRequest");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Web.Models.Notification", b =>
