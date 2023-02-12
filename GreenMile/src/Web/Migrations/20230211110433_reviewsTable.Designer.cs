@@ -11,8 +11,8 @@ using Web.Data;
 namespace Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230124061117_first")]
-    partial class first
+    [Migration("20230211110433_reviewsTable")]
+    partial class reviewsTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -261,6 +261,9 @@ namespace Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<double>("CarbonFootprint")
+                        .HasColumnType("REAL");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -311,6 +314,48 @@ namespace Web.Migrations
                     b.HasIndex("FoodItemId");
 
                     b.ToTable("FoodItemCategories");
+                });
+
+            modelBuilder.Entity("Web.Models.GroceryFoodItem", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double?>("CarbonFootprint")
+                        .HasColumnType("REAL");
+
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ExtraNote")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("HouseholdId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ImageFilePath")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("InBasket")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("HouseholdId");
+
+                    b.ToTable("GroceryFood");
                 });
 
             modelBuilder.Entity("Web.Models.Household", b =>
@@ -372,12 +417,17 @@ namespace Web.Migrations
 
             modelBuilder.Entity("Web.Models.Recipe", b =>
                 {
-                    b.Property<string>("recipeName")
-                        .HasMaxLength(20)
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("description")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("difficulty")
-                        .HasColumnType("decimal(2,1)");
+                    b.Property<string>("difficulty")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("duration")
                         .HasColumnType("INTEGER");
@@ -393,13 +443,38 @@ namespace Web.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("reviews")
+                    b.Property<string>("recipeName")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Recipes");
+                });
+
+            modelBuilder.Entity("Web.Models.Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("description")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("recipeName");
+                    b.Property<decimal>("rating")
+                        .HasColumnType("TEXT");
 
-                    b.ToTable("Recipes");
+                    b.Property<int>("recipeID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("userID")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("Web.Models.User", b =>
@@ -433,6 +508,10 @@ namespace Web.Migrations
 
                     b.Property<int?>("HouseholdId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("ImageURL")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -603,6 +682,21 @@ namespace Web.Migrations
                     b.Navigation("FoodItem");
                 });
 
+            modelBuilder.Entity("Web.Models.GroceryFoodItem", b =>
+                {
+                    b.HasOne("Web.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId");
+
+                    b.HasOne("Web.Models.Household", "Household")
+                        .WithMany("GroceryItems")
+                        .HasForeignKey("HouseholdId");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Household");
+                });
+
             modelBuilder.Entity("Web.Models.Household", b =>
                 {
                     b.HasOne("Web.Models.User", "Owner")
@@ -637,6 +731,8 @@ namespace Web.Migrations
 
             modelBuilder.Entity("Web.Models.Household", b =>
                 {
+                    b.Navigation("GroceryItems");
+
                     b.Navigation("Users");
                 });
 

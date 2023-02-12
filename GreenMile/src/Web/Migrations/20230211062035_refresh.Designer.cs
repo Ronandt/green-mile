@@ -11,8 +11,8 @@ using Web.Data;
 namespace Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230130104822_ingredientsReset")]
-    partial class ingredientsReset
+    [Migration("20230211062035_refresh")]
+    partial class refresh
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -421,6 +421,10 @@ namespace Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("difficulty")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -451,6 +455,30 @@ namespace Web.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Recipes");
+                });
+
+            modelBuilder.Entity("Web.Models.Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("rating")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("recipeID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("userID")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("Web.Models.User", b =>

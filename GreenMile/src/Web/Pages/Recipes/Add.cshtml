@@ -2,8 +2,10 @@
 @model Web.Pages.Recipes.AddModel
 @{
 }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<section class="content-main">
 	<form method="post" enctype="multipart/form-data">
+		
 			<div class="row">
 				<div class="col-9">
 					<div class="content-header">
@@ -23,7 +25,16 @@
 							
 								<div class="mb-4">
 									<label for="product_name" class="form-label" asp-for="CurrentRecipe.recipeName">Recipe Name</label>
-									<input type="text" placeholder="Type here" class="form-control" asp-for="CurrentRecipe.recipeName" />
+									<input type="text" placeholder="Type here" id="search" class="form-control" asp-for="CurrentRecipe.recipeName" />
+									<span asp-validation-for="CurrentRecipe.recipeName" class="text-danger"></span>
+								</div>
+
+						<input class="btn btn-primary" onclick="getRecipe(document.getElementById('search').value)" type="button" value="Search" />
+
+								<div class="mb-3">
+									<label class="form-label" asp-for="CurrentRecipe.description">Description</label>
+									<input placeholder="Add a description" type="text" class="form-control" asp-for="CurrentRecipe.description" id="description"/>
+									<span asp-validation-for="CurrentRecipe.description" class="text-danger"></span>
 								</div>
 								<div class="row">
 									<div class="col-lg-4">
@@ -36,12 +47,14 @@
 												<option value="Intermediate">Intermediate</option>
 												<option value="Hard">Hard</option>
 											</select>
+									<span asp-validation-for="CurrentRecipe.difficulty" class="text-danger"></span>
 										</div>
 									</div>
 									<div class="col-lg-4">
 										<div class="mb-4">
 											<label class="form-label" asp-for="CurrentRecipe.duration">Duration</label>
-											<input placeholder="mins" type="number" class="form-control" min="1" max="1000" step="1" asp-for="CurrentRecipe.duration"/>
+											<input placeholder="mins" type="number" class="form-control" min="1" max="1000" step="1" asp-for="CurrentRecipe.duration" id="duration" value="1"/>
+									<span asp-validation-for="CurrentRecipe.duration" class="text-danger"></span>
 										</div>
 									</div>
 									<table>
@@ -57,14 +70,15 @@
 									<td><input type="number" placeholder="g" step="1" min="1" max="10000" /></td>
 								</tr>*@
 								@{
-																			@foreach (var ingredient in Model.IngredientList)
+									@foreach (var ingredient in Model.IngredientList)
 									{
-																				<tr>
-																					<td><input id="@ingredient.Id" type="checkbox" onclick="EnableDisableTextBox(@ingredient.Id)"/></td>
-																					<td><p>@ingredient.Name</p></td> 
-																					<td><input type="number" disabled="disabled" id="@("amount" + ingredient.Id)" placeholder="g" step="1" min="1" max="10000" onchange="" required/></td>
-																				</tr>
+										<tr>
+											<td><input id="@ingredient.Id" type="checkbox" onclick="EnableDisableTextBox(@ingredient.Id)" /></td>
+											<td><p>@ingredient.Name</p></td>
+											<td><input type="number" disabled="disabled" id="@("amount" + ingredient.Id)" placeholder="g" step="1" min="1" max="10000" onchange="" required /></td>
+										</tr>
 									}
+									<span asp-validation-for="CurrentRecipe.ingredients" class="text-danger"></span>
 								}
 							</table>
 							<input type="hidden" id="PostIngredientList" asp-for="CurrentRecipe.ingredients" />
@@ -121,7 +135,8 @@
 						<div class="card-body">
 							<div class="input-upload">
 								<br />
-								<input class="form-control" type="file" accept="image/*" asp-for="image" onchange="showImgPreview(this)"/>
+								<input class="form-control" id="img" type="file" accept="image/*" asp-for="image" onchange="showImgPreview(this)"/>
+
 							</div>
 						<img id="imgPreview" class="rounded-circle"
 							 style="height:300px;width:300px;object-fit:cover"
@@ -133,6 +148,7 @@
 					<!-- card end// -->
 				</div>
 			</div>
+			<input type="hidden" id="filePath" asp-for="CurrentRecipe.imageFilePath" />
 			</form>
 		</section>
 		<!-- content-main end// -->
@@ -188,7 +204,41 @@
 			ingredient_amount.disabled = true;
 		}
 	}
-        
+    
+	function getSource(recipeName, index) {
+		var id = "source" + index
+		//alert(id)
+		$.ajax({
+			url: "https://api.spoonacular.com/recipes/" + recipeName + "/information?apiKey=7bee4be8c5994749b846c4966537ed75",
+			success: function (res) {
+
+				document.getElementById(id).innerHTML = res.sourceUrl
+				document.getElementById(id).href = res.sourceUrl
+			}
+		});
+	}
+	function getRecipe(query) {
+		var numberOfRecipes = "1";
+		var displayString = "";
+		$.ajax({
+			url: "https://api.spoonacular.com/recipes/search?apiKey=7bee4be8c5994749b846c4966537ed75&number=" + numberOfRecipes + "&query=" + query, 
+			success: function (res) {
+				if (res.results.length == 0) {
+					alert("No recipes found.");
+				}
+				document.getElementById("search").value = res.results[0].title;
+				document.getElementById("duration").value = res.results[0].readyInMinutes;
+				if (res.results[0].hasOwnProperty("summary")) {
+					document.getElementById("description").value = res.results[0].summary;
+				} else {
+					document.getElementById("description").value = "Summary not available.";
+				}
+				document.getElementById("imgPreview").src = res.baseUri + res.results[0].image;
+				document.getElementById("filePath").value = res.baseUri + res.results[0].image;
+ 			}
+		});
+	}
+	
 	
 </script>
 

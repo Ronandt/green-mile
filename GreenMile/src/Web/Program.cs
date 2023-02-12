@@ -29,6 +29,7 @@ builder.Services.AddOpenAIService();
 builder.Services.AddScoped<DonationService>();
 builder.Services.AddScoped<CustomFoodService>();
 builder.Services.AddScoped<DonationRequestService>();
+builder.Services.AddScoped<ReviewService>();
 
 builder.Services.AddDbContext<DataContext>(options =>
 {

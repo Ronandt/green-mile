@@ -419,6 +419,10 @@ namespace Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("difficulty")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -442,13 +446,33 @@ namespace Web.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("reviews")
+                    b.HasKey("Id");
+
+                    b.ToTable("Recipes");
+                });
+
+            modelBuilder.Entity("Web.Models.Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("rating")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("recipeID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("userID")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Recipes");
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("Web.Models.User", b =>
