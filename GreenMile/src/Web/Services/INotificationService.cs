@@ -99,4 +99,9 @@ public interface INotificationService
                 Read = false
             });
     }
+
+    Task<Notification?> FindById(int notificationId);
+    Task Update(Notification notification);
+    Task Delete(Notification notification);
+    Task<int> GetUnreadCount(User user);
 }

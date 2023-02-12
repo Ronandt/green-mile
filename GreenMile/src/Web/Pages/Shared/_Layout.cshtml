@@ -1,6 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Web.Models
+@using Web.Services
 @inject SignInManager<User> signInManager
+@inject INotificationService _notificationService;
 <!DOCTYPE html>
 <html lang="en">
 
@@ -57,14 +59,48 @@
                                         </select>
                                     </form>
                                 </div>
+                                @if (signInManager.IsSignedIn(User))
+                                {
+                                    <div class="header-action-icon-2">
+                                        <a href="/householdchat" class="mx-2">
+                                            <i class="fa fa-message"></i>
+                                        </a>
+                                    </div>
+                                }
+
+                                @if (signInManager.IsSignedIn(User))
+                                {
+                                    var user = await signInManager.UserManager.GetUserAsync(User);
+                                    var count = await _notificationService.GetUnreadCount(user);
+
+                                        <div class="header-action-icon-2">
+                                            <a href="/notifications" class="mx-2">
+                                                <i class="fa-solid fa-bell"></i>
+                                                <span id="notificationCount" class="notificationCount">@count</span>
+                                                <style>
+                                                    .notificationCount {
+                                                        background-color: red;
+                                                        color: white !important;
+                                                        padding: 2px;
+                                                        border-radius: 4px;
+                                                        position: absolute;
+                                                        top: -5px;
+                                                        right: 0;
+                                                    }
+                                                </style>
+                                            </a>
+                                        </div>
+
+                                }
+
                                 <div class="header-action-icon-2">
                                     @{
                                         if (signInManager.IsSignedIn(User))
                                         {
                                             <a href="/account/details">
-                                                <img class="svgInject" alt="GreenMile" src="~/imgs/theme/icons/icon-user.svg" />
+                                                <i class="fa-solid fa-user"></i>
+                                                @* <img class="svgInject" alt="GreenMile" src="~/imgs/theme/icons/icon-user.svg" /> *@
                                             </a>
-                                            <a href="/account/details"><span class="lable ml-0">Account</span></a>
                                             <div class="cart-dropdown-wrap cart-dropdown-hm2 account-dropdown">
                                                 <ul>
                                                     <li>
@@ -95,7 +131,7 @@
                                         {
                                             <a href="/login"><span class="lable ml-0">Sign in</span></a>
                                             <a href="/register" style="margin-left:15px"><span
-                                                class="lable ml-0">Register</span></a>
+                                                    class="lable ml-0">Register</span></a>
                                         }
                                     }
 
@@ -133,14 +169,14 @@
                                         <a href="#">Food Tracker <i class="fa-solid fa-chevron-down"></i></a>
                                         <ul class="sub-menu">
                                              <li><a href="/FoodTracker">Available Food</a></li>
-                                          
+
                                         </ul>
                                     </li>
                                     <li>
                                         <a href="#">Grocery List <i class="fa-solid fa-chevron-down"></i></a>
                                         <ul class="sub-menu">
                                             <li><a href="/grocerylist/groceries">Grocery List</a></li>
-                                   
+
                                         </ul>
                                     </li>
                                     <li>
@@ -158,6 +194,12 @@
                                             <li>
                                                 <a asp-page="/Recipes/viewtemplates">View Template</a>
                                             </li>
+											<li>
+                                                <a asp-page="/FoodTracker/AddFoodItem">Add Food Item</a>
+                                            </li>
+											<li>
+												<a asp-page="/Recipes/SpoonacularAPI">API</a>
+											</li>
                                         </ul>
                                     </li>
                                     <li>
@@ -322,6 +364,7 @@
             </div>
         </div>
     </div>
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
     <div class="container">
         @await Html.PartialAsync("_FlashMessage")
         <main role="main" class="pb-3">
@@ -430,6 +473,9 @@
     <!-- Template  JS -->
     <script src="~/js/main.js?v=5.6"></script>
     <script src="~/js/shop.js?v=5.6"></script>
+    <!-- SignalR -->
+    <script src="~/js/notification.js"></script>
+
     @await RenderSectionAsync("RecaptchaScript", required: false)
 </body>
 

@@ -8,27 +8,42 @@ namespace Web.Pages.Recipes
     public class AddModel : PageModel
     {
         private readonly RecipeService _recipeService;
+        private readonly FoodItemService _foodItemService;
         private IWebHostEnvironment _webHostEnvironment;
 
-        public AddModel(RecipeService recipeService, IWebHostEnvironment webHostEnvironment)
+
+        public AddModel(RecipeService recipeService, IWebHostEnvironment webHostEnvironment, FoodItemService foodItemService)
         {
             _recipeService = recipeService;
             _webHostEnvironment = webHostEnvironment;
+            _foodItemService = foodItemService;
         }
 
         [BindProperty]
         public Recipe CurrentRecipe { get; set; } = new();
         public IFormFile? image { get; set; }
-        public List<String> ingredients { get; set; } = new();
+        //public List<String> testIngredientList { get; set; } = new();
+
+        public List<FoodItem> IngredientList;
+
+        public List<string> ingredientIds;
+        public List<string> ingredientAmounts;
 
         public void OnGet()
         {
             //get the ingredients list
+             IngredientList =  _foodItemService.GetAllForRecipe();
+
+            //test data
+            //testIngredientList.Add("First ingredient");
+            //testIngredientList.Add("Second ingredient");
+            //testIngredientList.Add("Third ingredient");
         }
         public IActionResult OnPost()
         {
-            if(ModelState.IsValid)
-            {
+            IngredientList = _foodItemService.GetAllForRecipe();
+            if (ModelState.IsValid)
+            {  
                 if (image != null)
                 {
 
@@ -40,18 +55,17 @@ namespace Web.Pages.Recipes
                     CurrentRecipe.imageFilePath = String.Format("/" + imagesFolder + "/" + imageFile);
 
                 }
-                Recipe? recipe = _recipeService.GetRecipeById(CurrentRecipe.recipeName);
+                Recipe? recipe = _recipeService.GetRecipeById(CurrentRecipe.Id);
                 if(recipe != null)
                 {
-                    TempData["FlashMessage.Type"] = "danger";
-                    TempData["FlashMessage.Text"] = CurrentRecipe.recipeName + " already exists!";
+                    TempData["error"] = CurrentRecipe.recipeName + " already exists!";
                     return Page();
                 }
                 _recipeService.AddRecipe(CurrentRecipe);
-                TempData["FlashMessage.Type"] = "success";
-                TempData["FlashMessage.Text"] = CurrentRecipe.recipeName + " successfully added!";
+                TempData["success"] = CurrentRecipe.recipeName + " successfully added!";
                 return Redirect("/Recipes/Index");
             }
+            TempData["error"] = "Please fill in all the fields.";
             return Page();
         }
     }

@@ -32,4 +32,32 @@ public class NotificationsModel : PageModel
         Notifications = await _notificationService.GetNotifications(user);
         return Page();
     }
+
+    public async Task<IActionResult> OnPostReadAll()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        var notifications = await _notificationService.GetNotifications(user);
+        foreach (var notif in notifications)
+        {
+            notif.Read = true;
+            await _notificationService.Update(notif);
+        }
+        Notifications = await _notificationService.GetNotifications(user);
+        return Page();
+    }
+
+    public async Task<IActionResult> OnPostDeleteRead()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        var notifications = await _notificationService.GetNotifications(user);
+        foreach (var notif in notifications)
+        {
+            if (notif.Read)
+            {
+                await _notificationService.Delete(notif);
+            }
+        }
+        Notifications = await _notificationService.GetNotifications(user);
+        return Page();
+    }
 }
