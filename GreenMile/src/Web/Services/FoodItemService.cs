@@ -14,8 +14,13 @@ namespace Web.Services
             _context = context;
         }
 
+        public List<FoodItem> GetAllForRecipe()
+        {
+            return _context.FoodItems.ToList();
+        }
 
         public List<FoodItem> GetAll(Household household)
+
         {
 
 
@@ -30,7 +35,7 @@ namespace Web.Services
             return _context.FoodItems.FirstOrDefault(x => x.Id.Equals(id));
         }
 
-            public void AddFoodItem(FoodItem fooditem)
+        public void AddFoodItem(FoodItem fooditem)
         {
             _context.FoodItems.Add(fooditem);
             _context.SaveChanges();

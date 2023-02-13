@@ -16,11 +16,13 @@ namespace Web.Services
             _context = context;
         }
 
-        public List<Donation> GetAll()
+        // Only retrieve the donations that is not belong to the current user, and only retrieve Active Donation
+        public List<Donation> GetAll(string id)
         {
             return _context.Donations
                 .Include(d => d.CustomFood)
-                .Include(u => u.User)
+                .Include(d => d.User)
+                .Where(d => !d.User.Id.Equals(id) && d.Status.Equals(DonationStatus.ACTIVE))
                 .OrderBy(m => m.Id)
                 .ToList();
         }
@@ -31,10 +33,10 @@ namespace Web.Services
             _context.SaveChanges();
         }
 
-        public void UpdateDonation(Donation donation)
+        public async Task UpdateDonation(Donation donation)
         {
             _context.Donations.Update(donation);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         public Donation? GetDonationById(int id)
@@ -42,7 +44,8 @@ namespace Web.Services
 
             return _context.Donations
                 .Include(d => d.CustomFood)
-                .FirstOrDefault(x => x.Id.Equals(id)); ;
+                .Include(d => d.User)
+                .FirstOrDefault(x => x.Id.Equals(id)); 
         }
 
 

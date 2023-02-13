@@ -31,6 +31,17 @@ namespace Web.Pages.FoodSharing
             MyRequestCount = DonationRequestList.Count;
             return Page();
         }
-        
+        public async Task<IActionResult> OnPostAcceptAsync(int id)
+        {
+            var donationRequest = await _donationRequestService.GetRequestsByRequestID(id);
+            donationRequest.Status = RequestStatus.ACCEPTED;
+            donationRequest.Donation.Status = DonationStatus.RESERVED;
+            await _donationRequestService.Update(donationRequest);
+
+            TempData["FlashMessage.Type"] = "success";
+            TempData["FlashMessage.Text"] = string.Format("You have successfully accepted the request with food {0}", donationRequest.Donation.CustomFood.Name);
+
+            return RedirectToPage("/FoodSharing/ReceivedRequests");
+        }
     }
 }

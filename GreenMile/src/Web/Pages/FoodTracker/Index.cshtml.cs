@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+
+using Newtonsoft.Json;
+
 using Web.Data;
 using Web.Lib;
 using Web.Models;
@@ -48,6 +51,9 @@ namespace Web.Pages.FoodTracker
         [BindProperty]
         public string action_type { get; set; }
 
+       
+
+
         public int Count { get; set; }
         public string Name { get; set; }
 
@@ -59,17 +65,10 @@ namespace Web.Pages.FoodTracker
             Name = household.Name;
             Count = FoodItemList.Count();
 
-
-            var newcategory = new Category()
-            {
-                Name = "Fruit",
-                Description = "Fruits are healthy"
-
-            };
-            _foodcategoryService.AddCategory(newcategory);
+         
 
         }
-
+       
         public async Task<IActionResult> OnPostAsync()
         {
 

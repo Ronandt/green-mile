@@ -12,13 +12,15 @@ namespace Web.Services
         private readonly UserManager<User> _userManager;
         private readonly DataContext _dbContext;
         private readonly RoleManager<IdentityRole> _roleManager;
-        public HouseholdService(UserManager<User> userManager, DataContext authDbContext, RoleManager<IdentityRole> roleManager)
+        private readonly INotificationService _notificationService;
+        public HouseholdService(UserManager<User> userManager, DataContext authDbContext, RoleManager<IdentityRole> roleManager, INotificationService notificationService)
         {
             _userManager = userManager;
             _dbContext = authDbContext;
 
 
             _roleManager = roleManager;
+            _notificationService = notificationService;
         }
 
 
@@ -55,6 +57,9 @@ namespace Web.Services
             //household.Users.Add(user);
             //household.Users.Add(user);
             await _dbContext.SaveChangesAsync();
+            var household2 = await _dbContext.Household.Include(h => h.Users).FirstAsync(h => h.HouseholdId == householdId);
+            var notif = _notificationService.Create("Green Mile", $"{user.UserName} joined the household!");
+            await _notificationService.SendNotification(notif, household2);
 
             return Result<Tuple<User, Household>>.Success("User has been added to the household!", new Tuple<User, Household>(user, household));
         }
@@ -184,6 +189,8 @@ namespace Web.Services
             household.Owner = nextOwner;
             household.OwnerId = nextOwnerId;
             _dbContext.SaveChanges();
+            var notif = _notificationService.Create("Green Mile", $"Household owner is now {nextOwner.UserName}");
+            await _notificationService.SendNotification(notif, household);
             return Result<User>.Success("Transfer of ownership successful!", nextOwner);
 
         }

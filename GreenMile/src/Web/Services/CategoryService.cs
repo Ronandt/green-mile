@@ -32,8 +32,8 @@ namespace Web.Services
             },
                new Category()
             {
-                Name = "Fruits",
-                Description = "This is fruits"
+                Name = "Dairy",
+                Description = "This is dairy"
 
 
 

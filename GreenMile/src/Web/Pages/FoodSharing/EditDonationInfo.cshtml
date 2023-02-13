@@ -1,6 +1,6 @@
 ﻿@page
 @model EditDonationInfoModel
-
+@using Web.Models
 
 <main class="main">
     <div class="page-header mt-30 mb-50">
@@ -22,6 +22,7 @@
         <form class="mt-3" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="All" class="text-danger"></div>
             <input type="hidden" asp-for="CustomFoodId" value="@Model.CustomFoodId">
+            <input type="hidden" asp-for="DonationId" value="@Model.DonationId">
             <div class="row">
                 <div class="col-md-8">
                     <div class="row mb-3">
@@ -31,7 +32,21 @@
                             <span asp-validation-for="Name" class="text-danger"></span>
                         </div>
                     </div>
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label" asp-for="Category"></label>
+                        <div class="col-sm-10">
+                            @Html.DropDownListFor(model => model.Category, new List<SelectListItem>
+                            {
+                                new SelectListItem {Text = "Fresh produce", Value = "Fresh produce", Selected = true },
+                                new SelectListItem {Text = "Canned food", Value = "Canned food" },
+                                new SelectListItem {Text = "Snacks", Value = "Snacks" },
+                                new SelectListItem {Text = "Beverages", Value = "Beverages" },
+                                new SelectListItem {Text = "Meats", Value = "Meats" },
+                            }, "-- Select --", new { @class = "form-select" })
 
+                            <span asp-validation-for="Category" class="text-danger"></span>
+                        </div>
+                    </div>
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label" asp-for="Description"></label>
                         <div class="col-sm-10">
@@ -43,8 +58,37 @@
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label" asp-for="ExpiryDate"></label>
                         <div class="col-sm-10">
-                            <input class="form-control" asp-for="ExpiryDate" />
+                            <input class="form-control" asp-for="ExpiryDate" type="date" id="ExpiryDate" />
                             <span asp-validation-for="ExpiryDate" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label" asp-for="Status"></label>
+                        <div class="col-sm-10">
+                            @Html.DropDownListFor(model => model.Status, new List<SelectListItem>
+                            {
+                                new SelectListItem {Text = "ACTIVE", Value = DonationStatus.ACTIVE.ToString() },
+                                new SelectListItem {Text = "RESERVED", Value = DonationStatus.RESERVED.ToString() },
+                                new SelectListItem {Text = "COMPLETED", Value = DonationStatus.COMPLETED.ToString() },
+                                new SelectListItem {Text = "CANCELLED", Value =  DonationStatus.CANCELLED.ToString()},
+                            }, "-- Select --", new { @class = "form-select" })
+
+                            <span asp-validation-for="Status" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label" asp-for="Location"></label>
+                        <div class="col-sm-10">
+                            <input class="form-control" type="number" asp-for="Location" placeholder="Enter you postal code" onchange="initmap()" />
+                            <span asp-validation-for="Location" class="text-danger"></span>
+                            <p id="validlocation" class="text-danger" style="display:none"></p>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-10">
+                            <div id="map"></div>
                         </div>
                     </div>
                 </div>
@@ -54,7 +98,7 @@
                         <input type="file" accept="image/*" asp-for="Upload" class="form-control" onchange="showImgPreview(this)" />
                         <span asp-validation-for="Upload" class="text-danger"></span>
                     </div>
-                    <img id="imgPreview" class="rounded-circle" style="height:300px;width:300px;object-fit:cover"
+                    <img id="imgPreview" style="height:300px;width:300px;object-fit:cover"
                          src="@(string.IsNullOrEmpty(Model.Image) ? "/uploads/user.png" : Model.Image)"
                          onerror="this.src='/uploads/user.png'" />
                     <input class="form-control d-none" asp-for="Image" />
@@ -62,7 +106,7 @@
             </div>
 
             <div class="form-group mb-30">
-                <button type="submit" value="Update" class="btn btn-fill-out btn-block hover-up font-weight-bold">Edit</button>
+                <button id="submitBtn" type="submit" value="Update" class="btn btn-fill-out btn-block hover-up font-weight-bold">Edit</button>
                 <a class="btn btn-secondary ms-2" href="/FoodSharing/MyDonations">Cancel</a>
             </div>
         </form>
@@ -83,6 +127,52 @@
 
 @section Scripts {
 @{
-await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
 }
 }
+
+<script>
+    document.getElementById("ExpiryDate").min = new Date().toISOString().split("T")[0];
+</script>
+
+<style>
+    #map {
+        margin-top: 10px;
+        display: none;
+        width: 80%;
+        height: 400px;
+    }
+</style>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB8-8MPI9bBRCr3ny5hatCyihjlm1eT-kQ"></script>
+
+<script>
+    function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 14,
+        });
+
+        var geocoder = new google.maps.Geocoder();
+        geocoder.geocode({ 'address': document.getElementById('Location').value }, function (results, status) {
+            if (status === 'OK') {
+                map.setCenter(results[0].geometry.location);
+                var marker = new google.maps.Marker({
+                    map: map,
+                    position: results[0].geometry.location
+                });
+                document.getElementById('submitBtn').disabled = false;
+                document.getElementById('validlocation').style.display = "none";
+            }
+            else {
+                document.getElementById('validlocation').style.display = "block";
+                document.getElementById('submitBtn').disabled = true;
+                document.getElementById('validlocation').innerHTML = "Please enter a valid pick up location";
+            }
+        });
+    }
+
+    document.getElementById('Location').addEventListener('blur', function () {
+        document.getElementById('map').style.display = "block";
+        initMap()
+    });
+</script>
