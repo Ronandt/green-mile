@@ -54,7 +54,7 @@ public class RegisterModel : PageModel
         _notificationService = notificationService;
         _captchaService = captchaService;
         _imageService = imageService;
-       
+
     }
 
     public void OnGet()
@@ -71,11 +71,11 @@ public class RegisterModel : PageModel
         else if ((bool)!HouseholdUiState.JoinHousehold && HouseholdUiState.CreateHouseholdName is null)
         {
             ModelState.AddModelError("HouseholdUiState.CreateHouseholdName", "Please fill in the household name you want to create!");
-            if(HouseholdUiState.Address is null) ModelState.AddModelError("HouseholdUiState.Address", "Please fill in the address!");
-          
+            if (HouseholdUiState.Address is null) ModelState.AddModelError("HouseholdUiState.Address", "Please fill in the address!");
+
             return Page();
         }
-        
+
 
         if (ModelState.IsValid)
         {
@@ -121,7 +121,7 @@ public class RegisterModel : PageModel
 
             if (result.Succeeded)
             {
-               
+
                 await _signInManager.SignInAsync(newUser, false);
 
                 var user = await _userManager.FindByNameAsync(UserName);
@@ -139,7 +139,7 @@ public class RegisterModel : PageModel
                 }
                 else
                 {
-                    
+
                     await _householdService.AddUserToHousehold(userId, (await _householdService.VerifyLink(HouseholdUiState.InviteLink)).Value.HouseholdId);
                     TempData["success"] = "Added to household!";
                 }
@@ -149,7 +149,7 @@ public class RegisterModel : PageModel
                 //_contextAccessor.HttpContext.Session.SetString(SessionVariable.HousholdName, user.Household.Name);
 
                 var notif = _notificationService.Create(
-                    nameof(RegisterModel),
+                    "Green Mile",
                     "Welcome to GreenMile! Thank you for registering with us."
                 );
 
