@@ -51,7 +51,7 @@ namespace Web.Pages.FoodSharing
             var userId = (await _userManager.GetUserAsync(HttpContext.User)).Id;
             DonationList = _donationService.GetAll(userId);
             Freshproduce = DonationList.Count(d => d.CustomFood.Category == "Fresh produce");
-            Cannedfood = DonationList.Count(d => d.CustomFood.Category == "Canned food"); 
+            Cannedfood = DonationList.Count(d => d.CustomFood.Category == "Canned food");
             Snacks = DonationList.Count(d => d.CustomFood.Category == "Snacks");
             Beverages = DonationList.Count(d => d.CustomFood.Category == "Beverages");
             Meats = DonationList.Count(d => d.CustomFood.Category == "Meats");
@@ -75,7 +75,7 @@ namespace Web.Pages.FoodSharing
                 TempData["FlashMessage.Text"] = "You are not allowed to request your own donation";
                 return Redirect("/FoodSharing/Index");
             }
-                
+
             if (exists == false)
             {
                 var request = new DonationRequest()
@@ -86,7 +86,7 @@ namespace Web.Pages.FoodSharing
                     Status = RequestStatus.PENDING
                 };
 
-                _donationRequestService.AddRequest(request);
+                await _donationRequestService.AddRequest(request);
 
                 MailMessage message = new MailMessage();
                 message.To.Add("liujiajun2003@gmail.com");
@@ -130,7 +130,7 @@ namespace Web.Pages.FoodSharing
             }
 
 
-            
+
         }
     }
 }

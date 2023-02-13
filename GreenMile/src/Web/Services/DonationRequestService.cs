@@ -6,17 +6,21 @@ namespace Web.Services
 {
     public class DonationRequestService
     {
+        private readonly INotificationService _notificationService;
         private readonly DataContext _context;
 
-        public DonationRequestService(DataContext context)
+        public DonationRequestService(DataContext context, INotificationService notificationService)
         {
             _context = context;
+            _notificationService = notificationService;
         }
 
-        public void AddRequest(DonationRequest request)
+        public async Task AddRequest(DonationRequest request)
         {
             _context.DonationRequests.Add(request);
             _context.SaveChanges();
+            var notif = _notificationService.Create("Food Sharing", $"{request.Recipient.UserName} requests for {request.Donation.CustomFood.Name}");
+            await _notificationService.SendNotification(notif, request.Donor);
         }
         public List<DonationRequest> GetAll()
         {
@@ -46,7 +50,7 @@ namespace Web.Services
 
         }
 
-       
+
         public List<DonationRequest> GetRequestsByRecipient(string id)
         {
             return _context.DonationRequests
