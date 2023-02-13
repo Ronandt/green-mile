@@ -52,6 +52,8 @@ namespace Web.Pages.FoodTracker
 
         [BindProperty, Required]
         public double Weight { get; set; }
+        [BindProperty, Required]
+        public double Cost { get; set; }
 
         [BindProperty, Required]
         public double CarbonFoodprint { get; set; }
@@ -62,7 +64,9 @@ namespace Web.Pages.FoodTracker
 
         public async Task OnGetAsync(string name,string image,string weight)
         {
-            //Categories = _foodcategoryService.GetAll();
+
+            Categories = _foodcategoryService.GetAll();
+   
             Name = name;
             ImageFilePath = image;
             ExpiryDate = DateTime.Now;
@@ -119,6 +123,7 @@ namespace Web.Pages.FoodTracker
                         ImageFilePath = ImageFilePath,
                         Category = Category,
                         CarbonFootprint = 1.1,
+                        Cost = Cost,
                         Weight = 1.1,
                         IsCustom = false,
                         Status = true
