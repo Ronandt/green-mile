@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -21,14 +22,16 @@ namespace Web.Pages.GroceryList
         private readonly IGroceryFoodService _foodService;
         private readonly UserManager<User> _userManager;
         private readonly CategoryService _categoryService;
+        private readonly OpenAIApiService _openAIApiService;
 
-        public AddModel(IGroceryFoodService foodService, IImageService imageService, IHouseholdService householdService, UserManager<User> userManager, CategoryService categoryService)
+        public AddModel(IGroceryFoodService foodService, IImageService imageService, IHouseholdService householdService, UserManager<User> userManager, CategoryService categoryService, OpenAIApiService openAIApiService)
         {
             _foodService = foodService;
             _imageService = imageService;
             _householdService = householdService;
             _userManager = userManager;
             _categoryService = categoryService;
+            _openAIApiService= openAIApiService;        
         }
 
  
@@ -41,7 +44,44 @@ namespace Web.Pages.GroceryList
         public async Task<IActionResult> OnPost()
         {
             var user = await _userManager.GetUserAsync(User);
-            if(!(user is null))
+
+            var response = await _openAIApiService.ClassifyText(new List<string>()
+            {
+                GroceryUiState?.Description,
+                GroceryUiState?.Name
+            });
+
+            if(!response.Successful)
+            {
+                TempData["error"] = "Something went wrong, try again";
+                return Redirect("/grocerylist/add");
+            }
+
+
+            // List<string> vals = response.Results.Select(x => x.Categories.GetType().GetProperties().ToDictionary(a => a.Name, a => (bool)(a.GetValue(x) ?? false))).SelectMany(dict => dict).Where(kvp => kvp.Value).ToDictionary(kvp => kvp.Key, kvp => kvp.Value, StringComparer.OrdinalIgnoreCase).Select(x => x.Key).ToList();
+            List<string> vals = response.Results
+             .Where(x => x.Flagged)
+             .SelectMany(x => x.Categories.GetType().GetProperties(), (x, p) => (Property: p, Value: p.GetValue(x.Categories)))
+             .Where(tuple => (bool)(tuple.Value ?? false))
+             .Select(tuple => tuple.Property.Name)
+             .Distinct(StringComparer.OrdinalIgnoreCase)
+             .ToList();
+
+            if (!(vals.DefaultIfEmpty() is null))
+            {
+                TempData["error"] = $"Your content contains the following: {string.Join(",", vals)}";
+                return Redirect("/grocerylist/add");
+            }
+
+
+            
+       
+
+
+
+
+
+            if (!(user is null))
             {
                 var item = new GroceryFoodItem()
                 {

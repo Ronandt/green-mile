@@ -123,7 +123,7 @@ class="text-danger"></span>
             var contrast = getContrast(rgbval, ["255", "255", "255"])
             console.log(contrast)
             console.log(rgbval)
-            if(contrast > 4) {
+            if(contrast > 2) {
                 document.getElementById("header").style = "color:" + data.split("|")[1] + ";"
             document.getElementById("genimg").style = "background-color:" + data.split("|")[1] + ";" + "margin-top: 20px;"
             document.getElementById("up").style = "color:" + data.split("|")[1] + ";"

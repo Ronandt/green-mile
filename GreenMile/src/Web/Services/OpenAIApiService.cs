@@ -77,5 +77,32 @@ namespace Web.Services
             });
 
         }
+
+        public async Task<OpenAI.GPT3.ObjectModels.ResponseModels.CreateModerationResponse> ClassifyText(List<string> input)
+        {
+            OpenAI.GPT3.ObjectModels.ResponseModels.CreateModerationResponse response =  await _openAIService.Moderation.CreateModeration(new OpenAI.GPT3.ObjectModels.RequestModels.CreateModerationRequest()
+            {
+                InputAsList = input,
+            });
+
+            return response;
+            
+        }
+    }
+
+    enum Classification
+    {
+        HateThreatening,
+        Hate,
+        Sexual,
+        SexualMinors,
+        SelfHarm,
+        Violence,
+        ViolenceGraphic
+           
+
+       
     }
 }
+
+
