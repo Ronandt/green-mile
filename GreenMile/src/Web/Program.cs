@@ -15,7 +15,7 @@ using Web.Utils;
 using Web.Utils;
 
 using Web.API;
-
+using PexelsDotNetSDK.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,7 +38,7 @@ builder.Services.AddScoped<RecipeService>();
 
 
 builder.Services.AddScoped<ChatService>();
-
+builder.Services.AddScoped<PexelsClient>(x => new PexelsClient("5BjyM2w4YfxYHdJNj1vTek7DJvduGowqARPfCt6xLxzCvbgPYi0wKY4z"));
 
 builder.Services.AddScoped<ICaptchaService, CaptchaService>();
 builder.Services.AddOpenAIService();

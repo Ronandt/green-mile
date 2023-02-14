@@ -35,8 +35,10 @@ namespace Web.API
         {
             try
             {
-                string result = await _googleAIService.IdentifyObject(await _googleAIService.ConvertFileStreamToImage(file));
-                return Ok(result);
+                var fileStream = await _googleAIService.ConvertFileStreamToImage(file);
+                string result = await _googleAIService.IdentifyObject(fileStream);
+                string result2 = await _googleAIService.IdentifyAverageImageColour(fileStream);
+                return Ok(result + "|" +  result2);
             } catch (Exception ex)
             {
                 return BadRequest(ex);

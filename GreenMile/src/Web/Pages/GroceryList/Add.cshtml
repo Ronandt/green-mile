@@ -14,7 +14,7 @@
                             <div class="login_wrap widget-taber-content background-white">
                                 <div class="padding_eight_all bg-white">
                                     <div class="heading_s1" style="margin-top:100px; margin-bottom: 30px;">
-                                        <h1 class="mb-5">Add item to grocery list</h1>
+                                        <h1 class="mb-5" id="header">Add item to grocery list</h1>
 
                                     </div>
                                     <div asp-validation-summary="All" class="text-danger"></div>
@@ -51,11 +51,11 @@ class="text-danger"></span>
 
                                       <div style="margin-top: 40px;">Quantity</div>
                         <br />
-                                        <div class="detail-extralink mr-15" style="margin-bottom:30px; ">
-                                            <div class="detail-qty border radius">
-                                                <a onclick="down()" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
+                                        <div id ="upperBorder"class="detail-extralink mr-15" style="margin-bottom:30px; ">
+                                            <div class="detail-qty border radius" id="border">
+                                                <a onclick="down()" class="qty-down" id="down"><i class="fi-rs-angle-small-down"></i></a>
                                                 <span id="value" class="qty-val">1</span>
-                                                <a  onclick="up()" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
+                                                <a  onclick="up()" class="qty-up" id="up"><i class="fi-rs-angle-small-up"></i></a>
                                             </div>
                                         </div>
 
@@ -64,7 +64,7 @@ class="text-danger"></span>
 
 
                                         <div class="form-group mb-30">
-                                            <button type="submit" value="Add" class="btn btn-fill-out btn-block hover-up font-weight-bold">Submit</button>
+                                            <button type="submit" value="Add" id="submit" class="btn btn-fill-out btn-block hover-up font-weight-bold">Submit</button>
                                         </div>
                                         <p class="font-xs text-muted"><strong>Note:</strong>Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our privacy policy</p>
                                     </form>
@@ -118,13 +118,44 @@ class="text-danger"></span>
         }).then((response) => {
             return response.text()
         }).then((data) => {
-            document.getElementById("GroceryUiState_Name").value = data
+            var colour = data.split("|")[1]
+            var rgbval = colour.replace("rgb(", "").replace(")", "").replace(" ", "").split(",")
+            var contrast = getContrast(rgbval, ["255", "255", "255"])
+            console.log(contrast)
+            console.log(rgbval)
+            if(contrast > 4) {
+                document.getElementById("header").style = "color:" + data.split("|")[1] + ";"
+            document.getElementById("genimg").style = "background-color:" + data.split("|")[1] + ";" + "margin-top: 20px;"
+            document.getElementById("up").style = "color:" + data.split("|")[1] + ";"
+            document.getElementById("down").style = "color:" + data.split("|")[1] + ";"
+            document.getElementById("value").style = "color:" + data.split("|")[1] + ";"
+            document.getElementById("submit").style = "background-color:" + data.split("|")[1] + ";"
+            document.getElementById("border").style.cssText =  "border-color:" + data.split("|")[1] + "!important" + ";"
+             document.getElementById("upperBorder").style.borderColor =  data.split("|")[1] + ";"
+            }
+            document.getElementById("GroceryUiState_Name").value = data.split("|")[0]
+      
         }).catch((error) => {
             document.getElementById("GroceryUiState_Name").value = "Unknown"
         })
 
+        
     })
 
+
+    function getRelativeLuminance(rgb) {
+  var r = parseInt(rgb[0]) / 255;
+  var g = parseInt(rgb[1]) / 255;
+  var b = parseInt(rgb[2]) / 255;
+  var luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  return luminance;
+}
+    function getContrast(rgb1, rgb2) {
+        var luminance1 = getRelativeLuminance(rgb1);
+        var luminance2 = getRelativeLuminance(rgb2);
+        var contrast = (Math.max(luminance1, luminance2) + 0.05) / (Math.min(luminance1, luminance2) + 0.05);
+        return contrast;
+    }
 
 </script>
 <script>
