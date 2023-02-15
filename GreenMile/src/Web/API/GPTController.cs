@@ -98,7 +98,7 @@ namespace Web.API
             }
 
             a:
-                string prePrompt = $"You will think up of maximum 2 ingredients that make up a {prompt.Response} in the JSON format of Id, Name, Quantity (set this to 1), ExtraNote, InBasket (set this to false), Description (It must be a description of that ingredient), HouseholdId, CategoryId (CategoryId must be an integer that the food follows and cannot be null. {String.Join(",", categories)}), CarbonFootprint (set as 0), ImageFilePath (Set as null). The two ingredients have to be part of one array. Your output cannot have any extra text above or below the json array";
+                string prePrompt = $"You will think up of maximum 2 ingredients that make up a {prompt.Response} in the JSON format of Id, Name, Quantity (set this to 1), ExtraNote, InBasket (set this to false), Description (It must be a description of that ingredient), HouseholdId, CategoryId (CategoryId must be an integer that the food follows and cannot be null. {String.Join(",", categories)}), CarbonFootprint (set as 0), ImageFilePath (Set as null). The two ingredients have to be part of one array. Your output cannot have any extra text above or below the json array and has to be deserializable.";
                 OpenAI.GPT3.ObjectModels.ResponseModels.CompletionCreateResponse promptResult = await _openAIApiService.GenerateDavinciPrompt(prePrompt + prompt.Response);
                 var objectified = JsonConvert.DeserializeObject<List<GroceryFoodItem>>(promptResult.Choices.FirstOrDefault()?.Text);
 
