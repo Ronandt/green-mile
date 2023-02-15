@@ -69,7 +69,7 @@ namespace Web.Pages.GroceryList
 
             if (!(vals.DefaultIfEmpty() is null))
             {
-                TempData["error"] = $"Your content contains the following: {string.Join(",", vals)}";
+                TempData["error"] = $"You can't add as your content contains the following: {string.Join(" ,", vals)}";
                 return Redirect("/grocerylist/add");
             }
 

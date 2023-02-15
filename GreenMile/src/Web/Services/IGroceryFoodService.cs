@@ -22,5 +22,7 @@ namespace Web.Services
         public Task<string> ExportGroceryList(int householdId);
         public Task ImportGroceryList(int householdId, string json);
 
+        public Task ImportGroceryListFromPlainText(int householdId, List<string> text);
+
     }
 }

@@ -14,6 +14,8 @@ namespace Web.UiState
         [BindProperty]
         public IFormFile? JsonFile { get; set; }
 
+        [BindProperty]
+        public IFormFile? ImageFile { get; set; }
 
     }
 }

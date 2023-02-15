@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Web.Models
 {
+
     public class Recipe
     {
         [Key]

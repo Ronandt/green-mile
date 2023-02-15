@@ -47,10 +47,8 @@
                             <a class="btn btn-info"  id="btn" onclick="download();return false;" style="position:relative;left: 780px; top: 80px;background-color: darkred"><i class="fa-solid fa-file-export"></i> Export List</a>
                   
                     <div class="file-input-wrapper" style="position:relative;left: 430px; top: 100px;cursor: pointer">
-                        <button class="btn btn-info" style="background-color: darkred"><i class="fa-solid fa-file-import"></i> Import List</button>
-                        <form method="POST" id="form" enctype="multipart/form-data">
-                            <input type="file" asp-for="GroceryListUiState.JsonFile" accept=".json" />
-                        </form>
+                        <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#quick" style="background-color: darkred"><i class="fa-solid fa-file-import"></i> Import List</button>
+                
                   
                     </div>
            
@@ -81,6 +79,55 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <div class="modal fade custom-modal" id="quickViewModal" tabindex="-1"
+                                 aria-labelledby="quickViewModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        <div class="modal-body">
+                                            <h2 style="margin-bottom: 40px;">Generate Grocery List</h2>
+                                            <h5 style="margin-bottom: 4px;">Enter your recipe:</h5><br>
+                                            <input class="form-control" type="text" id="food" style="margin-bottom:20px; " placeholder="Enter what you want to cook to obtain ingredients for your list!" />
+                                            <a class="btn btn-info" id="btn2">Generate Grocery List</a>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                                        <div class="modal fade custom-modal" id="quick" tabindex="-1"
+                                 aria-labelledby="quickViewModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        <div class="modal-body">
+                                             <h2 style="margin-bottom: 40px;">Import List</h2>
+                                                   <div class="file-input-wrapper">
+
+                                                <button class="btn btn-info" style="background-color: darkred"><i class="fa-solid fa-file-import"></i> Import Json List</button>
+                                                <form method="POST" id="form" enctype="multipart/form-data">
+                                                    <input type="file" asp-for="GroceryListUiState.JsonFile" accept=".json" />
+                                                </form>
+
+                                            </div>
+                                            <div class="file-input-wrapper">
+                                                <button class="btn btn-info" style="background-color: darkred"><i class="fa-solid fa-file-import"></i> Import Physical List</button>
+                                                  <form method="POST" id="forms" enctype="multipart/form-data">
+                                                    <input type="file" asp-for="GroceryListUiState.ImageFile" accept="image/*" />
+                                                </form>
+
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             @foreach(var food in foods)
                             {
                                 <tr class="pt-30">
@@ -139,22 +186,7 @@
 
 
 
-                                <div class="modal fade custom-modal" id="quickViewModal" tabindex="-1"
-                                 aria-labelledby="quickViewModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                            <div class="modal-body">
-                                                Enter your food:<br>
-                                                <input class="form-control" type="text" id="food" style="margin-bottom:20px; "placeholder="Enter what you want to cook to obtain ingredients for your list!"/>
-                                                <a class="btn btn-info" id="btn2">Generate Grocery List</a>
-
-                                            
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                          
 
 
 
@@ -285,6 +317,11 @@ input.addEventListener("change", async (event) => {
   };
   document.getElementById("form").submit();
 });
+
+const inputs = document.getElementById("GroceryListUiState_ImageFile")
+inputs.addEventListener("change", async (event) => {
+    document.getElementById("forms").submit()
+})
 
             document.getElementById("btn").addEventListener("click", function() {
             fetch("/api/grocerylist/@(user.HouseholdId)")

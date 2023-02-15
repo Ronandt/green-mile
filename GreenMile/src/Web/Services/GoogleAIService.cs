@@ -70,5 +70,13 @@ namespace Web.Services
             var dominantColors = dominantColor.Color.Red;
             return $"rgb({dominantColor.Color.Red}, {dominantColor.Color.Green}, {dominantColor.Color.Blue})";
         }
+
+        public async Task<List<string>> DetectText(Google.Cloud.Vision.V1.Image image)
+        {
+            ImageAnnotatorClient client = await ImageAnnotatorClient.CreateAsync();
+            IReadOnlyList<EntityAnnotation> textAnnotations = await client.DetectTextAsync(image);
+            return textAnnotations.Select(x => x.Description).ToList();
+
+        }
     }
 }

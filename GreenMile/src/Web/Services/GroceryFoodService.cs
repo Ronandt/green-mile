@@ -4,8 +4,11 @@ using System.Text;
 using System.Text.Json;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 using Newtonsoft.Json;
+
+using PexelsDotNetSDK.Api;
 
 using Web.Data;
 using Web.Models;
@@ -22,9 +25,15 @@ namespace Web.Services
             
         };
         private readonly DataContext _dataContext;
-        public GroceryFoodService(DataContext dataContext)
+        private readonly PexelsClient _pexelsClient;
+        private readonly OpenAIApiService _openAIApiService;
+        private readonly CategoryService _categoryService;
+        public GroceryFoodService(DataContext dataContext, PexelsClient pexelsClient, CategoryService categoryService, OpenAIApiService openAIApiService)
         {
             _dataContext = dataContext;
+            _pexelsClient = pexelsClient;
+            _categoryService = categoryService;
+            _openAIApiService = openAIApiService;
         }
 
         public async Task<Boolean> Add(GroceryFoodItem groceryItem)
@@ -115,6 +124,35 @@ namespace Web.Services
 
             }
   
+      
+
+        }
+
+        public async Task ImportGroceryListFromPlainText(int householdId, List<string> text)
+        {
+          
+                List<string> categories = (await _categoryService.RetrieveCategories()).Select(x => x.ToString()).ToList();
+
+                List<string> categoryValues = (await _openAIApiService.GenerateDavinciPrompt($"Categorise these ingredients with the following categoryids: {String.Join(",", categories)}:　{String.Join(",", text)}. Only output in this format: 5,4,2,1")).Choices.FirstOrDefault().Text.Split(",").ToList();
+
+                List<GroceryFoodItem> objects = (await Task.WhenAll(text[0].Split("\n").Zip(categoryValues, async (x, y) =>
+
+                    new GroceryFoodItem()
+                    {
+                        HouseholdId = householdId,
+                        CarbonFootprint = 0,
+                        Description = "No description",
+                        ImageFilePath = (await _pexelsClient.SearchPhotosAsync(x, pageSize: 2)).photos[0].source.original,
+                        CategoryId = Int32.Parse(y),
+                        Name = x,
+                        Quantity = 1
+
+                    }
+
+                ))).ToList();
+
+                await _dataContext.GroceryFood.AddRangeAsync(objects);
+                await _dataContext.SaveChangesAsync();
       
 
         }
