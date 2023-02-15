@@ -133,7 +133,7 @@ namespace Web.Services
           
                 List<string> categories = (await _categoryService.RetrieveCategories()).Select(x => x.ToString()).ToList();
 
-                List<string> categoryValues = (await _openAIApiService.GenerateDavinciPrompt($"Categorise these ingredients with the following categoryids: {String.Join(",", categories)}:　{String.Join(",", text)}. Only output in this format: 5,4,2,1")).Choices.FirstOrDefault().Text.Split(",").ToList();
+                List<string> categoryValues = (await _openAIApiService.GenerateDavinciPrompt($"Categorise these ingredients with the following categoryids ({String.Join(",", categories)}):　{String.Join(",", text)}. Only output in this format: number,number,number")).Choices.FirstOrDefault().Text.Split(",").ToList();
 
                 List<GroceryFoodItem> objects = (await Task.WhenAll(text[0].Split("\n").Zip(categoryValues, async (x, y) =>
 
@@ -144,7 +144,7 @@ namespace Web.Services
                         Description = "No description",
                         ImageFilePath = (await _pexelsClient.SearchPhotosAsync(x, pageSize: 2)).photos[0].source.original,
                         CategoryId = Int32.Parse(y),
-                        Name = x,
+                        Name = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x),
                         Quantity = 1
 
                     }
